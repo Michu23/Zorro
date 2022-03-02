@@ -1,0 +1,171 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+
+<!-- content -->
+<div class="content ">
+
+    <div class="mb-4">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">
+                        <i class="bi bi-globe2 small me-2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Order Detail</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8 col-md-12">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="mb-5 d-flex align-items-center justify-content-between">
+                        <span>Order No : <a href="#">#5355619</a></span>
+                        <span class="badge bg-success">Completed</span>
+                    </div>
+                    <div class="row mb-5 g-4">
+                        <div class="col-md-3 col-sm-6">
+                            <p class="fw-bold">Order Created at</p>
+                            {{order.date_ordered}}
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <p class="fw-bold">Name</p>
+                            {{order.customer}}
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <p class="fw-bold">Email</p>
+                            {{order.customer.email}}
+                        </div>
+                        <div class="col-md-3 col-sm-6">
+                            <p class="fw-bold">Contact No</p>
+                            {{order.customer.phone}}
+                        </div>
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="card">
+                                <div class="card-body d-flex flex-column gap-3">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="mb-0">Delivery Address</h5>
+                                        <a href="#">Edit</a>
+                                    </div>
+                                    <div>Type: {{order.address.type}}</div>
+                                    <div>{{order.address.fname}} {{order.address.fname}}</div>
+                                    <div>{{order.address.address}}</div>
+                                    <div>
+                                        <i class="bi bi-telephone me-2"></i> {{order.address.phone}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="card">
+                                <div class="card-body d-flex flex-column gap-3">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="mb-0">Billing Address</h5>
+                                        <a href="#">Edit</a>
+                                    </div>
+                                    <div>Type: {{order.address.type}}</div>
+                                    <div>{{order.address.fname}} {{order.address.fname}}</div>
+                                    <div>{{order.address.address}}</div>
+                                    <div>
+                                        <i class="bi bi-telephone me-2"></i> {{order.address.phone}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card widget">
+                <h5 class="card-header">Order Items</h5>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-custom mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Photo</th>
+                                    <th>Name</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in items %}
+                                <tr>
+                                    <td>
+                                        <a href="#">
+                                            <img src="{{i.product.image1.url}}" class="rounded" width="60" alt="...">
+                                        </a>
+                                    </td>
+                                    <td>{{i.product.name}}</td>
+                                    <td>{{i.quantity}}</td>
+                                    <td>₹{{i.product.price}}</td>
+                                    <td>₹{{i.get_total}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-12 mt-4 mt-lg-0">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h6 class="card-title mb-4">Price</h6>
+                    <div class="row justify-content-center mb-3">
+                        <div class="col-4 text-end">Sub Total :</div>
+                        <div class="col-4">₹{{order.get_cart_total}}</div>
+                    </div>
+                    <div class="row justify-content-center mb-3">
+                        <div class="col-4 text-end">Shipping :</div>
+                        <div class="col-4">Free</div>
+                    </div>
+                    <!-- <div class="row justify-content-center mb-3">
+                        <div class="col-4 text-end">Tax(18%) :</div>
+                        <div class="col-4">₹273,77</div>
+                    </div> -->
+                    <div class="row justify-content-center">
+                        <div class="col-4 text-end">
+                            <strong>Total :</strong>
+                        </div>
+                        <div class="col-4">
+                            <strong>₹{{order.get_cart_total}}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title mb-4">Invoice</h6>
+                    <div class="row justify-content-center mb-3">
+                        <div class="col-6 text-end">Invoice No :</div>
+                        <div class="col-6">
+                            <a href="#">#5355619</a>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center mb-3">
+                        <div class="col-6 text-end">Seller GST :</div>
+                        <div class="col-6">12HY87072641Z0</div>
+                    </div>
+                    <div class="row justify-content-center mb-3">
+                        <div class="col-6 text-end">Purchase GST :</div>
+                        <div class="col-6">22HG9838964Z1</div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button class="btn btn-outline-primary">Download PDF</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- ./ content -->
+
+{% endblock %}

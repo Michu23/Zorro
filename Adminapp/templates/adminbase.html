@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title> Zorro | Admin </title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{% static 'assets/images/favicon.png' %}" />
+
+    <!-- Google fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com/">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&amp;display=swap"
+        rel="stylesheet">
+
+    <!-- Bootstrap icons -->
+    <link rel="stylesheet" href="{% static 'dist/icons/bootstrap-icons-1.4.0/bootstrap-icons.min.css' %}"
+        type="text/css">
+    <!-- Bootstrap Docs -->
+    <link rel="stylesheet" href="{% static 'dist/css/bootstrap-docs.css' %}" type="text/css">
+
+    <!-- Slick -->
+    <link rel="stylesheet" href="{% static 'libs/slick/slick.css' %}" type="text/css">
+
+    <!-- Main style file -->
+    <link rel="stylesheet" href="{% static 'dist/css/app.min.css' %}" type="text/css">
+
+
+</head>
+
+<body>
+
+    <!-- preloader -->
+    <div class="preloader">
+        <img src="{% static 'img/logo.jpg' %}" alt="logo">
+        <div class="preloader-icon"></div>
+    </div>
+    <!-- ./ preloader -->
+
+
+
+    <!-- menu -->
+    <div class="menu">
+        <div class="menu-header">
+            <a href="index.html" class="menu-header-logo">
+                <img src="{% static 'img/logo.svg' %}" alt="logo">
+            </a>
+            <a href="index.html" class="btn btn-sm menu-close-btn">
+                <i class="bi bi-x"></i>
+            </a>
+        </div>
+        <div class="menu-body">
+            <div class="dropdown">
+                <a href="#" class="d-flex align-items-center" data-bs-toggle="dropdown">
+                    <div class="avatar me-3">
+                        <img src="{% static 'assets/images/user/man_avatar3.jpg' %}" class="rounded-circle" alt="image">
+                    </div>
+                    <div>
+                        <div class="fw-bold">Michu</div>
+                        <small class="text-muted">CEO</small>
+                    </div>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end">
+                    <a href="#" class="dropdown-item d-flex align-items-center">
+                        <i class="bi bi-person dropdown-item-icon"></i> Profile
+                    </a>
+                    <a href="login.html" class="dropdown-item d-flex align-items-center text-danger" target="_blank">
+                        <i class="bi bi-box-arrow-right dropdown-item-icon"></i> Logout
+                    </a>
+                </div>
+            </div>
+            <ul>
+                <li class="menu-divider">E-Commerce</li>
+                {% if dashboard %}
+                <li>
+                    <a class="active" href="{% url 'AdminHome' %}">
+                        <span class="nav-link-icon">
+                            <i class="bi bi-bar-chart"></i>
+                        </span>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                {% else %}
+                <li>
+                    <a href="{% url 'AdminHome' %}">
+                        <span class="nav-link-icon">
+                            <i class="bi bi-bar-chart"></i>
+                        </span>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                {% endif %}
+
+                <li>
+                    <a href="#">
+                        <span class="nav-link-icon">
+                            <i class="bi bi-receipt"></i>
+                        </span>
+                        <span>Orders</span>
+                    </a>
+                    <ul>
+                        {% if orders %}
+                        <li>
+                            <a class="active" href="{% url 'AdminOrders' %}">List</a>
+                        </li>
+                        {% else %}
+                        <li>
+                            <a href="{% url 'AdminOrders' %}">List</a>
+                        </li>
+                        {% endif %}
+                        {% if details %}
+
+                        <li>
+                            <a class="active" href="{% url 'AdminOrders'  %}">Detail</a>
+                        </li>
+                        {% else %}
+                        <li>
+                            <a href="{% url 'AdminOrders'  %}">Detail</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="nav-link-icon">
+                            <i class="bi bi-truck"></i>
+                        </span>
+                        <span>Products</span>
+                    </a>
+                    <ul>
+                        {% if pro %}
+                        <li>
+                            <a class="active" href="{% url 'AdminProduct' %}">List
+                                View</a>
+                        </li>
+                        {% else %}
+                        <li>
+                            <a href="{% url 'AdminProduct' %}">List
+                                View</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </li>
+
+                <li>
+                    {% if cust %}
+                    <a class="active" href="{% url 'AdminCustomers' %}">
+                        <span class="nav-link-icon">
+                            <i class="bi bi-person-badge"></i>
+                        </span>
+                        <span>Customers</span>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'AdminCustomers' %}">
+                        <span class="nav-link-icon">
+                            <i class="bi bi-person-badge"></i>
+                        </span>
+                        <span>Customers</span>
+                    </a>
+                    {% endif %}
+                </li>
+
+                <li>
+                    <a href="#">
+                        <span class="nav-link-icon">
+                            <i class="bi bi-receipt"></i>
+                        </span>
+                        <span>Invoices</span>
+                    </a>
+                    <ul>
+                        <li>
+                            <a href="{% url 'AdminInvoice' %}">List</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- ./  menu -->
+
+    <!-- layout-wrapper -->
+    <div class="layout-wrapper">
+
+        <!-- header -->
+        <div class="header">
+            <div class="menu-toggle-btn">
+                <!-- Menu close button for mobile devices -->
+                <a href="#">
+                    <i class="bi bi-list"></i>
+                </a>
+            </div>
+            <!-- Logo -->
+            <a href="index.html" class="logo">
+                <img width="100" src="https://vetra.laborasyon.com/assets/images/logo.svg' %}" alt="logo">
+            </a>
+            <!-- ./ Logo -->
+            <div class="page-title">Overview</div>
+            <form class="search-form">
+                <div class="input-group">
+                    <button class="btn btn-outline-light" type="button" id="button-addon1">
+                        <i class="bi bi-search"></i>
+                    </button>
+                    <input type="text" class="form-control" placeholder="Search..."
+                        aria-label="Example text with button addon" aria-describedby="button-addon1">
+                    <a href="#" class="btn btn-outline-light close-header-search-bar">
+                        <i class="bi bi-x"></i>
+                    </a>
+                </div>
+            </form>
+            <div class="header-bar ms-auto">
+                <ul class="navbar-nav justify-content-end">
+                    <li class="nav-item ms-3">
+                        <a href="{% url 'AddProduct' %}">
+                            <button class="btn btn-primary btn-icon">
+                                <i class="bi bi-plus-circle"></i> Catogeries
+                            </button>
+                        </a>
+                    </li>
+                    <li class="nav-item ms-3">
+                        <a href="{% url 'AdminLogout' %}">
+                            <button class="btn btn-primary btn-icon">
+                                Logout
+                            </button>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        <!-- ./ header -->
+
+        {% block content %}
+
+        {% endblock %}
+
+
+
+    </div>
+    <!-- ./ layout-wrapper -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script>
+        $('ul li a').on('click', function () {
+            $('ul li a').removeClass('active')
+            $(this).addClass('active')
+        })
+    </script>
+    <!-- Bundle scripts -->
+    <script src="{% static 'libs/bundle.js' %}"></script>
+
+    <!-- Apex chart -->
+    <script src="{% static 'libs/charts/apex/apexcharts.min.js' %}"></script>
+
+    <!-- Slick -->
+    <script src="{% static 'libs/slick/slick.min.js' %}"></script>
+
+    <!-- Examples -->
+    <script src="{% static 'dist/js/examples/dashboard.js' %}"></script>
+
+
+    <!-- Main Javascript file -->
+    <script src="{% static 'dist/js/app.min.js' %}"></script>
+
+
+    <style>
+        .item-action-buttons {
+            display: none !important;
+        }
+    </style>
+</body>
+
+<!-- Mirrored from vetra.laborasyon.com/demos/default/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 04 Feb 2022 18:29:40 GMT -->
+
+</html>

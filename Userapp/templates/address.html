@@ -1,0 +1,103 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+<!-- content -->
+<br />
+<div class="content container bg-light rounded-3" style="width: fit-content">
+  <br /><br />
+
+  <div class="buyer-profile-cover row bg-image mb-4 p-5" style="background-color: azure;">
+    <div class="container d-flex  align-items-center h-100 flex-column flex-md-row text-center row text-md-start">
+      <div class="col-md-4">
+        <img src="{{user.propic.url}}" height="10%" width="60%" class="rounded-circle" alt="..." />
+      </div>
+      <div class="my-4 my-md-0 col-md-8">
+        <h3 class="mb-1" style="text-transform: capitalize;"><strong>Hi {{user.username}},</strong></h3>
+        <h5 class="mb-3">Welcome to Zorro-Estore</h5>
+        <a href="{% url 'editprofile' %}" class="btn btn-primary btn-lg btn-icon">
+          <i class="bi bi-pencil small"></i> Edit Account
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4 rounded-3">
+      <div class="card">
+        <div class="card-body">
+          <ul class="nav nav-pills flex-column gap-2">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'ProfileDash' %}">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'UserOrders' %}">My Orders</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="{% url 'UserAddress' %}">My Addresses</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'Wishlist' %}">Wishlist</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <div class="row g-4 mb-4">
+        {% for i in addr %}
+        <div class="col-md-6 col-sm-12">
+          <div class="card">
+            <div class="card-body d-flex flex-column gap-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">{{i.type}}</h5>
+                <div class="d-flex g-1">
+                  <p style="background-color: black; padding: 0px 10px 0px 10px">
+                    <a style="text-decoration: none; color: white" href="{% url 'EditUserAddress' i.id %}">Edit</a>
+                  </p>
+                  <p style="background-color: black; padding: 0px 10px 0px 10px">
+                    <a style="text-decoration: none; color: white" href="{% url 'DeleteUserAddress' i.id %}">Delete</a>
+                  </p>
+                </div>
+              </div>
+              <div>{{i.fname}} {{i.lname}}</div>
+              <div>{{i.address}}</div>
+              <div><i class="bi bi-telephone me-2"></i> {{i.phone}}</div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <p>
+        <a class="btn btn-outline-dark btn-icon bg-dark text-white" data-bs-toggle="collapse" href="#collapseExample"
+          role="button" aria-expanded="false" aria-controls="collapseExample">
+          <i class="bi bi-plus-circle"></i> Add New Address
+        </a>
+      </p>
+      <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+          <h6 class="display-6 text-center pt-5">Enter Details</h6>
+          <form method="POST" action="{% url 'UserAddress' %}">
+            {% csrf_token %} {% load crispy_forms_tags %}
+            <div class="row">
+              <div class="col-md-12 p-2">
+                <div class="field-group">
+                  <div class="content-input-field">
+                    <div>
+                      <label for="floatingInput">{{form.label}}</label>
+                    </div>
+                    <div>{{form|crispy}}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-dark mt-3">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br /><br /><br />
+</div>
+<!-- ./ content -->
+
+{% endblock %}

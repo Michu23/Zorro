@@ -1,0 +1,40 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="container m-5 p-5 w-50 mx-auto bg-dark text-light rounded">
+  <h3 class="text-center text-white">Register here!</h3>
+  <form method="POST" action="">
+    {% csrf_token %} {% load crispy_forms_tags %}
+    <div class="row">
+      <div class="col-md-6 p-2">{{form.first_name|as_crispy_field}}</div>
+      <div class="col-md-6 p-2">{{form.last_name|as_crispy_field}}</div>
+      <div class="col-md-6 p-2">{{form.email|as_crispy_field}}</div>
+
+      <div class="col-md-6 p-2">{{form.phone|as_crispy_field}}</div>
+      <div class="col-md-6 p-2">{{form.username|as_crispy_field}}</div>
+      <div class="col-md-6 p-2">{{form.password1|as_crispy_field}}</div>
+      <div class="col-md-6 p-2">{{form.password2|as_crispy_field}}</div>
+
+      {% for error in messages %}
+      <h6
+        class="text-danger p-3"
+        style="background-color: #ffcccb; background-color: rgba(0, 0, 0, 0.25)"
+      >
+        {{error}}
+      </h6>
+      {% endfor %}
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+  </form>
+
+  <div class="text-center">
+    Already a user? <a href="{% url 'UserLogin' %}">Sign in</a>
+  </div>
+</div>
+<style>
+  ul,
+  #hint_id_username,
+  #hint_id_password2 {
+    display: none;
+  }
+</style>
+{% endblock %}

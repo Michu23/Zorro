@@ -1,0 +1,224 @@
+{% extends 'base.html' %} {% block content %} {% load static %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-option">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="breadcrumb__text">
+          <h4>Shopping Cart</h4>
+          <div class="breadcrumb__links">
+            <a href="./index.html">Home</a>
+            <a href="./shop.html">Shop</a>
+            <span>Shopping Cart</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Breadcrumb Section End -->
+
+<!-- Shopping Cart Section Begin -->
+<section class="shopping-cart spad">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="shopping__cart__table" style="
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+            padding: 30px 30px 20px 20px;
+          ">
+          {% if page == "Empty" %}
+          <h3 class="text-center">
+            The Cart is Empty!
+          </h3>
+          {% else %}
+          <table>
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for i in items %}
+              <tr id="{{i.product.id}}">
+                <td class="product__cart__item">
+                  <div class="product__cart__item__pic">
+                    <a href="{% url 'Product' i.product.id %}"><img src="{{i.product.image1.url}}" alt=""
+                        width="100px" /></a>
+                  </div>
+                  <div class="product__cart__item__text">
+                    <h6>{{i.product.name}}</h6>
+                    <h5>₹{{i.product.price}}</h5>
+                  </div>
+                </td>
+                <td class="quantity__item">
+                  <div class="d-flex">
+                    <div>
+                      <p class="quantity" id="quantity">{{i.quantity}}</p>
+                    </div>
+                    <div class="quantity d-block">
+                      <img data-product="{{i.product.id}}" id="real-up" data-action="add"
+                        class="chg-quantity update-cart" src="{% static  'img/arrow-up.png' %}"
+                        style="width: 15%; height: 50%; cursor: pointer" />
+
+                      <img data-product="{{i.product.id}}" data-action="remove" class="chg-quantity update-cart"
+                        src="{% static  'img/arrow-down.png' %}" style="width: 15%; height: 50%; cursor: pointer" />
+                    </div>
+                  </div>
+                </td>
+                <td class="cart__price">
+                  <span id="totall"> ₹{{i.get_total}}</span>
+                </td>
+
+                <td style="cursor: pointer" class="cart__close">
+                  <button data-id="{{i.product.id}}" class="remove btn btn-danger rounded-circle">X</button>
+                </td>
+              </tr>
+              <p><span id="stockmsg" class="text-danger d-none">Out Of Stock</span></p>
+
+              {% endfor %}
+            </tbody>
+          </table>
+          {% endif %}
+        </div>
+        <div class="row">
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="continue__btn">
+              <a href="{% url 'UserShop' %}">Continue Shopping</a>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="continue__btn update__btn">
+              <a href="{% url 'UserCart' %}"><i class="fa fa-spinner"></i> Update cart</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4" style="
+          box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+          padding: 30px 30px 20px 20px;
+        ">
+        <div class="cart__discount">
+          <h6>Discount codes</h6>
+          <form action="#">
+            <input type="text" placeholder="Coupon code" />
+            <button type="submit">Apply</button>
+          </form>
+        </div>
+        <div class="cart__total" style="
+            box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+            padding: 30px 30px 20px 20px;
+          ">
+          <h6>Cart total</h6>
+          <ul>
+            <li>Total items <span id="items">1</span></li>
+            <li>
+              Subtotal <span id="cart_total">₹{{order.get_cart_total}}</span>
+            </li>
+            <li>
+              Total <span id="cart_total">₹{{order.get_cart_total}}</span>
+            </li>
+          </ul>
+          {% if order.get_cart_total != 0 %}
+          <a href="{% url 'UserCheckout' %}" id="go_checkout" class="primary-btn">Proceed to Checkout</a>
+          {% else %}
+          <a href="{% url 'UserCheckout' %}" id="stay_checkout" class="primary-btn">Proceed to Checkout</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Shopping Cart Section End -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  $(".remove").on("click", function (e) {
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          'Deleted!',
+          'Your file has been deleted.',
+          'success',
+
+          $.ajax({
+            type: "GET",
+            url: "{% url 'Remove' %}",
+            data: {
+              productid: $(this).data('id')
+            },
+            success: function (response) {
+              $('#' + response.id).remove()
+            }
+          })
+        )
+      }
+    })
+  });
+</script>
+
+<script>
+  $(".update-cart").on("click", function (e) {
+    var product = $(this).data("product");
+    var action = $(this).data("action");
+
+    console.log(product);
+    console.log(action);
+    $.ajax({
+      type: "POST",
+      url: "{% url 'updateitem' %}",
+      data: {
+        productId: product,
+        action: action,
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+      },
+      dataType: "json",
+      success: function (response) {
+        var items = response.items;
+        var quantity = response.quantity;
+        var total = response.total;
+        var cart_total = response.cart_total;
+        var productId = response.productId;
+        var cur_stock = response.cur_stock;
+        var flag = response.flag;
+        console.log("Quantity :" + quantity);
+        console.log("Current stock :" + cur_stock);
+        console.log("Total :" + total);
+        console.log("Cart total :" + cart_total);
+        console.log("Pro id :" + productId);
+
+        if (flag == 1) {
+          $("#" + productId + " #stockmsg").show();
+        } else {
+          $("#" + productId + " #stockmsg").hide();
+        }
+
+        var total_id = "#" + productId + " #totall";
+        var item_id = " #items";
+        var cart_total_id = " #cart_total";
+        var quantity_id = "#" + productId + " #quantity";
+
+        $(total_id).html("₹" + total);
+        $(item_id).html(items);
+        $(cart_total_id).html("₹" + cart_total);
+        $(quantity_id).html(quantity);
+        $();
+      },
+    });
+  });
+</script>
+{% endblock %}

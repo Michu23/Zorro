@@ -1,0 +1,371 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+<br><br>
+<!-- content -->
+<div class="content container bg-light rounded-3">
+    <br><br>
+
+    <div class="buyer-profile-cover row bg-image mb-4 p-5" style="background-color: azure;">
+        <div class="container d-flex  align-items-center h-100 flex-column flex-md-row text-center row text-md-start">
+            <div class="col-md-4">
+                <img src="{{user.propic.url}}" height="10%" width="60%" class="rounded-circle" alt="..." />
+            </div>
+            <div class="my-4 my-md-0 col-md-8">
+                <h3 class="mb-1" style="text-transform: capitalize;"><strong>Hi {{user.username}},</strong></h3>
+                <h5 class="mb-3">Welcome to Zorro-Estore</h5>
+                <a href="{% url 'editprofile' %}" class="btn btn-primary btn-lg btn-icon">
+                    <i class="bi bi-pencil small"></i> Edit Account
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <div class="row">
+        <div class="col-md-4 rounded-3">
+            <div class="card">
+                <div class="card-body">
+                    <ul class="nav nav-pills flex-column gap-2">
+                        <li class="nav-item">
+                            <a class="nav-link " href="{% url 'ProfileDash' %}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link  active " href="{% url 'UserOrders' %}">My Orders</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="{% url 'UserAddress' %}">My Addresses</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="{% url 'Wishlist' %}">Wishlist</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+
+            <div class="card widget mb-5">
+                <h5 class="card-header" style="margin-bottom: 30px; ">My Orders</h5>
+                {% for order in orders %}
+
+                <div class="accordion accordion-flush" id="accordionFlushExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-headingOne{{ forloop.counter }}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#flush-collapseOne{{ forloop.counter }}" aria-expanded="false"
+                                aria-controls="flush-collapseOne{{ forloop.counter }}">
+                                <table class="table" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th><strong>Date</strong>: {{ order.date_ordered|date:"d/m/Y" }}</th>
+                                            <th>{{order.get_cart_items}} Items</th>
+                                            <th><strong>Total</strong>: ${{order.get_cart_total}}</th>
+                                            <th><a href=""><button class="btn btn-dark">{{order.status}}</button></a>
+                                            </th>
+
+
+                                        </tr>
+                                    </thead>
+                                </table>
+                                <!-- <div><strong>Date</strong>: {{order.date_ordered}}</div>
+                                <div class="ms-3">{{order.get_cart_items}} Items</div>
+                                <div class="ms-auto"><strong>Total</strong>: ${{order.get_cart_total}}</div> -->
+                            </button>
+                        </h2>
+                        <div id="flush-collapseOne{{ forloop.counter }}" class="accordion-collapse collapse"
+                            aria-labelledby="flush-headingOne{{ forloop.counter }}"
+                            data-bs-parent="#accordionFlushExample">
+                            <hr class="mb-0">
+                            <div class="table-responsive">
+                                <table class="table table-custom mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Photo</th>
+                                            <th>Name</th>
+                                            <th>Quantity</th>
+                                            <th>Price</th>
+                                            <th>Total</th>
+                                            <th class="text-end">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in items %}
+                                        {% if item.order == order %}
+                                        <tr>
+                                            <td>
+                                                <a href="#">
+                                                    <img src="{{item.product.image1.url}}" class="rounded" width="40"
+                                                        alt="...">
+                                                </a>
+                                            </td>
+                                            <td>{{item.product.name}}</td>
+                                            <td>{{item.quantity}}</td>
+                                            <td>${{item.get_total}}</td>
+                                            <td>${{item.get_total}}</td>
+                                            <td class="text-end">
+                                                <div class="d-flex">
+                                                    <div class="dropdown ms-auto">
+                                                        <!-- <a href="#" data-bs-toggle="dropdown" class="btn btn-floating"
+                                                            aria-haspopup="true" aria-expanded="false">
+                                                            <i class="bi bi-three-dots"></i>
+                                                        </a>
+                                                        <div class="dropdown-menu dropdown-menu-end">
+                                                            <a href="#" class="dropdown-item">Action</a>
+                                                            <a href="#" class="dropdown-item">Another action</a>
+                                                            <a href="#" class="dropdown-item">Something else here</a>
+                                                        </div> -->
+                                                        {% if order.status == 'Pending' %}
+                                                        <a href="{% url 'cancelorder' item.id %}"><button
+                                                                class="btn btn-dark" id="btn">Cancel</button></a>
+                                                        {% else %}
+                                                        <a href="{% url 'returnorder' item.id %}"><button
+                                                                class="btn btn-dark">Return</button></a>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                        {% endfor %}
+                                        <!-- <tr>
+                                        <td>
+                                            <a href="#">
+                                                <img src="{% static 'assets/images/products/3.jpg' %}" class="rounded"
+                                                    width="40" alt="...">
+                                            </a>
+                                        </td>
+                                        <td>Digital clock</td>
+                                        <td>2</td>
+                                        <td>$1.190,90</td>
+                                        <td>$2.381,80</td>
+                                        <td class="text-end">
+                                            <div class="d-flex">
+                                                <div class="dropdown ms-auto">
+                                                    <a href="#" data-bs-toggle="dropdown" class="btn btn-floating"
+                                                        aria-haspopup="true" aria-expanded="false">
+                                                        <i class="bi bi-three-dots"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                        <a href="#" class="dropdown-item">Action</a>
+                                                        <a href="#" class="dropdown-item">Another action</a>
+                                                        <a href="#" class="dropdown-item">Something else here</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr> -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div>
+                                <div>Order number: <a href="#">#26598</a></div>
+                                <div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body" style="padding: 0;">
+                    <div class="d-flex gap-4 align-items-center" data-bs-toggle="collapse" aria-expanded="false"
+                        data-bs-target="#myOrders26598" role="button">
+
+                    </div>
+                    <div class="collapse show" id="myOrders26598">
+
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- <div class="card mb-4">
+                <div class="card-body">
+                    <div class="d-flex gap-4 align-items-center" data-bs-toggle="collapse" aria-expanded="false"
+                        data-bs-target="#myOrders53211" role="button">
+                        <div><strong>Date</strong>: 10 May 2021</div>
+                        <div>1 Item</div>
+                        <div><strong>Total</strong>: $500,30</div>
+                        <div class="bi bi-chevron-down ms-auto"></div>
+                    </div>
+                    <div class="collapse" id="myOrders53211">
+                        <hr class="mb-0">
+                        <div class="table-responsive">
+                            <table class="table table-custom mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Photo</th>
+                                        <th>Name</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>Created At</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <a href="#">
+                                                <img src="{% static 'assets/images/products/6.jpg' %}" class="rounded"
+                                                    width="40" alt="...">
+                                            </a>
+                                        </td>
+                                        <td>Shoe</td>
+                                        <td>1</td>
+                                        <td>$500,30</td>
+                                        <td>$500,30</td>
+                                        <td class="text-end">
+                                            <div class="d-flex">
+                                                <div class="dropdown ms-auto">
+                                                    <a href="#" data-bs-toggle="dropdown" class="btn btn-floating"
+                                                        aria-haspopup="true" aria-expanded="false">
+                                                        <i class="bi bi-three-dots"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                        <a href="#" class="dropdown-item">Action</a>
+                                                        <a href="#" class="dropdown-item">Another action</a>
+                                                        <a href="#" class="dropdown-item">Something else here</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div>Order number: <a href="#">#53211</a></div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="d-flex gap-4 align-items-center" data-bs-toggle="collapse" aria-expanded="false"
+                        data-bs-target="#myOrders53281" role="button">
+                        <div><strong>Date</strong>: 20 Apr 2021</div>
+                        <div>3 Items</div>
+                        <div><strong>Total</strong>: $1.286,50</div>
+                        <div class="bi bi-chevron-down ms-auto"></div>
+                    </div>
+                    <div class="collapse" id="myOrders53281">
+                        <hr class="mb-0">
+                        <div class="table-responsive">
+                            <table class="table table-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Photo</th>
+                                        <th>Name</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>Total</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <a href="#">
+                                                <img src="{% static 'assets/images/products/8.jpg' %}" class="rounded"
+                                                    width="40" alt="...">
+                                            </a>
+                                        </td>
+                                        <td>Headphone</td>
+                                        <td>1</td>
+                                        <td>$870,50</td>
+                                        <td>$870,50</td>
+                                        <td class="text-end">
+                                            <div class="d-flex">
+                                                <div class="dropdown ms-auto">
+                                                    <a href="#" data-bs-toggle="dropdown" class="btn btn-floating"
+                                                        aria-haspopup="true" aria-expanded="false">
+                                                        <i class="bi bi-three-dots"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                        <a href="#" class="dropdown-item">Action</a>
+                                                        <a href="#" class="dropdown-item">Another action</a>
+                                                        <a href="#" class="dropdown-item">Something else here</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a href="#">
+                                                <img src="{% static 'assets/images/products/9.jpg' %}" class="rounded"
+                                                    width="40" alt="...">
+                                            </a>
+                                        </td>
+                                        <td>Perfume</td>
+                                        <td>2</td>
+                                        <td>$170,50</td>
+                                        <td>$341,00</td>
+                                        <td class="text-end">
+                                            <div class="d-flex">
+                                                <div class="dropdown ms-auto">
+                                                    <a href="#" data-bs-toggle="dropdown" class="btn btn-floating"
+                                                        aria-haspopup="true" aria-expanded="false">
+                                                        <i class="bi bi-three-dots"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                        <a href="#" class="dropdown-item">Action</a>
+                                                        <a href="#" class="dropdown-item">Another action</a>
+                                                        <a href="#" class="dropdown-item">Something else here</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a href="#">
+                                                <img src="{% static 'assets/images/products/10.jpg' %}" class="rounded"
+                                                    width="40" alt="...">
+                                            </a>
+                                        </td>
+                                        <td>Cookie</td>
+                                        <td>5</td>
+                                        <td>$15,00</td>
+                                        <td>$75,00</td>
+                                        <td class="text-end">
+                                            <div class="d-flex">
+                                                <div class="dropdown ms-auto">
+                                                    <a href="#" data-bs-toggle="dropdown" class="btn btn-floating"
+                                                        aria-haspopup="true" aria-expanded="false">
+                                                        <i class="bi bi-three-dots"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                        <a href="#" class="dropdown-item">Action</a>
+                                                        <a href="#" class="dropdown-item">Another action</a>
+                                                        <a href="#" class="dropdown-item">Something else here</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div>Order number: <a href="#">#53281</a></div>
+                    </div>
+                </div>
+            </div> -->
+
+        </div>
+
+    </div>
+
+</div>
+<!-- ./ content -->
+<script>
+    function myFunction() {
+        document.getElementById("btn").onclick = function () {
+            //disable
+            document.getElementById("btn").innerText = "Requested Cancellation"
+            document.getElementById("btn").style.backgroundColor = 'Red';
+            this.disabled = true;
+        }
+    }
+</script>
+
+{% endblock %}

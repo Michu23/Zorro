@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zxx">
+{% load static %}
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="Male_Fashion Template" />
+  <meta name="keywords" content="Male_Fashion, unica, creative, html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Zorro-Estore</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+
+  <!-- Css Styles -->
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static 'css/elegant-icons.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static 'css/nice-select.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static 'css/slicknav.min.css' %}" type="text/css" />
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" />
+
+  <!-- Bootstrap icons -->
+  <link rel="stylesheet" href="{% static 'dist/icons/bootstrap-icons-1.4.0/bootstrap-icons.min.css' %}"
+    type="text/css" />
+  <!-- Bootstrap Docs -->
+  <link rel="stylesheet" href="{% static 'dist/css/bootstrap-docs.css' %}" type="text/css" />
+</head>
+
+<body style="background-color: #edf0f3">
+  <!-- Page Preloder -->
+  <div id="preloder">
+    <div class="loader"></div>
+  </div>
+
+  <!-- Offcanvas Menu Begin -->
+  <div class="offcanvas-menu-overlay"></div>
+  <div class="offcanvas-menu-wrapper">
+    <div class="offcanvas__option">
+      <div class="offcanvas__links"></div>
+      <!-- <div class="offcanvas__top__hover">
+                <span>Usd <i class="arrow_carrot-down"></i></span>
+                <ul>
+                    <li>USD</li>
+                    <li>EUR</li>
+                    <li>USD</li>
+                </ul>
+            </div> -->
+    </div>
+    <div class="offcanvas__nav__option">
+      <a href="#" class="search-switch"><img src="{% static 'img/icon/search.png' %}" alt="" /></a>
+      <a href="#"><img src="{% static 'img/icon/heart.png' %}" alt="" /></a>
+      <a href="#"><img src="{% static 'img/icon/cart.png' %}" alt="" />
+        <span>0</span></a>
+      <div class="price">$0.00</div>
+    </div>
+    <div id="mobile-menu-wrap"></div>
+    <div class="offcanvas__text">
+      <p>Free shipping, 30-day return or refund guarantee.</p>
+    </div>
+  </div>
+  <!-- Offcanvas Menu End -->
+
+  <!-- Header Section Begin -->
+  <header class="header container-fluid m-0 p-0" style="position:fixed; top:0; z-index: 999; justify-content: center;">
+    <div class="header__top">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 col-md-7">
+            <div class="header__top__left">
+              <p>
+                Welcome
+                <span style="text-transform: capitalize">{{user.username}}</span>
+              </p>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-5">
+            <div class="header__top__right">
+              <div class="header__top__links">
+                {% if user.is_authenticated %}
+                <a href="{% url 'ProfileDash' %}">My Profile</a>
+                <a href="{% url 'UserLogout' %}">Sign out</a>
+                {% else %}
+                <a href="{% url 'UserLogin' %}">Sign in</a>
+                {% endif %}
+              </div>
+              <!-- <div class="header__top__hover">
+                <span>Usd <i class="arrow_carrot-down"></i></span>
+                <ul>
+                  <li>USD</li>
+                  <li>EUR</li>
+                  <li>USD</li>
+                </ul>
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3 col-md-3">
+          <div class="header__logo">
+            <a href="{% url 'UserHome' %}"><img src="{% static 'img/zorro.svg' %}"
+                style="width: 50%; height: 50%; margin-top: -15px" alt="" /></a>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+          <nav class="header__menu mobile-menu">
+            <ul>
+              <li><a href="{% url 'UserHome' %}">Home</a></li>
+              <li><a href="{% url 'UserShop' %}">Shop</a></li>
+              <li><a href="{% url 'UserCart' %}">Cart</a></li>
+              <li><a href="{% url 'UserCheckout' %}">Checkout</a></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="col-lg-3 col-md-3">
+          <div class="header__nav__option">
+            <a href="#" class="search-switch"><img src="{% static 'img/icon/search.png' %}" alt="" /></a>
+            <a href="{% url 'Wishlist' %}"><img src="{% static 'img/icon/heart.png' %}" alt="" /></a>
+            <a href="{% url 'UserCart' %}"><img src="{% static 'img/icon/cart.png' %}" alt="" />
+              <span>0</span></a>
+            <div class="price">$0.00</div>
+          </div>
+        </div>
+      </div>
+      <div class="canvas__open"><i class="fa fa-bars"></i></div>
+    </div>
+  </header>
+  <!-- Header Section End -->
+
+  {% block content %} {% endblock %}
+
+  <!-- Footer Section Begin -->
+  <footer class="footer" style="background-color: black !important;">
+    <div class="container" style="background-color: black !important;">
+      <div class="row" style="background-color: black !important;">
+        <div class="col-lg-3 col-md-6 col-sm-6">
+          <div class="footer__about">
+            <div class="footer__logo">
+              <a href="#"><img src="{% static 'img/logo2.jpg' %}" alt="" /></a>
+            </div>
+            <p>
+              The customer is at the heart of our unique business model, which
+              includes design.
+            </p>
+            <a href="#"><img src="{% static 'img/payment.png' %}" alt="" /></a>
+          </div>
+        </div>
+        <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
+          <div class="footer__widget">
+            <h6>Shopping</h6>
+            <ul>
+              <li><a href="#">Clothing Store</a></li>
+              <li><a href="#">Trending Shoes</a></li>
+              <li><a href="#">Accessories</a></li>
+              <li><a href="#">Sale</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-6">
+          <div class="footer__widget">
+            <h6>Shopping</h6>
+            <ul>
+              <li><a href="#">Contact Us</a></li>
+              <li><a href="#">Payment Methods</a></li>
+              <li><a href="#">Delivary</a></li>
+              <li><a href="#">Return & Exchanges</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
+          <div class="footer__widget">
+            <h6>NewLetter</h6>
+            <div class="footer__newslatter">
+              <p>
+                Be the first to know about new arrivals, look books, sales &
+                promos!
+              </p>
+              <form action="#">
+                <input type="text" placeholder="Your email" />
+                <button type="submit">
+                  <span class="icon_mail_alt"></span>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12 text-center">
+          <div class="footer__copyright__text">
+            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+            <p>
+              Copyright ©
+              <script>
+                document.write(new Date().getFullYear());
+              </script>
+              2020
+            </p>
+            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- Footer Section End -->
+
+  <!-- Search Begin -->
+  <div class="search-model">
+    <div class="h-100 d-flex align-items-center justify-content-center">
+      <div class="search-close-switch">+</div>
+      <form class="search-model-form">
+        <input type="text" id="search-input" placeholder="Search here....." />
+      </form>
+    </div>
+  </div>
+  <!-- Search End -->
+
+  <!-- Js Plugins -->
+  <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/jquery.nice-select.min.js' %}"></script>
+  <script src="{% static 'js/jquery.nicescroll.min.js' %}"></script>
+  <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+  <script src="{% static 'js/jquery.countdown.min.js' %}"></script>
+  <script src="{% static 'js/jquery.slicknav.js' %}"></script>
+  <script src="{% static 'js/mixitup.min.js' %}"></script>
+  <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+
+  <!-- <script src="{% static 'js/cart.js' %}"></script> -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+    integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+    crossorigin="anonymous"></script>
+
+  <style>
+    .item-action-buttons {
+      display: none !important;
+    }
+  </style>
+</body>
+
+</html>

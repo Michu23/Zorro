@@ -1,0 +1,528 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+
+<!-- content -->
+<div class="content ">
+
+
+    <div class="card">
+        <div class="card-body">
+            <div class="d-md-flex">
+                <div class="d-md-flex gap-4 align-items-center">
+                    <form class="mb-3 mb-md-0">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <select class="form-select">
+                                    <option>Sort by</option>
+                                    <option value="desc">Desc</option>
+                                    <option value="asc">Asc</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="40">40</option>
+                                    <option value="50">50</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Search">
+                                    <button class="btn btn-outline-light" type="button">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="dropdown ms-auto">
+                    <a href="#" data-bs-toggle="dropdown" class="btn btn-primary dropdown-toggle" aria-haspopup="true"
+                        aria-expanded="false">Actions</a>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a href="#" class="dropdown-item">Action</a>
+                        <a href="#" class="dropdown-item">Another action</a>
+                        <a href="#" class="dropdown-item">Something else here</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-custom table-lg mb-0" id="customers">
+            <thead>
+                <tr>
+                    <th>
+                        <input class="form-check-input select-all" type="checkbox" data-select-all-target="#customers"
+                            id="defaultCheck1">
+                    </th>
+                    <th>ID</th>
+                    <th>Photo</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>
+                        <input class="form-check-input" type="checkbox">
+                    </td>
+                    <td>
+                        <a href="#">#{{user.id}}</a>
+                    </td>
+                    <td>
+                        <div class="avatar avatar-info">
+                            <span class="avatar-text rounded-circle">A</span>
+                        </div>
+                    </td>
+                    <td>{{user.username}}</td>
+                    <td>{{user.email}}</td>
+                    <td>{{user.phone}}</td>
+                    <td>{{user.date}}</td>
+                    <td>
+                        <!-- <span class="badge bg-success">Active</span> -->
+                        <div class="containere" id="container{{ user.id }}">
+                            <a href="{% url 'blockuser' user.id %}">
+                                <input class="inpute toggle-input" type="checkbox" value="{{ user.id }}"
+                                    id="toggle-input{{ user.id }}">
+                                <div class="toggle-btn" id="toggle-btn{{ user.id }}"></div>
+                            </a>
+                        </div>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-flex">
+                            <div class="dropdown ms-auto">
+                                <a href="#" data-bs-toggle="dropdown" class="btn btn-floating" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    <i class="bi bi-three-dots"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a href="#" class="dropdown-item">Show</a>
+                                    <a href="#" class="dropdown-item">Edit</a>
+                                    <a href="#" class="dropdown-item">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                <!-- <tr>
+                    <td>
+                        <input class="form-check-input" type="checkbox">
+                    </td>
+                    <td>
+                        <a href="#">#2</a>
+                    </td>
+                    <td>
+                        <div class="avatar avatar-secondary">
+                            <span class="avatar-text rounded-circle">B</span>
+                        </div>
+                    </td>
+                    <td>Billi Cicero</td>
+                    <td>bcicero1@wiley.com</td>
+                    <td>Indonesia</td>
+                    <td>11/20/2020</td>
+                    <td>
+                        <span class="badge bg-danger">Passive</span>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-flex">
+                            <div class="dropdown ms-auto">
+                                <a href="#" data-bs-toggle="dropdown" class="btn btn-floating" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    <i class="bi bi-three-dots"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a href="#" class="dropdown-item">Show</a>
+                                    <a href="#" class="dropdown-item">Edit</a>
+                                    <a href="#" class="dropdown-item">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input class="form-check-input" type="checkbox">
+                    </td>
+                    <td>
+                        <a href="#">#3</a>
+                    </td>
+                    <td>
+                        <div class="avatar avatar-warning">
+                            <span class="avatar-text rounded-circle">T</span>
+                        </div>
+                    </td>
+                    <td>Thorpe Hawksley</td>
+                    <td>thawksley2@senate.gov</td>
+                    <td>France</td>
+                    <td>10/20/2020</td>
+                    <td>
+                        <span class="badge bg-success">Active</span>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-flex">
+                            <div class="dropdown ms-auto">
+                                <a href="#" data-bs-toggle="dropdown" class="btn btn-floating" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    <i class="bi bi-three-dots"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a href="#" class="dropdown-item">Show</a>
+                                    <a href="#" class="dropdown-item">Edit</a>
+                                    <a href="#" class="dropdown-item">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input class="form-check-input" type="checkbox">
+                    </td>
+                    <td>
+                        <a href="#">#4</a>
+                    </td>
+                    <td>
+                        <div class="avatar avatar-danger">
+                            <span class="avatar-text rounded-circle">H</span>
+                        </div>
+                    </td>
+                    <td>Horacio Versey</td>
+                    <td>hversey3@illinois.edu</td>
+                    <td>China</td>
+                    <td>1/15/2021</td>
+                    <td>
+                        <span class="badge bg-success">Active</span>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-flex">
+                            <div class="dropdown ms-auto">
+                                <a href="#" data-bs-toggle="dropdown" class="btn btn-floating" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    <i class="bi bi-three-dots"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a href="#" class="dropdown-item">Show</a>
+                                    <a href="#" class="dropdown-item">Edit</a>
+                                    <a href="#" class="dropdown-item">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input class="form-check-input" type="checkbox">
+                    </td>
+                    <td>
+                        <a href="#">#5</a>
+                    </td>
+                    <td>
+                        <div class="avatar avatar-success">
+                            <span class="avatar-text rounded-circle">R</span>
+                        </div>
+                    </td>
+                    <td>Raphael Dampney</td>
+                    <td>rdampney4@reference.com</td>
+                    <td>Portugal</td>
+                    <td>8/17/2020</td>
+                    <td>
+                        <span class="badge bg-success">Active</span>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-flex">
+                            <div class="dropdown ms-auto">
+                                <a href="#" data-bs-toggle="dropdown" class="btn btn-floating" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    <i class="bi bi-three-dots"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a href="#" class="dropdown-item">Show</a>
+                                    <a href="#" class="dropdown-item">Edit</a>
+                                    <a href="#" class="dropdown-item">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input class="form-check-input" type="checkbox">
+                    </td>
+                    <td>
+                        <a href="#">#6</a>
+                    </td>
+                    <td>
+                        <div class="avatar avatar-info">
+                            <span class="avatar-text rounded-circle">A</span>
+                        </div>
+                    </td>
+                    <td>Arlan Pond</td>
+                    <td>apond0@nytimes.com</td>
+                    <td>Brazil</td>
+                    <td>1/11/2021</td>
+                    <td>
+                        <span class="badge bg-success">Active</span>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-flex">
+                            <div class="dropdown ms-auto">
+                                <a href="#" data-bs-toggle="dropdown" class="btn btn-floating" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    <i class="bi bi-three-dots"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a href="#" class="dropdown-item">Show</a>
+                                    <a href="#" class="dropdown-item">Edit</a>
+                                    <a href="#" class="dropdown-item">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input class="form-check-input" type="checkbox">
+                    </td>
+                    <td>
+                        <a href="#">#7</a>
+                    </td>
+                    <td>
+                        <div class="avatar avatar-secondary">
+                            <span class="avatar-text rounded-circle">B</span>
+                        </div>
+                    </td>
+                    <td>Billi Cicero</td>
+                    <td>bcicero1@wiley.com</td>
+                    <td>Indonesia</td>
+                    <td>11/20/2020</td>
+                    <td>
+                        <span class="badge bg-danger">Passive</span>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-flex">
+                            <div class="dropdown ms-auto">
+                                <a href="#" data-bs-toggle="dropdown" class="btn btn-floating" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    <i class="bi bi-three-dots"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a href="#" class="dropdown-item">Show</a>
+                                    <a href="#" class="dropdown-item">Edit</a>
+                                    <a href="#" class="dropdown-item">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input class="form-check-input" type="checkbox">
+                    </td>
+                    <td>
+                        <a href="#">#8</a>
+                    </td>
+                    <td>
+                        <div class="avatar avatar-warning">
+                            <span class="avatar-text rounded-circle">T</span>
+                        </div>
+                    </td>
+                    <td>Thorpe Hawksley</td>
+                    <td>thawksley2@senate.gov</td>
+                    <td>France</td>
+                    <td>10/20/2020</td>
+                    <td>
+                        <span class="badge bg-success">Active</span>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-flex">
+                            <div class="dropdown ms-auto">
+                                <a href="#" data-bs-toggle="dropdown" class="btn btn-floating" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    <i class="bi bi-three-dots"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a href="#" class="dropdown-item">Show</a>
+                                    <a href="#" class="dropdown-item">Edit</a>
+                                    <a href="#" class="dropdown-item">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input class="form-check-input" type="checkbox">
+                    </td>
+                    <td>
+                        <a href="#">#9</a>
+                    </td>
+                    <td>
+                        <div class="avatar avatar-danger">
+                            <span class="avatar-text rounded-circle">H</span>
+                        </div>
+                    </td>
+                    <td>Horacio Versey</td>
+                    <td>hversey3@illinois.edu</td>
+                    <td>China</td>
+                    <td>1/15/2021</td>
+                    <td>
+                        <span class="badge bg-success">Active</span>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-flex">
+                            <div class="dropdown ms-auto">
+                                <a href="#" data-bs-toggle="dropdown" class="btn btn-floating" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    <i class="bi bi-three-dots"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a href="#" class="dropdown-item">Show</a>
+                                    <a href="#" class="dropdown-item">Edit</a>
+                                    <a href="#" class="dropdown-item">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input class="form-check-input" type="checkbox">
+                    </td>
+                    <td>
+                        <a href="#">#10</a>
+                    </td>
+                    <td>
+                        <div class="avatar avatar-success">
+                            <span class="avatar-text rounded-circle">R</span>
+                        </div>
+                    </td>
+                    <td>Raphael Dampney</td>
+                    <td>rdampney4@reference.com</td>
+                    <td>Portugal</td>
+                    <td>8/17/2020</td>
+                    <td>
+                        <span class="badge bg-success">Active</span>
+                    </td>
+                    <td class="text-end">
+                        <div class="d-flex">
+                            <div class="dropdown ms-auto">
+                                <a href="#" data-bs-toggle="dropdown" class="btn btn-floating" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    <i class="bi bi-three-dots"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a href="#" class="dropdown-item">Show</a>
+                                    <a href="#" class="dropdown-item">Edit</a>
+                                    <a href="#" class="dropdown-item">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr> -->
+            </tbody>
+        </table>
+    </div>
+
+    <nav class="mt-4" aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+</div>
+<style>
+    .containere {
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        border: 1px solid tomato;
+        border-radius: 20px;
+        width: 40px;
+        height: 20px;
+    }
+
+    .containere input {
+        cursor: pointer;
+        width: 40px;
+        position: absolute;
+        opacity: 0;
+    }
+
+    .containere div {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background-color: tomato;
+        margin-left: 2px;
+        transition: margin-left 0.3s ease-in, background-color 0.2s ease-in;
+    }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+    crossorigin="anonymous"></script>
+<script>
+    $('.inpute').on('click', function () {
+        var val = $(this).val()
+        var container = document.getElementById("container" + val);
+        var toggleInput = document.getElementById("toggle-input" + val);
+        var toggleBtn = document.getElementById("toggle-btn" + val);
+
+        if (toggleInput.checked) {
+            toggleBtn.style.marginLeft = "22px";
+            toggleBtn.style.backgroundColor = "white";
+            container.style.backgroundColor = "red";
+            document.getElementById("toggle-btn").innerText = "Blocked";
+
+        } else {
+            toggleBtn.style.marginLeft = "2px";
+            toggleBtn.style.backgroundColor = "tomato";
+            container.style.backgroundColor = "white";
+
+        }
+    })
+</script>
+
+<!-- <script>
+    const container = document.getElementById("container")
+        const toggleInput = document.getElementById("hy")
+        const toggleBtn = document.getElementById("toggle-btn")
+        console.log(toggleBtn)
+        
+        toggleInput.addEventListener("click", () => {
+            if (toggleInput.checked) {
+                   toggleBtn.style.marginLeft = "22px"
+            toggleBtn.style.backgroundColor = "white"
+            container.style.backgroundColor = "tomato"
+
+        } else {
+            toggleBtn.style.marginLeft = "2px"
+            toggleBtn.style.backgroundColor = "tomato"
+            container.style.backgroundColor = "white"
+        }
+    })
+</script> -->
+<!-- ./ content -->
+
+{% endblock %}

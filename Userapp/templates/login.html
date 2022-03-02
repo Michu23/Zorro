@@ -1,0 +1,56 @@
+{% extends 'base.html' %} {% block content %}
+
+<div
+  class="container bg-dark text-light"
+  style="margin-top: 100px; padding: 40px; border-radius: 10px; width: 450px"
+>
+  <div class="text-center text-light">
+    <h3 class="text-white">Login Here!</h3>
+  </div>
+  <br />
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="exampleInputEmail1" username="username" class="form-label"
+        >Username</label
+      >
+      <input
+        type="text"
+        class="form-control"
+        name="username"
+        id="exampleInputEmail1"
+        aria-describedby="emailHelp"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputPassword1" password="password" class="form-label"
+        >Password</label
+      >
+      <input
+        type="password"
+        class="form-control"
+        name="password"
+        id="exampleInputPassword1"
+        required
+      />
+    </div>
+    <div class="mb-3 form-check">
+      {% for error in messages %}
+      <p class="text-danger">{{error}}</p>
+      {% endfor %}
+      <div class="d-flex justify-content-between">
+        <div class="text-center">
+          New here? <a href="{% url 'UserReg' %}">Sign up!</a>
+        </div>
+        <div class="text-center">
+          <a href="{% url 'OtpLogin' %}">OTP login</a>
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="btn text-center btn-primary">Submit</button>
+  </form>
+</div>
+<br /><br /><br /><br /><br />
+
+{% endblock %}

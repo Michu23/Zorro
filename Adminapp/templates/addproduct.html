@@ -1,0 +1,68 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+{% load static %}
+
+<!-- <div class="row page-titles">
+    <div class="col-md-5 align-self-center">
+        <h3 class="text-themecolor">Dashboard</h3>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+            <li class="breadcrumb-item active">Add Product</li>
+        </ol>
+    </div>
+</div>
+<div class="row">
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="row g-3 align-items-center">
+            <div class="col-auto">
+                <label for="inputPassword6" class="col-form-label">{{field.label}}</label>
+            </div>
+            <div class="col-auto">
+                {{field}}
+            </div>
+        </div>
+        {% endfor %}
+        <button type="submit" style="border: 2px; border-radius: 5px;">Add Product</button>
+    </form> -->
+
+
+<div class="container-fluid bg-dark text-light rounded">
+    <div class="container m-5 p-5 w-50 mx-auto ">
+        <h3 class="text-center text-white">Add the Product</h3>
+
+        {% for error in messages %}
+        <h6 class="text-success p-3" style="background-color: lightgreen">
+            {{error}}
+        </h6>
+        {% endfor %}
+
+        <form method="POST" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% load crispy_forms_tags %}
+            <div class="row">
+                {{form|crispy}}
+            </div>
+            <button type="submit" id="confirm-btn" class="btn btn-primary mt-3 ">Submit</button>
+        </form>
+
+        <div class="col-md-5">
+            <div class="form-group">
+                <div id="image-box" class="image-container"></div>
+                <button class="btn btn-outline-info" id="crop-btn" style=" margin-top: 10px; display: none;"
+                    type="button">Crop</button>
+            </div>
+        </div>
+        <img src="" id="img1" style="width:100px;">
+        <img src="" id="img2" style="width:100px;">
+        <img src="" id="img3" style="width:100px;">
+        <img src="" id="img4" style="width:100px;">
+
+    </div>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.js"></script>
+    <script src="{% static 'dist/js/cropper.js' %}"></script>
+
+    {% endblock %}

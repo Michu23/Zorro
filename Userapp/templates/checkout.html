@@ -1,0 +1,563 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+{% load static %}
+
+
+<!-- content -->
+{% if page == "Empty" %}
+<h3 class="text-center">
+    The Cart is Empty!
+</h3>
+{% else %}
+<div class="container mt-5 pt-5">
+    <div class="content " <div class="mb-4">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">
+                        <i class="bi bi-globe2 small me-2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 mt-2">
+            <div id="checkout-form-wizard">
+                <h3>Shipping</h3>
+                <section class="card card-body mb-0">
+                    <div class="mb-4">
+                        <div class="text-muted">Choose where you want to recived your product.</div>
+                    </div>
+                    <div class="row mb-4">
+                        {% for i in addr %}
+
+                        <div class="accordion accordion-flush" id="accordionFlushExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="flush-headingOne{{ forloop.counter }}">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#flush-collapseOne{{ forloop.counter }}" aria-expanded="false"
+                                        aria-controls="flush-collapseOne{{ forloop.counter }}">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" value="{{i.id}}" name="address"
+                                                checked id="flexRadioDefault1">
+                                            <div class="d-flex justify-content-between">
+                                                <h5 class="form-check-label mb-0 d-flex justify-content-between"
+                                                    for="flexRadioDefault1">
+                                                    <div>
+                                                        <b> {{i.fname}}
+                                                            {{i.lname}}
+                                                        </b>
+                                                    </div>
+                                                    <div class="">
+                                                        <span style="color: grey;">
+                                                            ({{i.type}} -
+                                                            {{i.city}})
+                                                        </span>
+                                                    </div>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                    </button>
+                                </h2>
+                                <div id="flush-collapseOne{{ forloop.counter }}" class="accordion-collapse collapse"
+                                    aria-labelledby="flush-headingOne{{ forloop.counter }}"
+                                    data-bs-parent="#accordionFlushExample">
+                                    <div class="card mb-3">
+                                        <div class="card-body d-flex flex-column gap-2">
+                                            <div class="form-check">
+
+                                                <h5 class="form-check-label mb-0" for="flexRadioDefault1">{{i.type}}
+                                                </h5>
+                                            </div>
+                                            <div>{{i.fname}} {{i.lname}}</div>
+                                            <div>{{i.address}}</div>
+                                            <div>
+                                                <i class="bi bi-telephone me-2"></i>{{i.phone}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            {% endfor %}
+
+                        </div>
+                        <p>
+                            <a class="btn btn-outline-dark btn-dark  text-white" data-bs-toggle="collapse"
+                                href="#collapseExample" role="button" aria-expanded="false"
+                                aria-controls="collapseExample">
+                                <i class="bi bi-plus-circle bg-dark text-white"></i> Add New Address
+                            </a>
+                        </p>
+                        <div class="collapse" id="collapseExample">
+                            <div class="card card-body">
+                                <h3 class="card-title text-center mb-4">Enter Details</h3>
+                                <form method="POST" action="{% url 'UserAddress' %}">
+                                    {% csrf_token %}
+                                    {% load crispy_forms_tags %}
+                                    <div class="row">
+                                        <div class="col-md-12 p-2">
+                                            <div class="field-group">
+                                                <div class="content-input-field">
+                                                    <div>
+                                                        <label for="floatingInput"><b>{{form.label}}</b></label>
+                                                    </div>
+                                                    <div>
+                                                        {{form|crispy}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-dark mt-3 ">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                </section>
+                <div class="my-3">
+                    <h3>Payment</h3>
+                    <section class="card card-body mb-0">
+                        <div class="mb-4">
+                            <div class="text-muted">Choose your payment method.</div>
+                        </div>
+                        <!-- <div class="accordion accordion-with-radio" id="accordionExample">
+
+
+
+                            
+
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                        <div class="form-check">
+                                            <input class="form-check-input payment" type="radio" name="payment"
+                                                id="paypalFlexRadioDefault">
+                                            <label class="form-check-label mb-0" for="paypalFlexRadioDefault">
+                                                Pay with Paypal
+                                            </label>
+                                        </div>
+                                    </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                                    data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <div class="d-flex align-items-center">
+                                            <img width="50" class="me-3"
+                                                src="{% static 'assets/images/paypal-logo.png' %}" alt="...">
+                                            You will be redirected to PayPal website to complete your purchase securely.
+                                        </div>
+                                        <div id="paypal-button-container"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingThree">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseThree" aria-expanded="false"
+                                        aria-controls="collapseThree">
+                                        <div class="form-check">
+                                            <input class="form-check-input payment" value="COD" type="radio"
+                                                name="payment" id="cashOnDeliveryFlexRadioDefault">
+                                            <label class="form-check-label mb-0" for="cashOnDeliveryFlexRadioDefault">
+                                                Cash on Delivery
+                                            </label>
+                                        </div>
+                                    </button>
+                                </h2>
+                                <div id="collapseThree" class="accordion-collapse collapse"
+                                    aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body d-flex">
+                                        <div class="d-flex align-items-center">
+                                            <img width="50" class="me-3"
+                                                src="{% static 'assets/images/cash-on-delivery-logo.png' %}" alt="...">
+                                            Pay with cash when your order is delivered.
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-primary btn-lg" id="proceed">Submit</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                        <!-- </section> -->
+
+                        <!-- <div class="my-2">
+                            <button
+                                class="btn btn-light text-dark paywith_razorpay btn-lg w-100 h-25"><strong>Razorpay</strong>
+                            </button>
+                        </div> -->
+
+                        <div class="my-2">
+                            <button id="razorpaybutton" class="btn btn-secondary btn-lg w-100 py-3"><img width="50"
+                                    class="me-3">Razorpay</button>
+                        </div>
+                        <div class="my-2">
+                            <button class="btn btn-dark btn-lg w-100" id="proceed"><img width="50" class="me-3"
+                                    src="{% static 'assets/images/cash-on-delivery-logo.png' %}" alt="...">Cash on
+                                Delivery</button>
+                        </div>
+                        <div class="my-2">
+                            <div id="paypal-button-container"></div>
+                        </div>
+
+                        <div class="my-3">
+                            <a href="{% url 'UserCart' %}"><button class="btn btn-primary btn-lg">Back to
+                                    Cart</button></a>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <h3 class="mb-2">Order Summary</h3>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h6 class="card-title mb-4">Products</h6>
+                    {% for i in items %}
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item d-flex px-0">
+                            <a href="{% url 'Product' i.product.id %}" style="cursor: pointer" class="me-3">
+                                <img src="{{i.product.image1.url}}" class="rounded" width="60" alt="">
+                            </a>
+                            <div>
+                                <a href="{% url 'Product' i.product.id %}" style="cursor: pointer">
+                                    <h6>{{i.product.name}}</h6>
+                                </a>
+                                <div>{{i.product.quanity}} x₹{{i.product.price}}</div>
+                            </div>
+                            <div class="text-end ms-auto"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h6 class="card-title mb-4">Price</h6>
+                    <div class="row justify-content-center mb-3">
+                        <div class="col-4 text-end">Sub Total :</div>
+                        <div class="col-4">₹{{order.get_cart_total}}</div>
+                    </div>
+                    <div class="row justify-content-center mb-3">
+                        <div class="col-4 text-end">Shipping :</div>
+                        <div class="col-4">Free</div>
+                    </div>
+                    <!-- <div class="row justify-content-center mb-3">
+                        <div class="col-4 text-end">Tax(18%) :</div>
+                        <div class="col-4">₹259.70</div>
+                    </div> -->
+                    <div class="row justify-content-center">
+                        <div class="col-4 text-end">
+                            <strong>Total :</strong>
+                        </div>
+                        <div class="col-4">
+                            <strong>₹{{order.get_cart_total}}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endif %}
+
+<script
+    src="https://www.paypal.com/sdk/js?client-id=AdpywOlgCr8HCcGzu0AIzoIG9XJq-sW3O4Ls_IaLmu-6mI6aZRkDmePN-UV_SOpZRQhGAUV3AuBch0y8&currency=USD"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $("#proceed").on("click", function (e) {
+        //var payment = $('input[name="payment"]:checked').val();
+        var address = $('input[name="address"]:checked').val();
+        $.ajax({
+            type: "POST",
+            url: "{% url 'proceed' %}",
+            data: {
+                //payment: payment,
+                address: address,
+                csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            dataType: "json",
+            success: function (response) {
+                Swal.fire(
+                    'Order Placed!',
+                    'Your order has been placed',
+                    'success'
+                )
+                location = '{% url "UserHome" %}'
+            },
+        });
+    });
+</script>
+
+
+
+<!-- <script>
+
+    var total = '{{order.get_cart_total}}'
+
+    function completeOrder() {
+        var url = "{% url 'proceed' %}"
+    }
+    // Render the PayPal button into #paypal-button-container
+    paypal.Buttons({
+
+        // Set up the transaction
+        createOrder: function (data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: total
+                    }
+                }]
+            });
+        },
+
+        // Finalize the transaction
+        onApprove: function (data, actions) {
+            return actions.order.capture().then(function (orderData) {
+                // Successful capture! For demo purposes:
+                console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                var transaction = orderData.purchase_units[0].payments.captures[0];
+                alert('Transaction ' + transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+
+                // Replace the above to show a success message within this page, e.g.
+                // const element = document.getElementById('paypal-button-container');
+                // element.innerHTML = '';
+                // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+                // Or go to another URL:  actions.redirect('thank_you.html');
+            });
+        }
+
+
+    }).render('#paypal-button-container');
+</script> -->
+
+<!-- <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.paywith_razorpay').click(function (e) {
+            e.preventDefault();
+
+            var address = $('input[name="address"]:checked').val();
+
+            $.ajax({
+                method: "GET",
+                url: "{% url 'razorpay' %}",
+
+                success: function (response) {
+                    //console.log(response);
+                    var options = {
+                        "key": "rzp_test_aRq4XkP2vJ58Xt", // Enter the Key ID generated from the Dashboard
+                        "amount": "{{order.get_cart_total}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                        "currency": "INR",
+                        "name": "Michu",
+                        "description": "Thankyou for shopping with us!",
+                        "image": "https://example.com/your_logo",
+                        //"order_id": "order_9A33XWu170gUtm", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                        "handler": function (response) {
+                            alert(response.razorpay_payment_id);
+                            data = {
+                                payment: payment,
+                                address: address,
+                            },
+
+                                $.ajax({
+                                    method: "POST",
+                                    url: "/razorpay",
+                                    data: data,
+                                    dataType: "dataType",
+                                    success: function (response) {
+                                    }
+                                });
+                        },
+
+                        "notes": {
+                            "address": "Razorpay Corporate Office"
+                        },
+                        "theme": {
+                            "color": "#3399cc"
+                        }
+                    };
+                    var rzp1 = new Razorpay(options);
+                    rzp1.open();
+
+
+                    Swal.fire(
+                        'Order Placed!',
+                        'Your order has been placed',
+                        'success',
+                    )
+                }
+            });
+
+            //var options = {
+            //"key": "YOUR_KEY_ID", // Enter the Key ID generated from the Dashboard
+            //"amount": "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            //"currency": "INR",
+            //"name": "Acme Corp",
+            //"description": "Test Transaction",
+            //"image": "https://example.com/your_logo",
+            //"order_id": "order_9A33XWu170gUtm", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            //"handler": function (response) {
+            //alert(response.razorpay_payment_id);
+            //alert(response.razorpay_order_id);
+            //alert(response.razorpay_signature)
+            //},
+            //"prefill": {
+            //"name": "Gaurav Kumar",
+            //"email": "gaurav.kumar@example.com",
+            //"contact": "9999999999"
+            //},
+            //"notes": {
+            //  "address": "Razorpay Corporate Office"
+            // },
+            //"theme": {
+            // "color": "#3399cc"
+            //  }
+            //  };
+            //  var rzp1 = new Razorpay(options);
+            //  rzp1.open();
+        });
+
+    });
+</script> -->
+
+
+<script>
+    // Render the PayPal button into #paypal-button-container
+    var totalinr = parseFloat('{{ order.get_cart_total }}')
+    var totalamt = totalinr / 75
+    paypal
+        .Buttons({
+            // Set up the transaction
+            createOrder: function (data, actions) {
+                return actions.order.create({
+                    purchase_units: [
+                        {
+                            amount: {
+                                value: parseFloat(totalamt).toFixed(2),
+                            },
+                        },
+                    ],
+                });
+            },
+
+            // Finalize the transaction
+            onApprove: function (data, actions) {
+                return actions.order.capture().then(function (orderData) {
+                    console.log(
+                        "Capture result",
+                        orderData,
+                        JSON.stringify(orderData, null, 2)
+                    );
+                    order_place();
+                });
+            },
+        })
+        .render("#paypal-button-container");
+</script>
+
+<script>
+    $(document).ready(function () {
+
+        $('#razorpaybutton').click(function () {
+            var address = $('input[name="address"]:checked').val();
+            console.log(address)
+            $.ajax({
+                method: 'GET',
+                url: '{% url "payrazor" %}',
+                data: {
+                    address: address
+                },
+                success: function (response) {
+                    console.log(response.total)
+
+                    var options = {
+                        "key": "rzp_test_aRq4XkP2vJ58Xt", // Enter the Key ID generated from the Dashboard
+                        "amount": response.total * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                        "currency": "INR",
+                        "name": "Zorro",
+                        "description": "Thankyou for shopping with us!",
+                        "image": "https://ibb.co/8Mm86Tw",
+                        // "order_id": "order_9A33XWu170gUtm", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                        "handler": function (responseb) {
+                            data = {
+                                'order_id': responseb.razorpay_payment_id,
+                            }
+                            $.ajax({
+                                type: "POST",
+                                url: "{% url 'razorpay' %}",
+                                data: data,
+                                success: function (responsec) {
+
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'success',
+                                        title: 'Your order has been placed',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    })
+                                    location = '{% url "UserHome" %}';
+                                }
+                            });
+                        },
+                        "prefill": {
+                            "name": response.name,
+                            "email": response.email,
+                            "contact": response.phone,
+                        },
+                        "theme": {
+                            "color": "#3399cc"
+                        }
+                    };
+
+                    var rzp1 = new Razorpay(options);
+                    rzp1.open();
+                }
+            })
+        });
+    });
+</script>
+
+<script>
+    var address = $('input[name="address"]:checked').val();
+    $("#proceed").on("click", function (e) {
+        cod();
+    });
+    function cod() {
+        var address = $('input[name="address"]:checked').val();
+        $.ajax({
+            type: "POST",
+            url: "{% url 'proceed' %}",
+            data: {
+                payment: payment,
+                address: address,
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+            },
+            dataType: "json",
+            success: function (response) {
+                Swal.fire(
+                    'Order Placed!',
+                    'Your order has been placed',
+                    'success'
+                )
+
+                location = '{% url "UserHome" %}';
+            },
+        });
+    }
+
+
+
+</script>
+{% endblock %}

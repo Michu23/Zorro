@@ -1,0 +1,34 @@
+{% extends 'base.html' %} {% block content %}
+
+<div
+  class="container bg-dark text-light"
+  style="margin-top: 100px; padding: 40px; border-radius: 10px; width: 450px"
+>
+  <div class="text-center text-light">
+    <h3 class="text-white">OTP Login</h3>
+  </div>
+  <br />
+  <form method="POST">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="exampleInputEmail1" username="username" class="form-label"
+        >Enter the OTP :</label
+      >
+      <input type="number" class="form-control" name="otp" />
+    </div>
+    <div class="mb-3 p-0 form-check">
+      {% for error in messages %}
+      <h6
+        class="text-danger"
+        "
+      >
+        <b>{{error}}</b>
+      </h6>
+      {% endfor %}
+    </div>
+    <button type="submit" class="btn text-center btn-primary">Submit</button>
+  </form>
+</div>
+<br /><br />
+
+{% endblock %}
