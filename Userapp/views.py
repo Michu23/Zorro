@@ -246,7 +246,6 @@ def usercart(request):
             page="Empty"
             return render(request,"cart.html",{'page':page})
         
-        
         if(order==None or items==None):
             page="Empty"
             return render(request,"cart.html",{'page':page})
@@ -276,6 +275,7 @@ def usercheckout(request):
     context = {'order':order,'items':items,'addr':addr,'form':form}
     return render(request, 'checkout.html', context )
 
+
 @never_cache
 def remove(request):
     user = request.user
@@ -291,7 +291,8 @@ def remove(request):
     response={'id':productId}
     return JsonResponse(response)
     return redirect('UserCart')
- 
+
+
 def userprofile(request):
     return render (request, "profile.html")
 
@@ -351,6 +352,7 @@ def editaddress(request,pk):
             messages.success(request,'Updated Successfully')
             return redirect('UserAddress')
     return render(request,'editaddress.html',{'form':form,'id':pk})
+
 
 def deleteaddress(request,pk):
     address = Address.objects.get(id=pk)
@@ -502,6 +504,26 @@ def razorpay(request):
         Pay.objects.get_or_create(order = order,method = 'RazorPay',amount = total_amount,status = 'Completed',transactionid=transaction_id)
         order.status = 'Placed'
         order.complete=True
+        order.save()
+        return JsonResponse({'status': 'Your order has been Placed Successfully'})
+    
+
+@csrf_exempt
+def paypal(request):
+    if request.method == 'POST':        
+        user = request.user
+        order= Order.objects.get(customer = user,complete=False)
+        items = order.orderitem_set.all()
+        for item in items :
+            ordered = item.quantity
+            prestocks = item.product.stocks
+            poststocks = prestocks - ordered
+            productid = item.product.id
+            Product.objects.filter(id = productid).update(stocks = poststocks)
+        total_amount = order.get_cart_total
+        transactionid = order.id
+        Pay.objects.get_or_create(order = order,method = 'Paypal',amount = total_amount,status = 'Completed', transactionid = transactionid)
+        order.status = 'Placed'
         order.save()
         return JsonResponse({'status': 'Your order has been Placed Successfully'})
 

@@ -30,6 +30,8 @@ urlpatterns = [
    path('editprofile/', views.editprofile, name='editprofile'),
    path('razorpay/',views.razorpay,name='razorpay'),
    path('payrazor/',views.payrazor,name='payrazor'),
+   path('paypal/',views.paypal,name='paypal'),
+   
    
    
    

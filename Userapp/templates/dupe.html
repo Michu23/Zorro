@@ -181,6 +181,56 @@
     .render("#paypal-button-container");
 </script>
 
+<script data-namespace="paypal_sdk" src="https://www.paypal.com/sdk/js?client-id=AVn8MVh5G2abs9bvuq3gr7L_wojUYyv4anPw7O5cJVzhItv_WF8cUlom3yiVZtRpJRDuw6UTqzIUV1Lz&currency=USD"></script>
+<script>
+    var total_amount = parseFloat('{{order.get_cart_total}}')
+    var inr_total = total_amount/75
+    paypal_sdk.Buttons({
+
+      // Sets up the transaction when a payment button is clicked
+      createOrder: function(data, actions) {
+        return actions.order.create({
+          purchase_units: [{
+            amount: {
+              value: inr_total.toFixed(2) // Can reference variables or functions. Example: `value: document.getElementById('...').value`
+            }
+          }]
+        });
+      },
+
+      // Finalize the transaction after payer approval
+      onApprove: function(data, actions) {
+        return actions.order.capture().then(function(orderData) {
+          // Successful capture! For dev/demo purposes:
+              
+              var transaction = orderData.purchase_units[0].payments.captures[0];
+              
+
+          // When ready to go live, remove the alert and show a success message within this page. For example:
+          // var element = document.getElementById('paypal-button-container');
+          // element.innerHTML = '';
+          // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+          // Or go to another URL:  actions.redirect('thank_you.html');
+             data = {
+                'order_id': orderData.id,
+            }
+            $.ajax({
+                
+                method :"POST",
+                url: "/order_by_paypal",
+                data: data,
+                success: function (responsec) {
+                    alert("Success");
+                    window.location.href = '/main_orders'
+                    
+                }
+            });  
+        });
+      }
+    }).render('#paypal-button-container');
+
+  </script>
+
 <script>
    $(document).ready(function(){
 

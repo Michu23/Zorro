@@ -455,12 +455,31 @@
             // Finalize the transaction
             onApprove: function (data, actions) {
                 return actions.order.capture().then(function (orderData) {
-                    console.log(
-                        "Capture result",
-                        orderData,
-                        JSON.stringify(orderData, null, 2)
-                    );
-                    order_place();
+
+
+                    $.ajax({
+
+                        method: "POST",
+                        url: "{% url 'paypal' %}",
+                        data: data,
+                        success: function (responsec) {
+
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'Your order has been placed',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            location = '{% url "UserHome" %}';
+
+
+
+
+                        }
+                    });
+
+
                 });
             },
         })
