@@ -64,6 +64,22 @@
                                             <th><strong>Total</strong>: ${{order.get_cart_total}}</th>
                                             <th><a href=""><button class="btn btn-dark">{{order.status}}</button></a>
                                             </th>
+                                            {% if order.status == "Placed" %}
+                                            <th>
+                                                <a href="{% url 'cancelorder' order.id %}"><button
+                                                        class="btn btn-danger" id="btn">Cancel</button></a>
+                                            </th>
+                                            {% else %}
+                                            {% endif %}
+
+                                            {% if order.status == "Shipped" %}
+                                            <th>
+                                                <a href="{% url 'returnorder' order.id %}"><button
+                                                        class="btn btn-danger" id="btn">Return</button></a>
+                                            </th>
+                                            {% else %}
+                                            {% endif %}
+
 
 
                                         </tr>
@@ -116,13 +132,7 @@
                                                             <a href="#" class="dropdown-item">Another action</a>
                                                             <a href="#" class="dropdown-item">Something else here</a>
                                                         </div> -->
-                                                        {% if order.status == 'Pending' %}
-                                                        <a href="{% url 'cancelorder' item.id %}"><button
-                                                                class="btn btn-dark" id="btn">Cancel</button></a>
-                                                        {% else %}
-                                                        <a href="{% url 'returnorder' item.id %}"><button
-                                                                class="btn btn-dark">Return</button></a>
-                                                        {% endif %}
+
                                                     </div>
                                                 </div>
                                             </td>
@@ -156,6 +166,7 @@
                                             </div>
                                         </td>
                                     </tr> -->
+
                                     </tbody>
                                 </table>
                             </div>
@@ -171,7 +182,6 @@
                 <div class="card-body" style="padding: 0;">
                     <div class="d-flex gap-4 align-items-center" data-bs-toggle="collapse" aria-expanded="false"
                         data-bs-target="#myOrders26598" role="button">
-
                     </div>
                     <div class="collapse show" id="myOrders26598">
 
@@ -179,6 +189,7 @@
                 </div>
                 {% endfor %}
             </div>
+
 
             <!-- <div class="card mb-4">
                 <div class="card-body">
@@ -358,12 +369,14 @@
 </div>
 <!-- ./ content -->
 <script>
+
     function myFunction() {
         document.getElementById("btn").onclick = function () {
             //disable
             document.getElementById("btn").innerText = "Requested Cancellation"
             document.getElementById("btn").style.backgroundColor = 'Red';
             this.disabled = true;
+
         }
     }
 </script>

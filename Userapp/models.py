@@ -38,13 +38,12 @@ class Address(models.Model):
 PAYMENT_STATUS = (('Pending','Pending'),('Paid','Paid'))
 STATUS = (
     ('New','New'),
-    ('Pending','Pending'),
-    ('Shipped','Shipped'),
-    ('RequestedCancellation','RequestedCancellation'),
+    ('Placed','Placed'),
     ('Cancelled','Cancelled'),
+    ('Shipped','Shipped'),
     ('Delivered','Delivered'),
-    ('RequestedReturn','RequestedReturn'),
     ('Return','Return'),
+    ('RequestedReturn','RequestedReturn')
     )
 
 
@@ -53,7 +52,6 @@ class Order(models.Model):
 	address = models.ForeignKey(Address,on_delete=models.SET_NULL, null=True)
 	date_ordered = models.DateTimeField(auto_now_add=True)
 	complete = models.BooleanField(default=False)
-	transaction_id = models.CharField(max_length=100, null=True)
 	status = models.CharField(max_length = 200,choices = STATUS, default = 'New', null=True)
 
 	def __str__(self):

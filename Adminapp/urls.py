@@ -20,4 +20,7 @@ urlpatterns = [
    path('addproduct/',views.addproduct,name='AddProduct'),
    path('blockuser/<str:pk>',views.blockuser,name='blockuser'),
    
+   path('acceptorder/<str:id>',views.acceptorder,name='acceptorder'),
+   path('cancelorder/<str:id>',views.cancelorder,name='cancelorder'),
+   
 ]

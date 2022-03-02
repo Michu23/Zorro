@@ -149,6 +149,29 @@ def addproduct(request):
     else:
         return render(request,'addproduct.html',{'form':form})
     return render(request,'addproduct.html')
+
+def acceptorder(request, id):
+    order = Order.objects.get(id = id)
+    items = OrderItem.objects.filter(order = order)
+    order.status = 'Shipped'
+    order.save()
+    return redirect('AdminOrders')
+
+
+def cancelorder(request, id):
+    order = Order.objects.get(id = id)
+    items = OrderItem.objects.filter(order = order)
+    order.status = 'Cancelled'
+    for item in items :
+        ordered = item.quantity
+        stock = item.quantity
+        newstock = stock + ordered
+        productid = item.product.id
+        Product.objects.filter(id = productid).update(stocks = newstock)
+    order.save()
+    return redirect('AdminOrders')
+
+
     
 
 

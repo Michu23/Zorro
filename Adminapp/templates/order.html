@@ -9,8 +9,8 @@
         <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
-                    <a href="#">
-                        <i class="bi bi-globe2 small me-2"></i> Dashboard
+                    <a href="#" class="text-dark">
+                        <i class="bi bi-globe2 small me-2 text-dark"></i> Dashboard
                     </a>
                 </li>
                 <li class="breadcrumb-item active" aria-current="page">Orders</li>
@@ -53,13 +53,15 @@
                     </form>
                 </div>
                 <div class="dropdown ms-auto">
-                    <a href="#" data-bs-toggle="dropdown" class="btn btn-primary dropdown-toggle" aria-haspopup="true"
-                        aria-expanded="false">Actions</a>
-                    <div class="dropdown-menu dropdown-menu-end">
+
+                    <a href="#" class="btn btn-dark " aria-haspopup="true" aria-expanded="false">Search</a>
+                    <!-- <a href="#" data-bs-toggle="dropdown" class="btn btn-dark dropdown-toggle" aria-haspopup="true"
+                        aria-expanded="false">Search</a> -->
+                    <!-- <div class="dropdown-menu dropdown-menu-end">
                         <a href="#" class="dropdown-item">Action</a>
                         <a href="#" class="dropdown-item">Another action</a>
                         <a href="#" class="dropdown-item">Something else here</a>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -78,7 +80,6 @@
                     <th>Date</th>
                     <th>Total</th>
                     <th>Status</th>
-                    <th class="text-end">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -88,27 +89,45 @@
                         <input class="form-check-input" type="checkbox">
                     </td>
                     <td>
-                        <a href="#">{{order.id}}</a>
+                        <a href="{% url 'AdminOrderDetail' order.id %}">{{order.id}}</a>
                     </td>
                     <td>{{order.customer}}</td>
                     <td>{{order.date_ordered}}</td>
-                    <td>${{order.get_cart_total}}</td>
+                    <td> ₹{{order.get_cart_total}}</td>
                     <td>
-                        <span class="badge bg-primary">{{order.status}}</span>
+                        {% if order.status == "Placed" %}
+                        <span class="badge bg-info p-2">{{order.status}}</span>
+                        {% elif order.status == "Cancelled" %}
+                        <span class="badge bg-danger p-2">{{order.status}}</span>
+                        {% elif order.status == "Shipped"%}
+                        <span class="badge bg-success p-2">{{order.status}}</span>
+                        {% else %}
+                        {% endif %}
                     </td>
-                    <td class="text-end">
-                        <div class="d-flex">
-                            <div class="dropdown ms-auto">
-                                <a href="#" data-bs-toggle="dropdown" class="btn btn-floating" aria-haspopup="true"
-                                    aria-expanded="false">
-                                    <i class="bi bi-three-dots"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a href="{% url 'AdminOrderDetail' order.id %}" class="dropdown-item">Show</a>
-                                    <a href="#" class="dropdown-item">Edit</a>
-                                    <a href="#" class="dropdown-item">Delete</a>
+                    <td class="">
+                        <div class="d-flex justify-content-between">
+                            <div class="">
+                                {% if order.status == "Placed" %}
+                                <a href="{% url 'acceptorder' order.id %}"><button
+                                        class="btn btn-outline-success">Accept</button></a>
+                                {% else %}
+                                <a href=""><button class="btn btn-success opacity-0">Accept</button></a>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <div>
+                                    <a href="{% url 'cancelorder' order.id %}"><button
+                                            class="btn btn-outline-danger">Cancel</button></a>
                                 </div>
                             </div>
+                            <div>
+                                <div>
+                                    <a href="{% url 'AdminOrderDetail' order.id %}"><button
+                                            class="btn btn-outline-dark">Details</button></a>
+                                </div>
+                            </div>
+
+
                         </div>
                     </td>
                 </tr>
@@ -122,7 +141,7 @@
                 </td>
                 <td>Mathilde Tumilson</td>
                 <td>May 15, 2021</td>
-                <td>$650,50</td>
+                <td> ₹650,50</td>
                 <td>
                     <span class="badge bg-dark">Shipped</span>
                 </td>
@@ -151,7 +170,7 @@
                     </td>
                     <td>Audrye Heaford</td>
                     <td>Apr 24, 2021</td>
-                    <td>$100,00</td>
+                    <td> ₹100,00</td>
                     <td>
                         <span class="badge bg-success">Completed</span>
                     </td>
@@ -180,7 +199,7 @@
                     </td>
                     <td>Brantley Mell</td>
                     <td>Apr 10, 2021</td>
-                    <td>$19</td>
+                    <td> ₹19</td>
                     <td>
                         <span class="badge bg-warning">Refunded</span>
                     </td>
@@ -209,7 +228,7 @@
                     </td>
                     <td>Dominique Enriques</td>
                     <td>March 5, 2021</td>
-                    <td>$150,00</td>
+                    <td> ₹150,00</td>
                     <td>
                         <span class="badge bg-danger">Cancelled</span>
                     </td>
@@ -238,7 +257,7 @@
                     </td>
                     <td>Cortie Gemson</td>
                     <td>May 23, 2021</td>
-                    <td>$239,00</td>
+                    <td> ₹239,00</td>
                     <td>
                         <span class="badge bg-primary">Processing</span>
                     </td>
@@ -267,7 +286,7 @@
                     </td>
                     <td>Mathilde Tumilson</td>
                     <td>May 15, 2021</td>
-                    <td>$650,50</td>
+                    <td> ₹650,50</td>
                     <td>
                         <span class="badge bg-dark">Shipped</span>
                     </td>
@@ -296,7 +315,7 @@
                     </td>
                     <td>Audrye Heaford</td>
                     <td>Apr 24, 2021</td>
-                    <td>$100,00</td>
+                    <td> ₹100,00</td>
                     <td>
                         <span class="badge bg-success">Completed</span>
                     </td>
@@ -325,7 +344,7 @@
                     </td>
                     <td>Brantley Mell</td>
                     <td>Apr 10, 2021</td>
-                    <td>$19</td>
+                    <td> ₹19</td>
                     <td>
                         <span class="badge bg-warning">Refunded</span>
                     </td>
@@ -354,7 +373,7 @@
                     </td>
                     <td>Dominique Enriques</td>
                     <td>March 5, 2021</td>
-                    <td>$150,00</td>
+                    <td> ₹150,00</td>
                     <td>
                         <span class="badge bg-danger">Cancelled</span>
                     </td>

@@ -314,12 +314,7 @@ def profiledash(request):
 #     return render(request, "address.html",context)
     # return render (request, "address.html",context)
 
-def profileorder(request):
-    user = request.user
-    orders =Order.objects.filter(customer=user,complete=True)
-    items=OrderItem.objects.all()
-    context={'orders':orders,'items':items}
-    return render (request, "profileorders.html",context)
+
 
 
 def wishlist(request):
@@ -445,7 +440,7 @@ def proceed(request):
             Product.objects.filter(id = productid).update(stocks = poststocks)
         total_amount=order.get_cart_total
         print(total_amount)
-        Order.objects.filter(customer=user,complete=False).update(complete=True, address=address)
+        Order.objects.filter(customer=user,complete=False).update(complete=True, address=address,status = 'Placed')
         transaction_id = order.id
         Pay.objects.get_or_create(order = order,method = 'COD',amount = total_amount,status = 'Completed',transactionid=transaction_id)
         response = {'':''}
@@ -505,7 +500,7 @@ def razorpay(request):
         total_amount = order.get_cart_total
         transaction_id = request.POST.get('order_id')
         Pay.objects.get_or_create(order = order,method = 'RazorPay',amount = total_amount,status = 'Completed',transactionid=transaction_id)
-        order.status = 'Pending'
+        order.status = 'Placed'
         order.complete=True
         order.save()
         return JsonResponse({'status': 'Your order has been Placed Successfully'})
@@ -516,9 +511,9 @@ def cancelorder(request, id):
     items = OrderItem.objects.filter(order = order)
     order.status = 'Cancelled'
     for item in items :
-        ordereditems = item.quantity
-        cur_stock = item.quantity
-        newstock = cur_stock + ordereditems
+        ordered = item.quantity
+        stock = item.quantity
+        newstock = stock + ordered
         productid = item.product.id
         Product.objects.filter(id = productid).update(stocks = newstock)
     order.save()
@@ -528,8 +523,15 @@ def cancelorder(request, id):
 def returnorder(request, id):
     order = Order.objects.get(id = id)
     items = OrderItem.objects.filter(order = order)
-    order.status = 'RequestedCancellation'
+    order.status = 'RequestedReturn'
     order.save()
     return redirect('UserOrders')
+
+def profileorder(request):
+    user = request.user
+    orders =Order.objects.filter(customer=user,complete=True)
+    items=OrderItem.objects.all()
+    context={'orders':orders,'items':items}
+    return render (request, "profileorders.html",context)
 
 
