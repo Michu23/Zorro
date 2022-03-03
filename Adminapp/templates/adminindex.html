@@ -73,7 +73,7 @@
         </div> -->
     </main>
     <div class="row p-2">
-        <div class="col-lg-4 col-md-4 border border-rounded border-2 border-dark">
+        <div class="col-lg-3 col-md-3  border border-rounded border-1 border-primary">
             <div class="card h-100">
                 <div class="card-body">
                     <div class="d-flex mb-3">
@@ -91,9 +91,9 @@
                             </div>
                         </div>
                     </div>
-                    <h4 class="mb-3">Orders</h4>
+                    <h4 class="mb-3">Total Revenue</h4>
                     <div class="d-flex mb-3">
-                        <div class="display-7">{{total_revenue}}</div>
+                        <div class="display-7">{{total_revenue.amount__sum}}</div>
                         <div class="ms-auto" id="total-orders"></div>
                     </div>
                     <div class="text-success">
@@ -103,7 +103,7 @@
             </div>
         </div>
 
-        <div class="col-lg-4 col-md-4  border border-rounded border-2 border-dark">
+        <div class="col-lg-3 col-md-3  border border-rounded border-1 border-primary">
             <div class="card h-100">
                 <div class="card-body">
                     <div class="d-flex mb-3">
@@ -133,7 +133,7 @@
             </div>
         </div>
 
-        <div class="col-lg-4 col-md-4  border border-rounded border-2 border-dark">
+        <div class="col-lg-3 col-md-3  border border-rounded border-1 border-primary">
             <div class="card h-100">
                 <div class="card-body">
                     <div class="d-flex mb-3">
@@ -158,6 +158,36 @@
                     </div>
                     <div class="text-success">
                         <!-- Over last month 1.4% <i class="small bi bi-arrow-up"></i> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-3  border border-rounded border-1 border-primary">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex mb-3">
+                        <div class="display-7">
+                            <i class="bi bi-credit-card-2-front"></i>
+                        </div>
+                        <div class="dropdown ms-auto">
+                            <a href="#" data-bs-toggle="dropdown" class="btn btn-sm" aria-haspopup="true"
+                                aria-expanded="false">
+                                <i class="bi bi-three-dots"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a href="#" class="dropdown-item">View Detail</a>
+                                <a href="#" class="dropdown-item">Download</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h4 class="mb-3">Orders</h4>
+                    <div class="d-flex mb-3">
+                        <div class="display-7">{{orders}}</div>
+                        <div class="ms-auto" id="total-sales"></div>
+                    </div>
+                    <div class="text-danger">
+                        <!-- Over last month 2.4% <i class="small bi bi-arrow-down"></i> -->
                     </div>
                 </div>
             </div>

@@ -96,7 +96,7 @@ status_list = (
     )
 
 class Pay(models.Model):
-    amount = models.CharField(max_length=30,default=0)
+    amount = models.FloatField()
     method = models.CharField(max_length=30,)
     status = models.CharField(max_length=30, choices=status_list, default='None',)
     order =  models.OneToOneField(Order, on_delete=models.CASCADE)  

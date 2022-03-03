@@ -59,7 +59,14 @@ def adminhome(request):
     customers = Users.objects.all().count()
     orders = Order.objects.all().count()
     product_count = Product.objects.all().count()
-    total_revenue = Pay.objects.all().annotate(Sum('amount'))
+    total_revenue = Pay.objects.all().aggregate(Sum('amount'))
+    
+    print(total_revenue)
+    print(product_count)
+    print(orders)
+    print(customers)
+    
+    
     
     context = {'products':products,'order_status': order_status, 'payment_type': payment_type, 
      'customers':customers,'orders': orders, 'product_count':product_count,'dashboard':'dashboard','total_revenue':total_revenue}
