@@ -2,9 +2,209 @@
 
 
 {% block content %}
+<link rel="stylesheet" type='text/css'
+    href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.14/semantic.min.css">
+<!--Chart js-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"
+    integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css"
+    integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
 <!-- content -->
-<div class="content ">
+
+<div class="dash-body container " width="100" style="height: 100rem;">
+
+
+    <main class="main users chart-page" id="skip-target">
+        <!-- <div class="container">
+            <h2 class="main-title">Dashboard</h2>
+            <div class="row stat-cards">
+                <div class="col-md-6 col-xl-3">
+                    <article class="stat-cards-item">
+                        <div class="stat-cards-icon primary">
+                            <i data-feather="bar-chart-2" aria-hidden="true"></i>
+                        </div>
+                        <div class="stat-cards-info">
+                            <p class="stat-cards-info__num">{{customers}}</p>
+                            <p class="stat-cards-info__title">Total Customers</p>
+
+                        </div>
+                    </article>
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <article class="stat-cards-item">
+                        <div class="stat-cards-icon warning">
+                            <i data-feather="file" aria-hidden="true"></i>
+                        </div>
+                        <div class="stat-cards-info">
+                            <p class="stat-cards-info__num">{{orders}}</p>
+                            <p class="stat-cards-info__title">Total Orders</p>
+
+                        </div>
+                    </article>
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <article class="stat-cards-item">
+                        <div class="stat-cards-icon purple">
+                            <i data-feather="file" aria-hidden="true"></i>
+                        </div>
+                        <div class="stat-cards-info">
+                            <p class="stat-cards-info__num">{{product_count}}</p>
+                            <p class="stat-cards-info__title">Total Products</p>
+
+                        </div>
+                    </article>
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <article class="stat-cards-item">
+                        <div class="stat-cards-icon success">
+                            <i data-feather="feather" aria-hidden="true"></i>
+                        </div>
+                        <div class="stat-cards-info">
+                            <p class="stat-cards-info_num">{{total_revenue.total_amount_sum}}</p>
+                            <p class="stat-cards-info__title">Total Income</p>
+
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div> -->
+    </main>
+    <div class="row p-2">
+        <div class="col-lg-4 col-md-4 border border-rounded border-2 border-dark">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex mb-3">
+                        <div class="display-7">
+                            <i class="bi bi-basket"></i>
+                        </div>
+                        <div class="dropdown ms-auto">
+                            <a href="#" data-bs-toggle="dropdown" class="btn btn-sm" aria-haspopup="true"
+                                aria-expanded="false">
+                                <i class="bi bi-three-dots"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a href="#" class="dropdown-item">View Detail</a>
+                                <a href="#" class="dropdown-item">Download</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h4 class="mb-3">Orders</h4>
+                    <div class="d-flex mb-3">
+                        <div class="display-7">{{total_revenue}}</div>
+                        <div class="ms-auto" id="total-orders"></div>
+                    </div>
+                    <div class="text-success">
+                        <!-- Over last month 1.4% <i class="small bi bi-arrow-up"></i> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-4  border border-rounded border-2 border-dark">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex mb-3">
+                        <div class="display-7">
+                            <i class="bi bi-credit-card-2-front"></i>
+                        </div>
+                        <div class="dropdown ms-auto">
+                            <a href="#" data-bs-toggle="dropdown" class="btn btn-sm" aria-haspopup="true"
+                                aria-expanded="false">
+                                <i class="bi bi-three-dots"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a href="#" class="dropdown-item">View Detail</a>
+                                <a href="#" class="dropdown-item">Download</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h4 class="mb-3">Products</h4>
+                    <div class="d-flex mb-3">
+                        <div class="display-7">{{product_count}}</div>
+                        <div class="ms-auto" id="total-sales"></div>
+                    </div>
+                    <div class="text-danger">
+                        <!-- Over last month 2.4% <i class="small bi bi-arrow-down"></i> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-4  border border-rounded border-2 border-dark">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex mb-3">
+                        <div class="display-7">
+                            <i class="bi bi-basket"></i>
+                        </div>
+                        <div class="dropdown ms-auto">
+                            <a href="#" data-bs-toggle="dropdown" class="btn btn-sm" aria-haspopup="true"
+                                aria-expanded="false">
+                                <i class="bi bi-three-dots"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a href="#" class="dropdown-item">View Detail</a>
+                                <a href="#" class="dropdown-item">Download</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h4 class="mb-3">Customers</h4>
+                    <div class="d-flex mb-3">
+                        <div class="display-7">{{customers}}</div>
+                        <div class="ms-auto" id="total-orders"></div>
+                    </div>
+                    <div class="text-success">
+                        <!-- Over last month 1.4% <i class="small bi bi-arrow-up"></i> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row p-2">
+
+            <div class="col-md-6 text-center">
+                <h2 class="main-title">Payment Methods</h2>
+                <canvas id="paymentchart" width="400" height="400">
+
+                </canvas>
+
+            </div>
+            <div class="col-md-6 text-center">
+                <h2 class="main-title">Order Status</h2>
+                <canvas id="orderchart" width="400" height="400">
+
+                </canvas>
+
+            </div>
+            <div class="col-md-6 text-center">
+                <h2 class="main-title">Products Available</h2>
+                <canvas id="productchart" width="400" height="400">
+
+                </canvas>
+
+            </div>
+
+
+
+            <div class="col-md-6 text-center">
+                <h2 class="main-title">Category Wise Orders</h2>
+                <canvas id="orderbycategory" width="400" height="400">
+
+                </canvas>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- <div class="content ">
 
     <div class="row row-cols-1 row-cols-md-3 g-4">
         <div class="col-lg-4 col-md-12">
@@ -508,7 +708,142 @@
         </div>
     </div>
 
-</div> -->
-<!-- ./ content -->
+</div>  -->
+    <!-- ./ content -->
 
-{% endblock %}
+    <script>
+
+        $(document).ready(function () {
+            const ctx = document.getElementById('productchart').getContext('2d');
+
+
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+
+                    labels: [{% for product in products %} '{{product.product_name}}', {% endfor %}],
+            datasets: [{
+                label: '# numbers',
+                data: [{% for product in products %} '{{product.quantity_available}}', {% endfor %}],
+            backgroundColor: [
+            'rgba(255, 99, 132, 0.8)',
+            'rgba(54, 162, 235, 0.8)',
+            'rgba(255, 206, 86, 0.8)',
+            'rgba(75, 192, 192, 0.8)',
+            'rgba(153, 102, 255, 0.8)',
+            'rgba(255, 159, 64, 0.8)'
+        ],
+            borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+        ],
+            borderWidth: 1
+            }]
+        },
+            options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    
+    });
+
+
+
+    </script>
+
+
+    <script>
+        var xValues = ['placed', 'shipped', 'out of delivery', 'completed', 'cancelled', 'returned'];
+        var yValues = {{ order_status | safe}};
+        var barColors = [
+            'rgba(255, 159, 64, 0.8)',
+            'rgba(255, 99, 132, 0.8)',
+            '#77DD77',
+            'rgba(54, 162, 235, 0.8)',
+
+            'rgba(255, 206, 86, 0.8)',
+            'rgba(75, 192, 192, 0.8)',
+            'rgba(153, 102, 255, 0.8)',
+
+
+        ];
+
+        new Chart("orderchart", {
+            type: "pie",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    backgroundColor: barColors,
+                    data: yValues
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: "Order Status Chart"
+                }
+            }
+        });
+    </script>
+
+    <script>
+        var xValues = ["Cash On Delevery", "PayPal", "RazorPay"];
+        var yValues = {{ payment_type }};
+        var barColors = [
+            'rgba(255, 99, 132, 0.8)',
+            'rgba(54, 162, 235, 0.8)',
+            'rgba(255, 206, 86, 0.8)',
+        ];
+
+        new Chart("paymentchart", {
+            type: "doughnut",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    backgroundColor: barColors,
+                    data: yValues
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: "Payment Modes Chart"
+                }
+            }
+        });
+    </script>
+
+
+    <script>
+        var xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
+        var yValues = [55, 49, 44, 24, 15];
+        var barColors = ["red", "green", "blue", "orange", "brown"];
+
+        new Chart("orderbycategory", {
+            type: "bar",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    backgroundColor: barColors,
+                    data: yValues
+                }]
+            },
+            options: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: "World Wine Production 2018"
+                }
+            }
+        });
+    </script>
+
+    {% endblock %}

@@ -9,7 +9,7 @@
         {% csrf_token %}
         <div class="mb-3">
             <label for="exampleInputEmail1" username="username" class="form-label">Enter mobile no</label>
-            <input type="number" class="form-control" name="number" required />
+            <input type="number" class="form-control" value="{{phone}}" name="number" required disabled />
         </div>
         <div class="mb-3 p-0 form-check">
             {% for error in messages %}

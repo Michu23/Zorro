@@ -8,7 +8,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login,logout
 from Userapp.models import Users
 from django.contrib import messages
-from django.db.models import Count
+from django.db.models import Count,Sum
+
 
 
 
@@ -34,9 +35,36 @@ def adminlogin(request):
     return render (request,"adminlogin.html")
 
 @never_cache
-@login_required(login_url='adminlogin')
 def adminhome(request):
-    return render(request, "adminindex.html",{'dashboard':'dashboard'})
+    
+    products = Product.objects.all()
+    
+    placed = Order.objects.filter(status= 'Placed').count()
+    shipped = Order.objects.filter(status= 'Shipped').count()
+    completed = Order.objects.filter(status= 'Completed').count()
+    cancelled = Order.objects.filter(status= 'Cancelled').count()
+    out_of_delivery = Order.objects.filter(status= 'Out Of Delevery').count()
+    returned = Order.objects.filter(status= 'Return').count()
+    order_status = [placed,shipped,out_of_delivery,completed,cancelled,returned]
+
+    cod = Pay.objects.filter(method = 'COD').count()
+    paypal = Pay.objects.filter(method = 'Paypal').count()
+    razorpay = Pay.objects.filter(method = 'RazorPay').count()
+    payment_type = [cod,paypal,razorpay]
+    
+    orderitems = Order.objects.filter(complete= True)
+    print(orderitems)
+    
+
+    customers = Users.objects.all().count()
+    orders = Order.objects.all().count()
+    product_count = Product.objects.all().count()
+    total_revenue = Pay.objects.all().annotate(Sum('amount'))
+    
+    context = {'products':products,'order_status': order_status, 'payment_type': payment_type, 
+     'customers':customers,'orders': orders, 'product_count':product_count,'dashboard':'dashboard','total_revenue':total_revenue}
+    
+    return render(request, "adminindex.html",context)
 
 @never_cache
 def adminlogout(request):

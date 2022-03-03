@@ -12,6 +12,7 @@ from django.db.models import Count
 from django.http import JsonResponse
 from decouple import config
 from django.views.decorators.csrf import csrf_exempt
+from .utils import *
 
 # Create your views here.
 @never_cache
@@ -43,6 +44,7 @@ def userlogin(request):
 @never_cache
 def userreg(request):
     global regform
+    Users.objects.filter(is_active=False).delete()
     form= MyUserFormUser()
     if request.method == 'POST':
         form = MyUserFormUser(request.POST)
@@ -50,6 +52,7 @@ def userreg(request):
         print(uname)
         umail=request.POST.get("email")
         uphone=request.POST.get("phone")
+        request.session['phone'] = uphone
         un="Not taken"
         um="Not taken"
         up="Not taken"
@@ -60,7 +63,7 @@ def userreg(request):
             messages.error(request,"Username already taken")
         except:
             pass
-        
+    
         try:
             um = Users.object.get(email=umail)
             messages.error(request,"Email already taken")
@@ -73,11 +76,14 @@ def userreg(request):
         except:
             pass
         
+        
+        
         if un == "Not taken":
             if(len(str(uphone))<=10):
                 if form.is_valid():
                     regform=form.save(commit=False)
-                    print(regform)
+                    regform.is_active=False
+                    regform.save()
                     return redirect ("SignupOtp")
                 else:
                     messages.error(request,"Enter the details properly!")
@@ -92,10 +98,13 @@ def userreg(request):
 
 @never_cache
 def signupotp(request):
-    global number
+    
+    phone = request.session.get('phone')
+    print("/////////////////////////////////////")
+    print(phone)
     if request.method == 'POST':
-        phone = request.POST.get('number')
         number = '+91' + str(phone)
+        request.session['phone'] = number
         account_sid = config('account_sid')
         auth_token = config('auth_token')
         client = Client(account_sid, auth_token)
@@ -104,15 +113,14 @@ def signupotp(request):
                             .verifications \
                             .create(to=number, channel='sms')
         return redirect ('SignupOtpVerify')
-    return render(request,'otploginsign.html')
-
-
+    return render(request,'otploginsign.html',{'phone':phone})
 
 
 
 
 @never_cache
 def signupotpverify(request):
+    number = request.session.get('phone')
     if request.method == 'POST':
         otp = request.POST.get('otp')
         account_sid = config('account_sid')
@@ -293,8 +301,9 @@ def usercart(request):
             context = {'items':items,'order':order}
             return render (request, "cart.html",context)
     else:
-        items = []
-        order=  []
+        cookieData = cookieCart(request)
+        order = cookieData['order']
+        items = cookieData['items']
     context = {'items':items,'order':order}
     return render (request, "cart.html",context)
 

@@ -221,4 +221,30 @@
     });
   });
 </script>
+<script>
+  function guest(productId, action) {
+    // var productId = $(this).val()
+    //   var action = $(this).data("action")
+    console.log('not logged in')
+    if (action == 'increment') {
+      if (cart[productId] == undefined) {
+        cart[productId] = { 'quantity': 1 }
+      } else {
+        cart[productId]['quantity'] += 1
+      }
+    }
+
+    if (action == 'decrement') {
+      cart[productId]['quantity'] -= 1
+
+      if (cart[productId]['quantity'] <= 0) {
+        console.log('Item should be deleted')
+        delete cart[productId];
+      }
+    }
+    console.log('CART:', cart)
+    document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
+    location.reload()
+  }
+</script>
 {% endblock %}
