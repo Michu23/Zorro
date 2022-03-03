@@ -12,23 +12,7 @@
                 <div class="d-md-flex gap-4 align-items-center">
                     <form class="mb-3 mb-md-0">
                         <div class="row g-3">
-                            <div class="col-md-3">
-                                <select class="form-select">
-                                    <option>Sort by</option>
-                                    <option value="desc">Desc</option>
-                                    <option value="asc">Asc</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <select class="form-select">
-                                    <option value="10">10</option>
-                                    <option value="20">20</option>
-                                    <option value="30">30</option>
-                                    <option value="40">40</option>
-                                    <option value="50">50</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
+                            <div class="col-md-9">
                                 <div class="input-group">
                                     <input type="text" class="form-control" placeholder="Search">
                                     <button class="btn btn-outline-light" type="button">
@@ -36,6 +20,23 @@
                                     </button>
                                 </div>
                             </div>
+                            <!-- <div class="col-md-3">
+                                <select class="form-select">
+                                    <option>Sort by</option>
+                                    <option value="desc">Desc</option>
+                                    <option value="asc">Asc</option>
+                                </select>
+                            </div> -->
+                            <div class="col-md-3">
+                                <!-- <select class="form-select">
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="40">40</option>
+                                    <option value="50">50</option>
+                                </select> -->
+                            </div>
+
                         </div>
                     </form>
                 </div>
@@ -67,7 +68,7 @@
                     <th>Phone</th>
                     <th></th>
                     <th>Status</th>
-                    <th class="text-end">Actions</th>
+                    <th class="text-end">Orders</th>
                 </tr>
             </thead>
             <tbody>
@@ -100,8 +101,8 @@
 
                         {% if user.adminstatus == False %}
                         <div>
-                            <a href="{% url 'blockuser' user.id %}"><button class="block btn btn-outline-danger"
-                                    id="block">Block</button></a>
+                            <a class="block" href="{% url 'blockuser' user.id %}"><button
+                                    class=" btn btn-outline-danger">Block</button></a>
                         </div>
                         {% else %}
                         <div>
@@ -113,7 +114,10 @@
 
 
                     <td class="text-end">
-                        <div class="d-flex">
+                        <div>
+
+                        </div>
+                        <!-- <div class="d-flex">
                             <div class="dropdown ms-auto">
                                 <a href="#" data-bs-toggle="dropdown" class="btn btn-floating" aria-haspopup="true"
                                     aria-expanded="false">
@@ -126,7 +130,7 @@
                                 </div>
                             </div>
                         </div>
-                    </td>
+                    </td> -->
                 </tr>
                 {% endfor %}
                 <!-- <tr>
@@ -497,6 +501,45 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
     crossorigin="anonymous"></script>
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function () {
+        $('.block').click(function (e) {
+            var flag = 0
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "The account will be blocked!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, block it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    flag = 1
+                    Swal.fire(
+                        'Deleted!',
+                        'Your account has been deleted.',
+                        'success',
+
+
+                    )
+                    if (flag == 0) {
+                        e.preventDefault()
+                    }
+                    else {
+                        return true
+                    }
+
+
+                }
+            })
+
+        })
+    })
+</script>
 <script>
     $('.inpute').on('click', function () {
         var val = $(this).val()

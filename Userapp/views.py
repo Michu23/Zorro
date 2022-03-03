@@ -42,6 +42,7 @@ def userlogin(request):
 
 @never_cache
 def userreg(request):
+    global regform
     form= MyUserFormUser()
     if request.method == 'POST':
         form = MyUserFormUser(request.POST)
@@ -75,16 +76,9 @@ def userreg(request):
         if un == "Not taken":
             if(len(str(uphone))<=10):
                 if form.is_valid():
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    user=form.save()
-                    login(request,user)
-                    return redirect("UserHome")
+                    regform=form.save(commit=False)
+                    print(regform)
+                    return redirect ("SignupOtp")
                 else:
                     messages.error(request,"Enter the details properly!")
             else:
@@ -95,6 +89,52 @@ def userreg(request):
         
     context={'form':form}
     return render(request, "reg.html",context)
+
+@never_cache
+def signupotp(request):
+    global number
+    if request.method == 'POST':
+        phone = request.POST.get('number')
+        number = '+91' + str(phone)
+        account_sid = config('account_sid')
+        auth_token = config('auth_token')
+        client = Client(account_sid, auth_token)
+        verification = client.verify \
+                            .services(config('services')) \
+                            .verifications \
+                            .create(to=number, channel='sms')
+        return redirect ('SignupOtpVerify')
+    return render(request,'otploginsign.html')
+
+
+
+
+
+
+@never_cache
+def signupotpverify(request):
+    if request.method == 'POST':
+        otp = request.POST.get('otp')
+        account_sid = config('account_sid')
+        auth_token = config('auth_token')
+        client = Client(account_sid, auth_token)
+        if(len(str(otp))==6):
+            verification_check = client.verify \
+                                .services(config('services')) \
+                                .verification_checks \
+                                .create(to= number, code= str(otp))
+        else:
+            messages.error(request,"Enter a valid OTP!")
+            return render(request, 'otpverifysign.html')
+        if verification_check.status == 'approved':
+            regform.save()
+            login(request,user)
+            return redirect('UserHome')
+        else:
+            messages.error(request,"Invalid OTP")
+            return redirect ("SignupOtp")
+    return render(request,'otpverifysign.html')
+
 
 
 @never_cache

@@ -8,6 +8,7 @@ class Users(AbstractUser):
     phone = models.CharField(max_length=11,null=True)
     adminstatus=models.BooleanField(blank=True,default=False,null=True)
     propic=models.ImageField(upload_to='images',blank=True,null=True)
+    totalorders= models.PositiveIntegerField(null=True,blank=True)
 
 
 AddType = (
@@ -68,6 +69,8 @@ class Order(models.Model):
 		order_items = self.orderitem_set.all()
 		total = sum([item.quantity for item in order_items])
 		return total
+
+	
 		
 
 class OrderItem(models.Model):
