@@ -90,24 +90,15 @@
                     <td>{{user.phone}}</td>
                     <td>{{user.date}}</td>
                     <td>
-                        <!-- <span class="badge bg-success">Active</span> -->
-                        <!-- <div class="containere" id="container{{ user.id }}">
-                            <a href="{% url 'blockuser' user.id %}">
-                                <input class="inpute toggle-input" type="checkbox" value="{{ user.id }}"
-                                    id="toggle-input{{ user.id }}">
-                                <div class="toggle-btn" id="toggle-btn{{ user.id }}"></div>
-                            </a>
-                        </div> -->
+
 
                         {% if user.adminstatus == False %}
                         <div>
-                            <a class="block" href="{% url 'blockuser' user.id %}"><button
-                                    class=" btn btn-outline-danger">Block</button></a>
+                            <button data-id="{{user.id}}" class="block btn btn-outline-danger">Block</button>
                         </div>
                         {% else %}
                         <div>
-                            <a href="{% url 'blockuser' user.id %}"><button
-                                    class="btn btn-outline-success">Unblock</button></a>
+                            <button data-id="{{user.id}}" class="block btn btn-outline-success">Unblock</button>
                         </div>
                         {% endif %}
                     </td>
@@ -506,7 +497,6 @@
 <script>
     $(document).ready(function () {
         $('.block').click(function (e) {
-            var flag = 0
 
             Swal.fire({
                 title: 'Are you sure?',
@@ -517,23 +507,26 @@
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, block it!'
             }).then((result) => {
+
+
                 if (result.isConfirmed) {
-                    flag = 1
-                    Swal.fire(
-                        'Deleted!',
-                        'Your account has been deleted.',
-                        'success',
 
-
-                    )
-                    if (flag == 0) {
-                        e.preventDefault()
-                    }
-                    else {
-                        return true
-                    }
-
-
+                    $.ajax({
+                        type: "GET",
+                        url: "{% url 'blockuser' %}",
+                        data: {
+                            productid: $(this).data('id')
+                        },
+                        success: function (response) {
+                            Swal.fire(
+                                'Deleted!',
+                                'Your account has been deleted.',
+                                'success',
+                            ).then((result) => {
+                                location.reload()
+                            })
+                        }
+                    })
                 }
             })
 

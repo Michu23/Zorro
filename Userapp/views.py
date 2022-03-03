@@ -82,8 +82,6 @@ def userreg(request):
         except:
             pass
         
-        
-        
         if un == "Not taken":
             if(len(str(uphone))<=10):
                 if form.is_valid():

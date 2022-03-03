@@ -55,7 +55,6 @@ def adminhome(request):
     orderitems = Order.objects.filter(complete= True)
     print(orderitems)
     
-
     customers = Users.objects.all().count()
     orders = Order.objects.all().count()
     product_count = Product.objects.all().count()
@@ -65,8 +64,6 @@ def adminhome(request):
     print(product_count)
     print(orders)
     print(customers)
-    
-    
     
     context = {'products':products,'order_status': order_status, 'payment_type': payment_type, 
      'customers':customers,'orders': orders, 'product_count':product_count,'dashboard':'dashboard','total_revenue':total_revenue}
@@ -112,7 +109,8 @@ def deleteproduct(request,pk):
     return redirect("AdminProduct")
     
 @never_cache
-def blockuser(request,pk):
+def blockuser(request):
+    pk=request.GET.get('productid')
     user = Users.objects.get(id=pk)
     if user.adminstatus == False:
         user.adminstatus=True
@@ -203,6 +201,12 @@ def cancelorder(request, id):
         Product.objects.filter(id = productid).update(stocks = newstock)
     order.save()
     return redirect('AdminOrders')
+
+def admincats(request):
+    return render (request, "catogeries.html")
+
+def addcats(request):
+    return render ( request, "catogeries.html")
 
 
     
