@@ -22,17 +22,23 @@ def userlogin(request):
     if request.method == "POST":
         uname = request.POST.get('username')
         password= request.POST.get('password')
+        print(uname)
         try:
-            user = Users.object.get(username=uname)
+            user = Users.objects.get(username=uname)
+            print("//////////same fields")
+            
         except:
             messages.error(request,'User does not exists')
         
         try:
             user= authenticate(request,username=uname,password=password)
+            print("//////////same fields")
+            
+            
             if user.adminstatus == False:
-                if user is not None:
-                    login(request,user)
-                    return redirect ("UserHome")   
+                print("//////////not blocked")
+                login(request,user)
+                return redirect ("UserHome")   
             else:
                 messages.error(request,"You have been banned by the admin. Please call our customer care for more details!")
         except:
@@ -135,7 +141,11 @@ def signupotpverify(request):
             messages.error(request,"Enter a valid OTP!")
             return render(request, 'otpverifysign.html')
         if verification_check.status == 'approved':
+            regform.is_active=True
             regform.save()
+            num=number[3:]
+            print(num)
+            user=Users.objects.get(phone=num)
             login(request,user)
             return redirect('UserHome')
         else:
@@ -225,9 +235,6 @@ def userlogout(request):
 @never_cache
 def userhome(request):
     return render(request, "userindex.html")
-
-
-
 
 
 
@@ -342,6 +349,12 @@ def userprofile(request):
     return render (request, "profile.html")
 
 def profiledash(request):
+    
+    customers = Users.objects.all().count()
+    orders = Order.objects.all().count()
+    product_count = Product.objects.all().count()
+    total_revenue = Pay.objects.all().aggregate(Sum('amount'))
+    
     return render (request, "profiledash.html")
 
 # def addaddress(request):
@@ -555,7 +568,10 @@ def razorpay(request):
 
 @csrf_exempt
 def paypal(request):
+    print("/////////////////////////////////activating paypal")
     if request.method == 'POST':        
+        print("/////////////////////////////////activating paypal")
+        
         user = request.user
         order= Order.objects.get(customer = user,complete=False)
         items = order.orderitem_set.all()

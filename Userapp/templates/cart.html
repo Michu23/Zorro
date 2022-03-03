@@ -74,12 +74,16 @@
                 <td class="cart__price">
                   <span id="totall"> ₹{{i.get_total}}</span>
                 </td>
-
+                <p><span id="stockmsg" class="text-danger"></span></p>
                 <td style="cursor: pointer" class="cart__close">
-                  <button data-id="{{i.product.id}}" class="remove btn btn-danger rounded-circle">X</button>
+                  <button data-id="{{i.product.id}}" class="remove btn btn-dark rounded-circle">X</button>
                 </td>
               </tr>
-              <p><span id="stockmsg" class="text-danger d-none">Out Of Stock</span></p>
+
+
+
+
+
 
               {% endfor %}
             </tbody>
@@ -202,9 +206,12 @@
         console.log("Pro id :" + productId);
 
         if (flag == 1) {
-          $("#" + productId + " #stockmsg").show();
+          //$("#" + productId + " #stockmsg").show();
+          document.getElementById("stockmsg").innerText = "Out of Stock"
         } else {
-          $("#" + productId + " #stockmsg").hide();
+          //$("#" + productId + " #stockmsg").hide();
+          document.getElementById("stockmsg").innerText = ""
+
         }
 
         var total_id = "#" + productId + " #totall";

@@ -2,19 +2,19 @@ const imagebox = document.getElementById("image-box");
 // crop-btn is the id of button that will trigger the event of change original file with cropped file.
 const crop_btn = document.getElementById("crop-btn");
 // id_image is the id of the input tag where we will upload the image
-const input4 = document.getElementById("id_image1");
+const input1 = document.getElementById("id_image1");
 var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
 
-var filePath = input4.value;
+var filePath = input1.value;
 
 // When user uploads the image this event will get triggered
-input4.addEventListener("change", () => {
-  if (!allowedExtensions.exec(input4.value)) {
+input1.addEventListener("change", () => {
+  if (!allowedExtensions.exec(input1.value)) {
     alert("Invalid file type");
-    input4.value = "";
+    input1.value = "";
   } else {
     // Getting image file object from the input variable
-    const img_data = input4.files[0];
+    const img_data = input1.files[0];
     // createObjectURL() static method creates a DOMString containing a URL representing the object given in the parameter.
     // The new object URL represents the specified File object or Blob object.
     const url = URL.createObjectURL(img_data);
@@ -82,13 +82,13 @@ input4.addEventListener("change", () => {
 });
 
 // id_image is the id of the input tag where we will upload the image
-const input = document.getElementById("id_image2");
+const input2 = document.getElementById("id_image2");
 var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
 
 var filePath = input.value;
 
 // When user uploads the image this event will get triggered
-input.addEventListener("change", () => {
+input2.addEventListener("change", () => {
   if (!allowedExtensions.exec(input.value)) {
     alert("Invalid file type");
     input.value = "";
