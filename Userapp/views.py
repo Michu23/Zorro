@@ -102,7 +102,6 @@ def userreg(request):
 
 @never_cache
 def signupotp(request):
-    
     phone = request.session.get('phone')
     print("/////////////////////////////////////")
     print(phone)
@@ -120,13 +119,11 @@ def signupotp(request):
     return render(request,'otploginsign.html',{'phone':phone})
 
 
-
-
 @never_cache
 def signupotpverify(request):
     number = request.session.get('phone')
     if request.method == 'POST':
-        otp = request.POST.get('otp')
+        otp = request.POST.pop('otp')
         account_sid = config('account_sid')
         auth_token = config('auth_token')
         client = Client(account_sid, auth_token)
