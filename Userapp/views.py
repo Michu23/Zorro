@@ -280,13 +280,9 @@ def usercheckout(request):
 def remove(request):
     user = request.user
     productId=request.GET.get("productid")
-    print(productId)
     order = Order.objects.get(customer=user,complete=False)
-    print(order)
     product = Product.objects.get(id=productId)
-    print(product)
     order_item = OrderItem.objects.get(product=product, order=order)
-    print(order_item)
     order_item.delete()
     response={'id':productId}
     return JsonResponse(response)
@@ -524,6 +520,7 @@ def paypal(request):
         transactionid = order.id
         Pay.objects.get_or_create(order = order,method = 'Paypal',amount = total_amount,status = 'Completed', transactionid = transactionid)
         order.status = 'Placed'
+        order.complete=True
         order.save()
         return JsonResponse({'status': 'Your order has been Placed Successfully'})
 

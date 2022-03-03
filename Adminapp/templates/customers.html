@@ -65,7 +65,7 @@
                     <th>Username</th>
                     <th>Email</th>
                     <th>Phone</th>
-                    <th>Phone</th>
+                    <th></th>
                     <th>Status</th>
                     <th class="text-end">Actions</th>
                 </tr>
@@ -90,14 +90,28 @@
                     <td>{{user.date}}</td>
                     <td>
                         <!-- <span class="badge bg-success">Active</span> -->
-                        <div class="containere" id="container{{ user.id }}">
+                        <!-- <div class="containere" id="container{{ user.id }}">
                             <a href="{% url 'blockuser' user.id %}">
                                 <input class="inpute toggle-input" type="checkbox" value="{{ user.id }}"
                                     id="toggle-input{{ user.id }}">
                                 <div class="toggle-btn" id="toggle-btn{{ user.id }}"></div>
                             </a>
+                        </div> -->
+
+                        {% if user.adminstatus == False %}
+                        <div>
+                            <a href="{% url 'blockuser' user.id %}"><button class="block btn btn-outline-danger"
+                                    id="block">Block</button></a>
                         </div>
+                        {% else %}
+                        <div>
+                            <a href="{% url 'blockuser' user.id %}"><button
+                                    class="btn btn-outline-success">Unblock</button></a>
+                        </div>
+                        {% endif %}
                     </td>
+
+
                     <td class="text-end">
                         <div class="d-flex">
                             <div class="dropdown ms-auto">
@@ -434,7 +448,7 @@
         </table>
     </div>
 
-    <nav class="mt-4" aria-label="Page navigation example">
+    <!-- <nav class="mt-4" aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
             <li class="page-item">
                 <a class="page-link" href="#" aria-label="Previous">
@@ -450,7 +464,7 @@
                 </a>
             </li>
         </ul>
-    </nav>
+    </nav> -->
 
 </div>
 <style>
@@ -480,6 +494,7 @@
         transition: margin-left 0.3s ease-in, background-color 0.2s ease-in;
     }
 </style>
+
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
     crossorigin="anonymous"></script>
 <script>

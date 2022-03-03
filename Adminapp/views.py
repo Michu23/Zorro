@@ -77,14 +77,12 @@ def deleteproduct(request,pk):
     return redirect("AdminProduct")
     
 @never_cache
-@login_required(login_url='admin-login')
 def blockuser(request,pk):
-    print("Are you thereeee")
     user = Users.objects.get(id=pk)
     if user.adminstatus == False:
-        Users.adminstatus=True
+        user.adminstatus=True
     else:
-        Users.adminstatus=False
+        user.adminstatus=False
     user.save()
     return redirect("AdminCustomers")
 
