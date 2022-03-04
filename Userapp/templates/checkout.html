@@ -234,7 +234,6 @@
                         </div>
                     </div>
                     {% endfor %}
-
                 </div>
             </div>
             <div class="card mb-4">
@@ -242,7 +241,7 @@
                     <h6 class="card-title mb-4">Price</h6>
                     <div class="row justify-content-center mb-3">
                         <div class="col-4 text-end">Sub Total :</div>
-                        <div class="col-4">₹{{order.get_cart_total}}</div>
+                        <div class="col-4">{{order.get_cart_total}}</div>
                     </div>
                     <div class="row justify-content-center mb-3">
                         <div class="col-4 text-end">Shipping :</div>
@@ -250,14 +249,14 @@
                     </div>
                     <!-- <div class="row justify-content-center mb-3">
                         <div class="col-4 text-end">Tax(18%) :</div>
-                        <div class="col-4">₹259.70</div>
+                        <div class="col-4">259.70</div>
                     </div> -->
                     <div class="row justify-content-center">
                         <div class="col-4 text-end">
                             <strong>Total :</strong>
                         </div>
                         <div class="col-4">
-                            <strong>₹{{order.get_cart_total}}</strong>
+                            <strong>{{order.get_cart_total}}</strong>
                         </div>
                     </div>
                 </div>

@@ -8,11 +8,12 @@ from .forms import *
 from django.contrib import messages
 from twilio.rest import Client 
 import random
-from django.db.models import Count
+from django.db.models import Count,Sum
 from django.http import JsonResponse
 from decouple import config
 from django.views.decorators.csrf import csrf_exempt
 from .utils import *
+from babel.numbers import format_currency
 
 # Create your views here.
 @never_cache
@@ -121,9 +122,9 @@ def signupotp(request):
 
 @never_cache
 def signupotpverify(request):
-    number = request.session.get('phone')
+    number = request.session.pop('phone')
     if request.method == 'POST':
-        otp = request.POST.pop('otp')
+        otp = request.POST.get('otp')
         account_sid = config('account_sid')
         auth_token = config('auth_token')
         client = Client(account_sid, auth_token)
@@ -209,7 +210,7 @@ def editprofile(request):
     if request.method == "POST":
         print("////////////////////////////////////////////////////")
         print(form)
-        form=UserUpdateForm(request.POST,instance=user)
+        form=UserUpdateForm(request.POST,request.FILES,instance=user)
         if form.is_valid(): 
             SaveForm=form.save(commit=False)
             SaveForm.user=user
@@ -346,9 +347,15 @@ def userprofile(request):
 def profiledash(request):
     
     customers = Users.objects.all().count()
-    orders = Order.objects.all().count()
+    orders = Order.objects.filter(customer=request.user).count()
     product_count = Product.objects.all().count()
-    total_revenue = Pay.objects.all().aggregate(Sum('amount'))
+    expense= Pay.objects.filter(payuser=request.user).aggregate(Sum("amount"))
+    print(exp)
+    print(expense)
+    # expenseinr= format_currency(5433422.8012, 'INR', locale='en_IN')
+    # total_revenue = Pay.objects.filter(order.user=request.user).aggregate(Sum('amount'))
+    
+    context= {'orders':orders,}
     
     return render (request, "profiledash.html")
 
@@ -477,6 +484,7 @@ def updateitem(request):
         }
     return JsonResponse(response)
   
+  
 
 @never_cache
 def proceed(request):
@@ -561,12 +569,13 @@ def razorpay(request):
         return JsonResponse({'status': 'Your order has been Placed Successfully'})
     
 
+
 @csrf_exempt
 def paypal(request):
     print("/////////////////////////////////activating paypal")
     if request.method == 'POST':        
         print("/////////////////////////////////activating paypal")
-        
+
         user = request.user
         order= Order.objects.get(customer = user,complete=False)
         items = order.orderitem_set.all()

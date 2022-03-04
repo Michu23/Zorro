@@ -7,7 +7,7 @@ urlpatterns = [
    path('orderdetails/<str:pk>',views.adminorderdetail,name='AdminOrderDetail'),
    path('adminproduct/',views.adminproduct,name='AdminProduct'),
    
-   path('adminproduct/',views.adminproduct,name='AdminProduct'),
+   path('admincats/',views.admincats,name='AdminCats'),
    path('addcats/',views.addcats,name='AddCats'),
    
    path('filterview/<str:id>',views.filterview,name='AFilterView'),

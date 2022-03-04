@@ -72,7 +72,7 @@
                   </div>
                 </td>
                 <td class="cart__price">
-                  <span id="totall"> ₹{{i.get_total}}</span>
+                  <span id="totall"> {{i.get_total}}</span>
                 </td>
                 <p><span id="stockmsg" class="text-danger"></span></p>
                 <td style="cursor: pointer" class="cart__close">
@@ -122,10 +122,10 @@
           <ul>
             <li>Total items <span id="items">1</span></li>
             <li>
-              Subtotal <span id="cart_total">₹{{order.get_cart_total}}</span>
+              Subtotal <span id="cart_total">{{order.get_cart_total}}</span>
             </li>
             <li>
-              Total <span id="cart_total">₹{{order.get_cart_total}}</span>
+              Total <span id="cart_total">{{order.get_cart_total}}</span>
             </li>
           </ul>
           {% if order.get_cart_total != 0 %}
@@ -219,9 +219,9 @@
         var cart_total_id = " #cart_total";
         var quantity_id = "#" + productId + " #quantity";
 
-        $(total_id).html("₹" + total);
+        $(total_id).html("" + total);
         $(item_id).html(items);
-        $(cart_total_id).html("₹" + cart_total);
+        $(cart_total_id).html("" + cart_total);
         $(quantity_id).html(quantity);
         $();
       },

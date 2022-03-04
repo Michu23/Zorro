@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from babel.numbers import format_currency
 from Adminapp.models import *
 
 # Create your models here.
@@ -60,8 +61,11 @@ class Order(models.Model):
 	@property
 	def get_cart_total(self):
 		order_items = self.orderitem_set.all()
-		total = sum([item.get_total for item in order_items])
-		return total
+		total = sum([item.gettotal for item in order_items])
+		totalinr = format_currency(total, 'INR', locale='en_IN')
+		return totalinr
+
+
 
 	@property
 	def get_cart_items(self):
@@ -82,9 +86,15 @@ class OrderItem(models.Model):
 		return str(self.product)
 
 	@property
-	def get_total(self):
+	def gettotal(self):
 		total = self.product.price * self.quantity
 		return total
+
+	@property
+	def get_total(self):
+		total = self.product.price * self.quantity
+		totalinr = format_currency(total, 'INR', locale='en_IN')
+		return totalinr
 
 
 
@@ -95,11 +105,20 @@ status_list = (
     )
 
 class Pay(models.Model):
-    amount = models.FloatField()
-    method = models.CharField(max_length=30,)
-    status = models.CharField(max_length=30, choices=status_list, default='None',)
-    order =  models.OneToOneField(Order, on_delete=models.CASCADE)  
-    transactionid = models.CharField(max_length= 100,null= True ,blank=True)
+	payuser = models.ForeignKey(Users, on_delete=models.SET_NULL, null=True, blank=True)
+	amount = models.FloatField()
+	method = models.CharField(max_length=30)
+	status = models.CharField(max_length=30, choices=status_list, default='None')
+	order =  models.OneToOneField(Order, on_delete=models.CASCADE)  
+	transactionid = models.CharField(max_length= 100,null= True ,blank=True)
+    
+	def __str__(self):
+		return str(self.product)
+    
+    
+    
+    
+    
 
 
 

@@ -82,7 +82,7 @@
                     </td>
                     <td>
                         <div class="avatar avatar-info">
-                            <span class="avatar-text rounded-circle">A</span>
+                            <img src="{{user.propic.url}}" height="10%" width="60%" class="rounded-circle" alt="..." />
                         </div>
                     </td>
                     <td>{{user.username}}</td>
@@ -90,8 +90,6 @@
                     <td>{{user.phone}}</td>
                     <td>{{user.date}}</td>
                     <td>
-
-
                         {% if user.adminstatus == False %}
                         <div>
                             <button data-id="{{user.id}}" class="block btn btn-outline-danger">Block</button>

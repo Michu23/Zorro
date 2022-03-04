@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from babel.numbers import format_currency
+
 
 # Create your models here.
 class Catogery(models.Model):
@@ -37,5 +39,34 @@ class Product(models.Model):
     stocks=models.IntegerField(null=True)
     
     
+    
     def __str__(self):
         return self.name
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
