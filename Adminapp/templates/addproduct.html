@@ -48,19 +48,27 @@
             <button type="submit" id="confirm-btn" class="btn btn-primary mt-3 ">Submit</button>
         </form>
 
-        <div class="col-md-5">
+
+
+
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
             <div class="form-group">
                 <div id="image-box" class="image-container"></div>
                 <button class="btn btn-outline-info" id="crop-btn" style=" margin-top: 10px; display: none;"
                     type="button">Crop</button>
             </div>
         </div>
-        <img src="" id="img1" style="width:100px;">
-        <img src="" id="img2" style="width:100px;">
-        <img src="" id="img3" style="width:100px;">
-        <img src="" id="img4" style="width:100px;">
+        <img src="" id="image1" style="width:400px;">
+        <img src="" id="image2" style="width:400px;">
+        <img src="" id="image3" style="width:400px;">
+        <img src="" id="image4" style="width:400px;">
 
     </div>
+
+
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.js"></script>
     <script src="{% static 'dist/js/cropper.js' %}"></script>

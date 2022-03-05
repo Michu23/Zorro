@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from .forms import ProductForm
+from .forms import *
 from .models import Product
 from Userapp.models import *
 from django.views.decorators.cache import never_cache
@@ -75,13 +75,15 @@ def adminlogout(request):
     logout(request)
     return redirect('AdminLogin')
 
+
 def admincustomers(request):
-    users = Users.objects.all()
+    users = Users.objects.all().order_by('id')
     context = {'users':users,'cust':'cust'}
     return render(request, "customers.html",context)
 
+
 def adminorders(request):
-    orders=Order.objects.filter(complete=True)
+    orders=Order.objects.filter(complete=True).order_by('-date_ordered')
     context={'orders':orders}
     return render(request, "order.html",context)
 
@@ -120,7 +122,7 @@ def blockuser(request):
     return redirect("AdminCustomers")
 
 def adminproduct(request):
-    products = Product.objects.all()
+    products = Product.objects.all().order_by('id')
     catogeries = Catogery.objects.all().annotate(numpro=Count('product'))
     brands=Brand.objects.all().annotate(bpro=Count('product'))
     ptypes=PriceType.objects.all().annotate(ppro=Count('product'))
@@ -202,11 +204,83 @@ def cancelorder(request, id):
     order.save()
     return redirect('AdminOrders')
 
-def admincats(request):
-    return render (request, "catogeries.html")
 
-def addcats(request):
-    return render ( request, "catogeries.html")
+def admincats(request):
+    brands=Brand.objects.all()
+    cats=Catogery.objects.all()
+    form= MyCatForm()
+    if request.method == 'POST':
+        form = MyCatForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.error(request,"Successfully added")
+            return redirect("AdminCats")
+        else:
+            messages.error(request,"Error")
+    context={'form':form,'cats':cats,'brands':brands}
+    return render (request, "catogeries.html",context)
+
+def addcats(request,pk):
+    page="edit"
+    cats = Catogery.objects.get(id=pk)
+    form = MyCatForm(instance=cats)
+    if request.method == 'POST': 
+        form = MyCatForm(request.POST,instance=cats)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Updated Successfully')
+            return redirect('AdminCats')
+    formm= MyCatForm()
+    if request.method == 'POST':
+        formm = MyCatForm(request.POST)
+        if formm.is_valid():
+            formm.save()
+            messages.error(request,"Successfully added")
+            return redirect("AdminCats")
+        else:
+            messages.error(request,"Error")
+    return render(request,'catogeries.html',{'form':form,'formm':formm,'page':page})
+
+def delcats(request,pk):
+    cats = Catogery.objects.get(id=pk)
+    cats.delete()
+    return redirect("AdminCats")
+
+# def adminbrands(request):
+#     brands=Brand.objects.all()
+#     cats=Catogery.objects.all()
+#     form= MyCatForm()
+#     if request.method == 'POST':
+#         form = MyCatForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             messages.error(request,"Successfully added")
+#             return redirect("AdminCats")
+#         else:
+#             messages.error(request,"Error")
+#     context={'form':form,'cats':cats,'brands':brands,'page':page}
+#     return render (request, "catogeries.html",context)
+
+def addbrands(request,pk):
+    page="editbrand"
+    cats=Catogery.objects.all()
+    brands = Brand.objects.get(id=pk)
+    form = MyBrandForm(instance=brands)
+    if request.method == 'POST': 
+        form = MyBrandForm(request.POST,instance=brands)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Updated Successfully')
+            return redirect('AdminCats')
+    return render(request,'catogeries.html',{'form':form,'page':page,'cats':cats})
+
+def delbrands(request,pk):
+    brands = Brand.objects.get(id=pk)
+    brands.delete()
+    return redirect("AdminCats")
+
+
+
 
 
     

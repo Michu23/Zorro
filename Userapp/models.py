@@ -8,7 +8,7 @@ from Adminapp.models import *
 class Users(AbstractUser):
     phone = models.CharField(max_length=11,null=True)
     adminstatus=models.BooleanField(blank=True,default=False,null=True)
-    propic=models.ImageField(upload_to='images',blank=True,null=True)
+    propic=models.ImageField(upload_to='images',default="2950f96af23e53d8ba98351184c2c803_eW7MOkE.jpg" ,blank=True,null=True)
 
 
 AddType = (

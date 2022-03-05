@@ -67,7 +67,7 @@ input1.addEventListener("change", () => {
         console.log(container.files[0]);
         let img = container.files[0];
         const url = URL.createObjectURL(img);
-        document.getElementById("img1").src = url;
+        document.getElementById("image1").src = url;
 
         console.log("Ivde ethy");
         // Hide the cropper box
@@ -81,29 +81,31 @@ input1.addEventListener("change", () => {
   }
 });
 
-// id_image is the id of the input tag where we will upload the image
+//image 2
+
 const input2 = document.getElementById("id_image2");
 var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
 
-var filePath = input.value;
+console.log(input2);
+var filePath1 = input2.value;
 
 // When user uploads the image this event will get triggered
 input2.addEventListener("change", () => {
-  if (!allowedExtensions.exec(input.value)) {
+  if (!allowedExtensions.exec(input2.value)) {
     alert("Invalid file type");
-    input.value = "";
+    input2.value = "";
   } else {
     // Getting image file object from the input variable
-    const img_data = input.files[0];
+    const img_data = input2.files[0];
     // createObjectURL() static method creates a DOMString containing a URL representing the object given in the parameter.
     // The new object URL represents the specified File object or Blob object.
     const url = URL.createObjectURL(img_data);
 
     // Creating a image tag inside imagebox which will hold the cropping view image(uploaded file) to it using the url created before.
-    imagebox.innerHTML = `<img src="${url}" id="imagebox2" style="width:100%;">`;
+    imagebox.innerHTML = `<img src="${url}" id="image1" style="width:100%;">`;
 
     // Storing that cropping view image in a variable
-    const image = document.getElementById("imagebox2");
+    const image = document.getElementById("image1");
 
     // Displaying the image box
     document.getElementById("image-box").style.display = "block";
@@ -147,9 +149,8 @@ input2.addEventListener("change", () => {
         console.log(container.files[0]);
         let img = container.files[0];
         const url = URL.createObjectURL(img);
-        document.getElementById("img2").src = url;
+        document.getElementById("image2").src = url;
 
-        console.log("Ivde ethy");
         // Hide the cropper box
         document.getElementById("image-box").style.display = "none";
         // Hide the crop button
@@ -161,29 +162,31 @@ input2.addEventListener("change", () => {
   }
 });
 
-// id_image is the id of the input tag where we will upload the image
-const input2 = document.getElementById("id_image3");
+// image 3
+
+const input3 = document.getElementById("id_image3");
 var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
 
-var filePath = input2.value;
+console.log(input3);
+var filePath1 = input3.value;
 
 // When user uploads the image this event will get triggered
-input2.addEventListener("change", () => {
-  if (!allowedExtensions.exec(input2.value)) {
+input3.addEventListener("change", () => {
+  if (!allowedExtensions.exec(input3.value)) {
     alert("Invalid file type");
-    input2.value = "";
+    input3.value = "";
   } else {
     // Getting image file object from the input variable
-    const img_data = input2.files[0];
+    const img_data = input3.files[0];
     // createObjectURL() static method creates a DOMString containing a URL representing the object given in the parameter.
     // The new object URL represents the specified File object or Blob object.
     const url = URL.createObjectURL(img_data);
 
     // Creating a image tag inside imagebox which will hold the cropping view image(uploaded file) to it using the url created before.
-    imagebox.innerHTML = `<img src="${url}" id="imagebox3" style="width:100%;">`;
+    imagebox.innerHTML = `<img src="${url}" id="image2" style="width:100%;">`;
 
     // Storing that cropping view image in a variable
-    const image = document.getElementById("imagebox3");
+    const image = document.getElementById("image2");
 
     // Displaying the image box
     document.getElementById("image-box").style.display = "block";
@@ -227,9 +230,8 @@ input2.addEventListener("change", () => {
         console.log(container.files[0]);
         let img = container.files[0];
         const url = URL.createObjectURL(img);
-        document.getElementById("img3").src = url;
+        document.getElementById("image3").src = url;
 
-        console.log("Ivde ethy");
         // Hide the cropper box
         document.getElementById("image-box").style.display = "none";
         // Hide the crop button
@@ -241,29 +243,31 @@ input2.addEventListener("change", () => {
   }
 });
 
-// id_image is the id of the input tag where we will upload the image
-const input3 = document.getElementById("id_image4");
+//image 4
+
+const input4 = document.getElementById("id_image4");
 var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
 
-var filePath = input3.value;
+console.log(input4);
+var filePath1 = input4.value;
 
 // When user uploads the image this event will get triggered
-input3.addEventListener("change", () => {
-  if (!allowedExtensions.exec(input3.value)) {
+input4.addEventListener("change", () => {
+  if (!allowedExtensions.exec(input4.value)) {
     alert("Invalid file type");
-    input3.value = "";
+    input4.value = "";
   } else {
-    // Getting image file object from the input3 variable
-    const img_data = input3.files[0];
+    // Getting image file object from the input variable
+    const img_data = input4.files[0];
     // createObjectURL() static method creates a DOMString containing a URL representing the object given in the parameter.
     // The new object URL represents the specified File object or Blob object.
     const url = URL.createObjectURL(img_data);
 
     // Creating a image tag inside imagebox which will hold the cropping view image(uploaded file) to it using the url created before.
-    imagebox.innerHTML = `<img src="${url}" id="imagebox4" style="width:100%;">`;
+    imagebox.innerHTML = `<img src="${url}" id="image2" style="width:100%;">`;
 
     // Storing that cropping view image in a variable
-    const image = document.getElementById("imagebox4");
+    const image = document.getElementById("image2");
 
     // Displaying the image box
     document.getElementById("image-box").style.display = "block";
@@ -307,9 +311,8 @@ input3.addEventListener("change", () => {
         console.log(container.files[0]);
         let img = container.files[0];
         const url = URL.createObjectURL(img);
-        document.getElementById("img4").src = url;
+        document.getElementById("image4").src = url;
 
-        console.log("Ivde ethy");
         // Hide the cropper box
         document.getElementById("image-box").style.display = "none";
         // Hide the crop button

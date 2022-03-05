@@ -70,7 +70,7 @@ def userreg(request):
             messages.error(request,"Username already taken")
         except:
             pass
-    
+            
         try:
             um = Users.object.get(email=umail)
             messages.error(request,"Email already taken")
@@ -104,8 +104,6 @@ def userreg(request):
 @never_cache
 def signupotp(request):
     phone = request.session.get('phone')
-    print("/////////////////////////////////////")
-    print(phone)
     if request.method == 'POST':
         number = '+91' + str(phone)
         request.session['phone'] = number
@@ -122,7 +120,7 @@ def signupotp(request):
 
 @never_cache
 def signupotpverify(request):
-    number = request.session.pop('phone')
+    number = request.session.get('phone')
     if request.method == 'POST':
         otp = request.POST.get('otp')
         account_sid = config('account_sid')
@@ -142,6 +140,10 @@ def signupotpverify(request):
             num=number[3:]
             print(num)
             user=Users.objects.get(phone=num)
+            try:
+                del request.session['phone']
+            except:
+                pass
             login(request,user)
             return redirect('UserHome')
         else:
@@ -350,8 +352,7 @@ def profiledash(request):
     orders = Order.objects.filter(customer=request.user).count()
     product_count = Product.objects.all().count()
     expense= Pay.objects.filter(payuser=request.user).aggregate(Sum("amount"))
-    print(exp)
-    print(expense)
+    
     # expenseinr= format_currency(5433422.8012, 'INR', locale='en_IN')
     # total_revenue = Pay.objects.filter(order.user=request.user).aggregate(Sum('amount'))
     
