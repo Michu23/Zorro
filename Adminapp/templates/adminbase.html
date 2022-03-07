@@ -104,57 +104,49 @@
                     </a>
                 </li>
                 {% endif %}
-
+                {% if abc %}
                 <li>
-                    <a href="#">
+                    <a class="active" href="{% url 'AdminOrders' %}">
                         <span class="nav-link-icon">
                             <i class="bi bi-receipt"></i>
                         </span>
                         <span>Orders</span>
                     </a>
-                    <ul>
-                        {% if orders %}
-                        <li>
-                            <a class="active" href="{% url 'AdminOrders' %}">List</a>
-                        </li>
-                        {% else %}
-                        <li>
-                            <a href="{% url 'AdminOrders' %}">List</a>
-                        </li>
-                        {% endif %}
-                        {% if details %}
-
-                        <li>
-                            <a class="active" href="{% url 'AdminOrders'  %}">Detail</a>
-                        </li>
-                        {% else %}
-                        <li>
-                            <a href="{% url 'AdminOrders'  %}">Detail</a>
-                        </li>
-                        {% endif %}
-                    </ul>
                 </li>
+                {% else %}
                 <li>
-                    <a href="#">
+                    <a href="{% url 'AdminOrders' %}">
+                        <span class="nav-link-icon">
+                            <i class="bi bi-receipt"></i>
+                        </span>
+                        <span>Orders</span>
+                    </a>
+                </li>
+                {% endif %}
+
+                {% if pro %}
+
+                <li>
+                    <a class="active" href="{% url 'AdminProduct' %}">
                         <span class="nav-link-icon">
                             <i class="bi bi-truck"></i>
                         </span>
                         <span>Products</span>
                     </a>
-                    <ul>
-                        {% if pro %}
-                        <li>
-                            <a class="active" href="{% url 'AdminProduct' %}">List
-                                View</a>
-                        </li>
-                        {% else %}
-                        <li>
-                            <a href="{% url 'AdminProduct' %}">List
-                                View</a>
-                        </li>
-                        {% endif %}
-                    </ul>
                 </li>
+                {% else %}
+
+                <li>
+                    <a href="{% url 'AdminProduct' %}">
+                        <span class="nav-link-icon">
+                            <i class="bi bi-truck"></i>
+                        </span>
+                        <span>Products</span>
+                    </a>
+                </li>
+                {% endif %}
+
+
 
                 <li>
                     {% if cust %}
@@ -173,20 +165,28 @@
                     </a>
                     {% endif %}
                 </li>
-
+                {% if sales %}
                 <li>
-                    <a href="#">
+                    <a class="active" href="{% url 'SalesReport' %}">
                         <span class="nav-link-icon">
                             <i class="bi bi-receipt"></i>
                         </span>
-                        <span>Invoices</span>
+                        <span>Sales Report</span>
                     </a>
-                    <ul>
-                        <li>
-                            <a href="{% url 'AdminInvoice' %}">List</a>
-                        </li>
-                    </ul>
                 </li>
+                {% else %}
+                <li>
+                    <a href="{% url 'SalesReport' %}">
+                        <span class="nav-link-icon">
+                            <i class="bi bi-receipt"></i>
+                        </span>
+                        <span>Sales Report</span>
+                    </a>
+                </li>
+                {% endif %}
+
+
+
             </ul>
         </div>
     </div>
@@ -205,10 +205,15 @@
             </div>
             <!-- Logo -->
             <a href="index.html" class="logo">
-                <img width="100" src="https://vetra.laborasyon.com/assets/images/logo.svg' %}" alt="logo">
+                <img width="100" src="{% static 'https://vetra.laborasyon.com/assets/images/logo.svg' %}" alt="logo">
             </a>
             <!-- ./ Logo -->
+            {% if pro %}
+            <div class="page-title">Products</div>
+            {% else %}
             <div class="page-title">Overview</div>
+
+            {% endif %}
             <form class="search-form">
                 <div class="input-group">
                     <button class="btn btn-outline-light" type="button" id="button-addon1">
@@ -306,6 +311,7 @@
             display: none !important;
         }
     </style>
+
 </body>
 
 <!-- Mirrored from vetra.laborasyon.com/demos/default/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 04 Feb 2022 18:29:40 GMT -->

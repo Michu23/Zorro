@@ -24,7 +24,7 @@ urlpatterns = [
    path('adminlogout/',views.adminlogout,name='AdminLogout'),
    path('editproduct/<str:pk>',views.editproduct,name='EditProduct'),
    path('deleteproduct/<str:pk>',views.deleteproduct,name='DeleteProduct'),
-   path('invoice/',views.admininvoices,name='AdminInvoice'),
+   path('salesreport/',views.salesreport,name='SalesReport'),
    path('addproduct/',views.addproduct,name='AddProduct'),
    path('blockuser',views.blockuser,name='blockuser'),
    

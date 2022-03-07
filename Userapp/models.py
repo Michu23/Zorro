@@ -9,6 +9,8 @@ class Users(AbstractUser):
     phone = models.CharField(max_length=11,null=True)
     adminstatus=models.BooleanField(blank=True,default=False,null=True)
     propic=models.ImageField(upload_to='images',default="2950f96af23e53d8ba98351184c2c803_eW7MOkE.jpg" ,blank=True,null=True)
+    device = models.CharField( max_length=30 , null=True , blank=True )
+    
 
 
 AddType = (
@@ -65,8 +67,6 @@ class Order(models.Model):
 		totalinr = format_currency(total, 'INR', locale='en_IN')
 		return totalinr
 
-
-
 	@property
 	def get_cart_items(self):
 		order_items = self.orderitem_set.all()
@@ -74,8 +74,6 @@ class Order(models.Model):
 		return total
 
 	
-		
-
 class OrderItem(models.Model):
 	product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
 	order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True)

@@ -48,6 +48,59 @@ def userlogin(request):
     return render(request, "login.html")
 
 
+
+@never_cache
+def otplogin(request):
+    global number,phone
+    if request.method == 'POST':
+        phone = request.POST.get('number')
+        number = '+91' + str(phone)
+        user = None
+        try:
+            user = Users.objects.get(phone=phone)
+        except:
+            messages.error(request,"No matching phone number found!")
+            return render(request, 'otplogin.html') 
+        if user is not None:
+            account_sid = config('account_sid')
+            auth_token = config('auth_token')
+            client = Client(account_sid, auth_token)
+            verification = client.verify \
+                                .services(config('services')) \
+                                .verifications \
+                                .create(to=number, channel='sms')
+            return redirect ('OtpVerify')
+    return render(request,'otplogin.html')
+
+
+@never_cache
+def otpverify(request):
+    user=Users.objects.get(phone=phone)
+    if request.method == 'POST':
+        otp = request.POST.get('otp')
+        account_sid = config('account_sid')
+        auth_token = config('auth_token')
+        client = Client(account_sid, auth_token)
+        if(len(str(otp))==6):
+            verification_check = client.verify \
+                                .services(config('services')) \
+                                .verification_checks \
+                                .create(to= number, code= str(otp))
+        else:
+            messages.error(request,"Enter a valid OTP!")
+            return render(request, 'otpverify.html')
+        if verification_check.status == 'approved':
+            login(request,user)
+            return redirect('UserHome')
+        else:
+            messages.error(request,"Invalid OTP")
+            return redirect ("OtpLogin")
+    return render(request,'otpverify.html')
+
+
+
+####################################### SIGNUP ###################################################
+
 @never_cache
 def userreg(request):
     global regform
@@ -65,20 +118,20 @@ def userreg(request):
         up="Not taken"
         
         try:
-            un = Users.object.get(username=uname)
+            un = Users.objects.get(username=uname)
             print(un)
             messages.error(request,"Username already taken")
         except:
             pass
             
         try:
-            um = Users.object.get(email=umail)
+            um = Users.objects.get(email=umail)
             messages.error(request,"Email already taken")
         except:
             pass
         
         try:
-            up = Users.object.get(phone=uphone)
+            up = Users.objects.get(phone=uphone)
             messages.error(request,"Phone number already taken")
         except:
             pass
@@ -153,76 +206,9 @@ def signupotpverify(request):
 
 
 
-@never_cache
-def otplogin(request):
-    global number,phone
-    if request.method == 'POST':
-        phone = request.POST.get('number')
-        number = '+91' + str(phone)
-        user = None
-        try:
-            user = Users.objects.get(phone=phone)
-        except:
-            messages.error(request,"No matching phone number found!")
-            return render(request, 'otplogin.html') 
-        if user is not None:
-            account_sid = config('account_sid')
-            auth_token = config('auth_token')
-            client = Client(account_sid, auth_token)
-            verification = client.verify \
-                                .services(config('services')) \
-                                .verifications \
-                                .create(to=number, channel='sms')
-            return redirect ('OtpVerify')
-    return render(request,'otplogin.html')
-
-
-@never_cache
-def otpverify(request):
-    user=Users.objects.get(phone=phone)
-    if request.method == 'POST':
-        otp = request.POST.get('otp')
-        account_sid = config('account_sid')
-        auth_token = config('auth_token')
-        client = Client(account_sid, auth_token)
-        if(len(str(otp))==6):
-            verification_check = client.verify \
-                                .services(config('services')) \
-                                .verification_checks \
-                                .create(to= number, code= str(otp))
-        else:
-            messages.error(request,"Enter a valid OTP!")
-            return render(request, 'otpverify.html')
-        if verification_check.status == 'approved':
-            login(request,user)
-            return redirect('UserHome')
-        else:
-            messages.error(request,"Invalid OTP")
-            return redirect ("OtpLogin")
-    return render(request,'otpverify.html')
 
 
 
-
-
-@never_cache
-def editprofile(request):
-    user = request.user
-    form=UserUpdateForm(instance=user)
-    if request.method == "POST":
-        print("////////////////////////////////////////////////////")
-        print(form)
-        form=UserUpdateForm(request.POST,request.FILES,instance=user)
-        if form.is_valid(): 
-            SaveForm=form.save(commit=False)
-            SaveForm.user=user
-            SaveForm.save()
-            messages.success(request,"Your account has been updated successfully!")
-            return redirect('editprofile')
-        else:
-            messages.error(request,"Form isn't valid")
-            print(form.errors)
-    return render(request,"editprofile.html",{'form':form})
 
 
 @never_cache
@@ -284,6 +270,55 @@ def filterprice(request,id):
 @never_cache
 def filter_data(request):
     return Jsonresponse({'data':'hello'})
+
+
+def product(request,pk):
+    product = Product.objects.get(id=pk)
+    context = {'product':product}
+    return render(request, "product.html",context)
+
+
+
+
+
+def updateitem(request):
+    customer = request.user
+    customer = Users.objects.get(username=customer)
+    productId = request.POST.get('productId')
+    print(productId)
+    action = request.POST.get('action')
+    product = Product.objects.get(id=productId)
+    print(action)
+    cur_stock = product.stocks
+    order, created = Order.objects.get_or_create(customer = customer , status='New',complete=False)
+    orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
+    if  cur_stock > orderItem.quantity :
+        flag = 0
+    else :
+        flag = 1
+    if action == 'add' and cur_stock > orderItem.quantity :
+        orderItem.quantity = (orderItem.quantity + 1)
+    elif action == 'remove' and orderItem.quantity > 1:
+        orderItem.quantity = (orderItem.quantity - 1)
+        if  cur_stock > orderItem.quantity :
+            flag = 0
+        else :
+            flag = 1
+    orderItem.save()
+    if orderItem.quantity <= 0:
+        orderItem.delete()
+    response = {
+        'items':order.get_cart_items,
+        'quantity':orderItem.quantity,
+        'total':orderItem.get_total,
+        'cart_total':order.get_cart_total,
+        'productId':productId,
+        'cur_stock':cur_stock,
+        'flag':flag
+        }
+    return JsonResponse(response)
+  
+  
 
 
 @never_cache
@@ -360,27 +395,62 @@ def profiledash(request):
     
     return render (request, "profiledash.html")
 
-# def addaddress(request):
-#     form= MyAddressForm()
-#     if request.method == 'POST':
-#         form = MyAddressForm(request.POST)
-#         if form.is_valid():
-#             address = form.save(commit=False)
-#             address.cust=request.user
-#             address.save()
-#             return redirect("UserAddress")
-#         else:
-#             messages.error(request,"Error")
-            
-#     context={'form':form}
-#     return render(request, "address.html",context)
-    # return render (request, "address.html",context)
 
+
+@never_cache
+def editprofile(request):
+    user = request.user
+    form=UserUpdateForm(instance=user)
+    if request.method == "POST":
+        print("////////////////////////////////////////////////////")
+        print(form)
+        form=UserUpdateForm(request.POST,request.FILES,instance=user)
+        if form.is_valid(): 
+            SaveForm=form.save(commit=False)
+            SaveForm.user=user
+            SaveForm.save()
+            messages.success(request,"Your account has been updated successfully!")
+            return redirect('editprofile')
+        else:
+            messages.error(request,"Form isn't valid")
+            print(form.errors)
+    return render(request,"editprofile.html",{'form':form})
 
 
 
 def wishlist(request):
     return render (request, "wishlist.html")
+
+
+def cancelorder(request, id):
+    order = Order.objects.get(id = id)
+    items = OrderItem.objects.filter(order = order)
+    order.status = 'Cancelled'
+    for item in items :
+        ordered = item.quantity
+        stock = item.quantity
+        newstock = stock + ordered
+        productid = item.product.id
+        Product.objects.filter(id = productid).update(stocks = newstock)
+    order.save()
+    return redirect('UserOrders')
+
+
+def returnorder(request, id):
+    order = Order.objects.get(id = id)
+    items = OrderItem.objects.filter(order = order)
+    order.status = 'RequestedReturn'
+    order.save()
+    return redirect('UserOrders')
+
+def profileorder(request):
+    user = request.user
+    orders =Order.objects.filter(customer=user,complete=True)
+    items=OrderItem.objects.all()
+    context={'orders':orders,'items':items}
+    return render (request, "profileorders.html",context)
+
+
 
 
 
@@ -423,69 +493,8 @@ def deleteaddress(request,pk):
 
 ################################################################################################
 
-# def addaddress(request):
-#     form= MyAddressForm()
-#     if request.method == 'POST':
-#         form = MyAddressForm(request.POST)
-#         if form.is_valid():
-#             address = form.save(commit=False)
-#             address.cust=request.user
-#             address.save()
-#             return redirect("UserAddress")
-#         else:
-#             messages.error(request,"Error")
-            
-#     context={'form':form}
-#     return render(request, "address.html",context)
-    # return render (request, "address.html",context)
-
-def product(request,pk):
-    product = Product.objects.get(id=pk)
-    context = {'product':product}
-    return render(request, "product.html",context)
 
 
-
-
-
-def updateitem(request):
-    customer = request.user
-    customer = Users.objects.get(username=customer)
-    productId = request.POST.get('productId')
-    print(productId)
-    action = request.POST.get('action')
-    product = Product.objects.get(id=productId)
-    print(action)
-    cur_stock = product.stocks
-    order, created = Order.objects.get_or_create(customer = customer , status='New',complete=False)
-    orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
-    if  cur_stock > orderItem.quantity :
-        flag = 0
-    else :
-        flag = 1
-    if action == 'add' and cur_stock > orderItem.quantity :
-        orderItem.quantity = (orderItem.quantity + 1)
-    elif action == 'remove' and orderItem.quantity > 1:
-        orderItem.quantity = (orderItem.quantity - 1)
-        if  cur_stock > orderItem.quantity :
-            flag = 0
-        else :
-            flag = 1
-    orderItem.save()
-    if orderItem.quantity <= 0:
-        orderItem.delete()
-    response = {
-        'items':order.get_cart_items,
-        'quantity':orderItem.quantity,
-        'total':orderItem.get_total,
-        'cart_total':order.get_cart_total,
-        'productId':productId,
-        'cur_stock':cur_stock,
-        'flag':flag
-        }
-    return JsonResponse(response)
-  
-  
 
 @never_cache
 def proceed(request):
@@ -511,31 +520,6 @@ def proceed(request):
         return JsonResponse(response)
     return render(request, "userindex.html")
 
-# def razorpay(request):
-#     if request.method == 'GET':
-#         address_id = request.GET.get('address')
-#         user = request.user
-#         address= Address.objects.get(id=address_id)
-#         order= Order.objects.get(customer = user,complete=False)
-#         items = order.orderitem_set.all()
-#         print(items)
-#         for item in items :
-#             ordered = item.quantity
-#             print(item.quantity)
-#             prestocks = item.product.stocks
-#             poststocks = prestocks - ordered
-#             productid = item.product.id
-#             Product.objects.filter(id = productid).update(stocks = poststocks)
-#         total_amount = order.get_cart_total
-#         order.complete=True
-#         order.address=Address.objects.get(id=address_id)
-#         Pay.objects.get_or_create(order = order,method = 'RazorPay',amount = total_amount,status = 'Completed')
-#         order.status = 'Placed'
-#         order.save()
-#         response = {'name':user.username,'email':user.email,'total':total_amount,'phone':user.phone,'status': 'Your order has been Placed Successfully'}
-#         print(response)
-#         return JsonResponse(response)
-#     return render(request, "shop.html")
 
 
 def payrazor(request):
@@ -593,34 +577,5 @@ def paypal(request):
         order.complete=True
         order.save()
         return JsonResponse({'status': 'Your order has been Placed Successfully'})
-
-
-def cancelorder(request, id):
-    order = Order.objects.get(id = id)
-    items = OrderItem.objects.filter(order = order)
-    order.status = 'Cancelled'
-    for item in items :
-        ordered = item.quantity
-        stock = item.quantity
-        newstock = stock + ordered
-        productid = item.product.id
-        Product.objects.filter(id = productid).update(stocks = newstock)
-    order.save()
-    return redirect('UserOrders')
-
-
-def returnorder(request, id):
-    order = Order.objects.get(id = id)
-    items = OrderItem.objects.filter(order = order)
-    order.status = 'RequestedReturn'
-    order.save()
-    return redirect('UserOrders')
-
-def profileorder(request):
-    user = request.user
-    orders =Order.objects.filter(customer=user,complete=True)
-    items=OrderItem.objects.all()
-    context={'orders':orders,'items':items}
-    return render (request, "profileorders.html",context)
 
 

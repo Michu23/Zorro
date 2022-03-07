@@ -75,16 +75,14 @@ def adminlogout(request):
     logout(request)
     return redirect('AdminLogin')
 
-
 def admincustomers(request):
     users = Users.objects.all().order_by('id')
     context = {'users':users,'cust':'cust'}
     return render(request, "customers.html",context)
 
-
 def adminorders(request):
     orders=Order.objects.filter(complete=True).order_by('-date_ordered')
-    context={'orders':orders}
+    context={'orders':orders,'abc':'abc'}
     return render(request, "order.html",context)
 
 def adminorderdetail(request,pk):
@@ -122,7 +120,7 @@ def blockuser(request):
     return redirect("AdminCustomers")
 
 def adminproduct(request):
-    products = Product.objects.all().order_by('id')
+    products = Product.objects.all().order_by('-price')
     catogeries = Catogery.objects.all().annotate(numpro=Count('product'))
     brands=Brand.objects.all().annotate(bpro=Count('product'))
     ptypes=PriceType.objects.all().annotate(ppro=Count('product'))
@@ -139,7 +137,7 @@ def filterview(request,id):
     ptypes=PriceType.objects.all().annotate(ppro=Count('product'))
     products = Product.objects.filter(catogery=id)
     context = {'products':products,'catogeries':catogeries,'brands':brands,'ptypes':ptypes,'pro':'pro'}
-    return render(request, "shop.html",context)
+    return render(request, "productlist.html",context)
 
 @never_cache
 def filterbrand(request,id):
@@ -151,7 +149,7 @@ def filterbrand(request,id):
     ptypes=PriceType.objects.all().annotate(ppro=Count('product'))
     products = Product.objects.filter(btype=id)
     context = {'products':products,'catogeries':catogeries,'brands':brands,'ptypes':ptypes}
-    return render(request, "shop.html",context)
+    return render(request, "productlist.html",context)
 
 @never_cache
 def filterprice(request,id):
@@ -163,11 +161,14 @@ def filterprice(request,id):
     brands=Brand.objects.all().annotate(bpro=Count('product'))
     products = Product.objects.filter(ptype=id)
     context = {'products':products,'catogeries':catogeries,'brands':brands,'ptypes':ptypes}
-    return render(request, "shop.html",context)
+    return render(request, "productlist.html",context)
 
 
-def admininvoices(request):
-    return render(request, "invoices.html",{'invoices':'invoices'})
+def salesreport(request):
+    pay=Pay.objects.all()
+    context={'sales':'sales','pay':pay}
+    return render(request, "salesreport.html",context)
+
 
 def addproduct(request):
     form = ProductForm()
@@ -182,6 +183,7 @@ def addproduct(request):
     else:
         return render(request,'addproduct.html',{'form':form})
     return render(request,'addproduct.html')
+
 
 def acceptorder(request, id):
     order = Order.objects.get(id = id)
