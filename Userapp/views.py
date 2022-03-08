@@ -14,8 +14,11 @@ from decouple import config
 from django.views.decorators.csrf import csrf_exempt
 from .utils import *
 from babel.numbers import format_currency
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+
+
 @never_cache
 def userlogin(request):
     if request.user.is_authenticated:
@@ -105,6 +108,13 @@ def otpverify(request):
 def userreg(request):
     global regform
     Users.objects.filter(is_active=False).delete()
+    
+    try:
+        device= request.COOKIES['device']
+        user= Users.objects.get(device=device)
+    except:
+        pass
+    
     form= MyUserFormUser()
     if request.method == 'POST':
         form = MyUserFormUser(request.POST)
@@ -191,10 +201,12 @@ def signupotpverify(request):
             regform.is_active=True
             regform.save()
             num=number[3:]
+            
             print(num)
             user=Users.objects.get(phone=num)
             try:
                 del request.session['phone']
+                Users.objects.get(username=username).update(device=None)
             except:
                 pass
             login(request,user)
@@ -205,12 +217,6 @@ def signupotpverify(request):
     return render(request,'otpverifysign.html')
 
 
-
-
-
-
-
-
 @never_cache
 def userlogout(request):
     logout(request)
@@ -218,12 +224,30 @@ def userlogout(request):
 
 @never_cache
 def userhome(request):
+    
+    if request.user.is_authenticated:
+        customer=request.user
+    else:
+        device=request.COOKIES['device']
+        print("////////////////////////////",device)
+        customer,created=Users.objects.get_or_create(device=device)
+        order,created= Order.objects.get_or_create(customer=customer,complete=False)
+        
     return render(request, "userindex.html")
+
 
 
 
 @never_cache
 def usershop(request):
+    if request.user.is_authenticated:
+        customer=request.user
+    else:
+        device=request.COOKIES['device']
+        print("////////",device)
+        customer,created=Users.objects.get_or_create(device=device)
+        order,created= Order.objects.get_or_create(customer=customer,complete=False)
+        
     products = Product.objects.all()
     catogeries = Catogery.objects.all().annotate(numpro=Count('product'))
     brands=Brand.objects.all().annotate(bpro=Count('product'))
@@ -279,11 +303,14 @@ def product(request,pk):
 
 
 
-
-
 def updateitem(request):
-    customer = request.user
-    customer = Users.objects.get(username=customer)
+    if request.user.is_authenticated:
+        customer= request.user
+    else:
+        device=request.COOKIES['device']
+        print("////////////////////////////",device)
+        customer= Users.objects.get(device=device)
+    
     productId = request.POST.get('productId')
     print(productId)
     action = request.POST.get('action')
@@ -318,41 +345,61 @@ def updateitem(request):
         }
     return JsonResponse(response)
   
-  
-
-
 @never_cache
 def usercart(request):
     if request.user.is_authenticated:
-        user = request.user
-        try:
-            order = Order.objects.get(customer=user,complete=False)
-            items = order.orderitem_set.all()
-        except:
-            order=  []
-            items = []
-            page="Empty"
-            return render(request,"cart.html",{'page':page})
-        
-        if(order==None or items==None):
-            page="Empty"
-            return render(request,"cart.html",{'page':page})
-        else:
-            context = {'items':items,'order':order}
-            return render (request, "cart.html",context)
+        customer= request.user
+        print("//////////////////////")
     else:
-        cookieData = cookieCart(request)
-        order = cookieData['order']
-        items = cookieData['items']
+        device=request.COOKIES['device']
+        print("////////////////////////////",device)
+        customer= Users.objects.get(device=device)
+
+    try:
+        order = Order.objects.get(customer=customer,complete=False,status="New")
+        items = order.orderitem_set.all()
+    except:
+        order=  []
+        items = []
+        page="Empty"
+        return render(request,"cart.html",{'page':page})
+    
+    if(order==None or items==None):
+        page="Empty"
+        return render(request,"cart.html",{'page':page})
+    else:
+        context = {'items':items,'order':order}
+        return render (request, "cart.html",context)
+    
     context = {'items':items,'order':order}
     return render (request, "cart.html",context)
 
+@login_required(login_url="UserLogin")
+def buynow(request,id):
+    page="BuyNow"
+    customer= request.user
+    product = Product.objects.get(id=id)
+    try:
+        cur= Order.objects.filter(customer=customer,status="BuyNow",complete=False).order_by('-id')[0]
+        cur.delete()
+    except:
+        pass
+    
+    order, created = Order.objects.get_or_create(customer = customer , status='BuyNow',complete=False)
+    items, created = OrderItem.objects.get_or_create(order=order, product=product,quantity=1)
+    
+    form= MyAddressForm()
+    addr = Address.objects.filter(cust=customer)
+    context = {'product':product,'order':order,'items':items,'addr':addr,'form':form,'page':page}
+    return render(request, 'checkout.html',context)
+
+@login_required(login_url="UserLogin")
 @never_cache
 def usercheckout(request):
     if request.user.is_authenticated:
         user = request.user
         try:
-            order = Order.objects.get(customer=user,complete=False)
+            order = Order.objects.get(customer=user,complete=False,status="New")
             items = order.orderitem_set.all()
         except:
             order=  []

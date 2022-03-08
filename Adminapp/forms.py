@@ -21,12 +21,7 @@ class ProductForm(ModelForm):
             'image3': 'Image 3 : ',
             'image4': 'Image 4 : ',
         }
-        
-        def _init_(self, args ,*kwargs):
-            super(Product, self)._init_(args ,*kwargs)
-            self.fields['price'].widget.attrs.update(
-                {'min':'1'})
-        
+   
 class MyCatForm(forms.ModelForm):
     class Meta:
         model=Catogery

@@ -18,7 +18,7 @@ class MyUserFormUser(UserCreationForm):
             self.fields['email'].widget.attrs.update(
                 {'name':'email'})
             self.fields['phone'].widget.attrs.update(
-                {'name':'phone'})
+                {'name':'phone','type':'number'})
         
 class UserUpdateForm(forms.ModelForm):
     class Meta:

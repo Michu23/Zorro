@@ -112,7 +112,8 @@
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-end">
                                             <a href="{% url 'EditProduct' product.id %}" class="dropdown-item">Edit</a>
-                                            <a type="button"  class="dropdown-item">Delete</a>
+                                            <a href="{% url 'DeleteProduct' product.id %}" type="button"
+                                                class="dropdown-item">Delete</a>
                                         </div>
                                     </div>
                                 </div>

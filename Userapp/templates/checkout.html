@@ -216,6 +216,27 @@
         <div class="col-md-4">
             <h3 class="mb-2">Order Summary</h3>
             <div class="card mb-4">
+                {% if page == 'BuyNow' %}
+                <div class="card-body">
+                    <h6 class="card-title mb-4">Products</h6>
+
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item d-flex px-0">
+                            <a href="{% url 'Product' product.id %}" style="cursor: pointer" class="me-3">
+                                <img src="{{product.image1.url}}" class="rounded" width="60" alt="">
+                            </a>
+                            <div>
+                                <a href="{% url 'Product' product.id %}" style="cursor: pointer">
+                                    <h6>{{product.name}}</h6>
+                                </a>
+                                <div>₹{{product.price}}</div>
+                            </div>
+                            <div class="text-end ms-auto"></div>
+                        </div>
+                    </div>
+
+                </div>
+                {% else %}
                 <div class="card-body">
                     <h6 class="card-title mb-4">Products</h6>
                     {% for i in items %}
@@ -235,6 +256,7 @@
                     </div>
                     {% endfor %}
                 </div>
+                {% endif %}
             </div>
             <div class="card mb-4">
                 <div class="card-body">
@@ -431,7 +453,6 @@
     });
 </script> -->
 
-
 <script>
     // Render the PayPal button into #paypal-button-container
     var totalinr = parseFloat('{{ order.get_cart_total }}')
@@ -450,13 +471,10 @@
                     ],
                 });
             },
-
             // Finalize the transaction
             onApprove: function (data, actions) {
                 return actions.order.capture().then(function (orderData) {
-
                     $.ajax({
-
                         method: "POST",
                         url: "{% url 'paypal' %}",
                         data: data,
@@ -480,7 +498,6 @@
 
 <script>
     $(document).ready(function () {
-
         $('#razorpaybutton').click(function () {
             var address = $('input[name="address"]:checked').val();
             console.log(address)
@@ -492,7 +509,6 @@
                 },
                 success: function (response) {
                     console.log(response.total)
-
                     var options = {
                         "key": "rzp_test_aRq4XkP2vJ58Xt", // Enter the Key ID generated from the Dashboard
                         "amount": response.total * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -562,13 +578,9 @@
                     'Your order has been placed',
                     'success'
                 )
-
                 location = '{% url "UserHome" %}';
             },
         });
     }
-
-
-
 </script>
 {% endblock %}

@@ -243,9 +243,12 @@
                                 </div> -->
                                 <h5>₹{{product.price}}</h5>
                                 <div class="product__color__select">
-                                    <div><button class="btn btn-dark rating" style="height: 40px; width: 100px; "><a
-                                                href=""><span style="display: table-cell;
-                                        vertical-align: top; color: white; ">Buy
+                                    <div><button class="btn  rounded-4 mb-4 mt-0 pt-0"
+                                            style="height: 40px; width: 100px; background-color: white; "><a
+                                                href="{% url 'BuyNow' product.id %}"><span
+                                                    class="px-5 rounded-4 mb-2 mt-0 pt-0"
+                                                    style="display: table-cell;
+                                        vertical-align: top; color: black; background-color: aquamarine; margin-top: 0">Buy
                                                     Now</span> </a></button></div>
                                 </div>
                             </div>

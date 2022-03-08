@@ -9,7 +9,13 @@ class Users(AbstractUser):
     phone = models.CharField(max_length=11,null=True)
     adminstatus=models.BooleanField(blank=True,default=False,null=True)
     propic=models.ImageField(upload_to='images',default="2950f96af23e53d8ba98351184c2c803_eW7MOkE.jpg" ,blank=True,null=True)
-    device = models.CharField( max_length=30 , null=True , blank=True )
+    device = models.CharField( max_length=60 , null=True , blank=True )
+    
+    def __str__(self):
+        if self.username=="":
+            return self.device
+        else:
+            return self.username
     
 
 
@@ -40,13 +46,14 @@ class Address(models.Model):
 
 PAYMENT_STATUS = (('Pending','Pending'),('Paid','Paid'))
 STATUS = (
+    ('BuyNow','BuyNow'),
     ('New','New'),
     ('Placed','Placed'),
     ('Cancelled','Cancelled'),
     ('Shipped','Shipped'),
     ('Delivered','Delivered'),
     ('Return','Return'),
-    ('RequestedReturn','RequestedReturn')
+    ('RequestedReturn','RequestedReturn'),
     )
 
 
@@ -64,9 +71,16 @@ class Order(models.Model):
 	def get_cart_total(self):
 		order_items = self.orderitem_set.all()
 		total = sum([item.gettotal for item in order_items])
+		return total
+
+	
+	@property
+	def get_cart_totall(self):
+		order_items = self.orderitem_set.all()
+		total = sum([item.gettotal for item in order_items])
 		totalinr = format_currency(total, 'INR', locale='en_IN')
 		return totalinr
-
+ 
 	@property
 	def get_cart_items(self):
 		order_items = self.orderitem_set.all()
@@ -111,7 +125,30 @@ class Pay(models.Model):
 	transactionid = models.CharField(max_length= 100,null= True ,blank=True)
     
 	def __str__(self):
-		return str(self.product)
+		return str(self.amount)
+
+class CouponDetail(models.Model):
+    name = models.CharField(max_length=30,null= True, blank=True)
+    code = models.CharField(max_length=30)
+    offer_percentage = models.FloatField(max_length=30,default=0)
+    created_date = models.DateField(auto_now_add=True)
+    exp_date = models.DateField(null=True, blank=True)
+    use_count= models.FloatField(max_length=30,default=0)
+    total_lessed_money = models.FloatField(max_length=30,default=0)
+    active = models.BooleanField(default=True,null=True)
+    
+    def __str__(self):
+		return self.name
+
+class UseCoupon(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE) 
+    fororder = models.OneToOneField(Orderdetail, on_delete=models.SET_NULL, null=True)
+    coupon = models.ForeignKey(CouponDetail, on_delete=models.CASCADE, blank=True, null=True)
+    used = models.BooleanField(default=False,)
+    lessed_money = models.FloatField(max_length=30,default=0)
+    
+    def __str__(self):
+		return self.user
     
     
     
