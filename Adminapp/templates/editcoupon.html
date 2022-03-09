@@ -1,0 +1,17 @@
+{% extends 'adminbase.html' %}
+{% block content %}
+
+<div class="container-fluid bg-dark text-light rounded">
+    <div class="container m-5 p-5 w-50 mx-auto ">
+        <h3 class="text-center text-white">Edit Coupon</h3>
+        <form method="POST" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% load crispy_forms_tags %}
+            <div class="row">
+                {{form|crispy}}
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Submit</button>
+        </form>
+    </div>
+
+    {% endblock %}

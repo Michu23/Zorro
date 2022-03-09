@@ -33,7 +33,7 @@ def userlogin(request):
             
         except:
             messages.error(request,'User does not exists')
-        
+    
         try:
             user= authenticate(request,username=uname,password=password)
             print("//////////same fields")
@@ -624,5 +624,50 @@ def paypal(request):
         order.complete=True
         order.save()
         return JsonResponse({'status': 'Your order has been Placed Successfully'})
+    
+    
+@never_cache
+def verifycoupon(request):
+    customer = request.user
+    print("///////////////////////")
+    input_code = request.GET.get('input_code')
+    print(input_code)
+    try :
+        coupon = CouponDetail.objects.get(code=input_code)
+    except :
+        data = {'total_amount' : None,'percentage':None,}
+        return JsonResponse(data)
+    last = Order.objects.filter(customer = customer).order_by('-id')[0]
+    if last.status == 'BuyNow' :
+        order = Order.objects.get(customer = customer,status = 'BuyNow')
+        items = OrderItem.objects.get(order = order)
+    else :
+        order= Order.objects.get(customer = customer,status = 'New')  
+        items = order.orderitem_set.all()
+    lessed_money = (order.get_cart_total * coupon.percentage / 100)
+    old_price = order.get_cart_total
+    try:
+        coupon_check = CouponUsed.objects.get(user = customer,coupon = coupon,used = True)
+        data = {'total_amount' : None,'percentage':'used',}
+        return JsonResponse(data)
+    except:
+        apply_coupon = CouponUsed.objects.create(user = customer,coupon = coupon,order = order, used = True,loss =  lessed_money)
+        order.coupon_used = True
+        CouponUsed.objects.get(user=customer,coupon=coupon).save()
+        coupon.count = coupon.count + 1
+        coupon.loss = coupon.loss +lessed_money
+        print(coupon.loss)
+        coupon.save()
+        order.save()
+        print('///////////////////////////////////////////')
+        print(lessed_money)
+        print(order.get_cart_total)
+        lessedinr = format_currency(lessed_money, 'INR', locale='en_IN')
+        data = {'total_amount' : order.get_cart_total,'percentage':coupon.percentage,'old_price':old_price ,'lessedmoney' :lessedinr}
+    return JsonResponse(data)
 
+
+def invoicedetails(request):
+    
+    return render(request,'invoicedetails.html')
 

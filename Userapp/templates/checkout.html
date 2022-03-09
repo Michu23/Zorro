@@ -26,10 +26,13 @@
     </div>
 
     <div class="row">
-        <div class="col-md-8 mt-2">
+        <div class="col-md-8">
             <div id="checkout-form-wizard">
-                <h3>Shipping</h3>
-                <section class="card card-body mb-0">
+                <h3 class="mb-2">Shipping</h3>
+                <section class="card card-body mb-0" style="
+                box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+                padding: 30px 30px 20px 20px;
+              ">
                     <div class="mb-4">
                         <div class="text-muted">Choose where you want to recived your product.</div>
                     </div>
@@ -120,8 +123,11 @@
                         </div>
                 </section>
                 <div class="my-3">
-                    <h3>Payment</h3>
-                    <section class="card card-body mb-0">
+                    <h3 class="mb-2">Payment</h3>
+                    <section class="card card-body mb-0" style="
+                    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+                    padding: 30px 30px 20px 20px;
+                  ">
                         <div class="mb-4">
                             <div class="text-muted">Choose your payment method.</div>
                         </div>
@@ -207,17 +213,24 @@
                         </div>
 
                         <div class="my-3">
-                            <a href="{% url 'UserCart' %}"><button class="btn btn-primary btn-lg">Back to
+                            <a href="{% url 'UserCart' %}"><button class="btn btn-outline-dark btn-lg">Back to
                                     Cart</button></a>
                         </div>
                 </div>
             </div>
         </div>
+
         <div class="col-md-4">
             <h3 class="mb-2">Order Summary</h3>
-            <div class="card mb-4">
+            <div class="card mb-4" style="
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+            padding: 30px 30px 20px 20px; background-color:white
+          ">
                 {% if page == 'BuyNow' %}
-                <div class="card-body">
+                <div class="card-body" style="
+                box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+                padding: 30px 30px 20px 20px;
+              ">
                     <h6 class="card-title mb-4">Products</h6>
 
                     <div class="list-group list-group-flush">
@@ -258,27 +271,50 @@
                 </div>
                 {% endif %}
             </div>
-            <div class="card mb-4">
+            <div class="col-md-12" style="
+          box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+          padding: 30px 30px 20px 20px; background-color:white
+        ">
+                <div class="cart__discount">
+                    <h6>Discount codes</h6>
+                    <form class="mb-3">
+                        <input type="text" placeholder="Coupon code" id="coupon_input" />
+                        <button id="submit_coupon" type="button">Apply</button>
+                    </form>
+                    <h6 id="applied" class="text-success px-2 py-0 m-0 d-none">&#10004; Coupon applied</h6>
+                    <h6 id="expire" class="text-danger px-2 py-0 m-0 d-none">&#x274C; Coupon expired</h6>
+                    <h6 id="used" class="text-danger px-2 py-0 m-0 d-none">&#x274C; Coupon already used</h6>
+                    <h6 id="invalid" class="text-danger px-2 py-0 m-0 d-none">&#x274C; Coupon invalid</h6>
+                    <h6 id="blank" class="text-danger px-2 py-0 m-0 d-none">&#x274C; Invalid entry</h6>
+                </div>
+            </div>
+            <div class="card my-4 p-0" style="
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+            padding: 30px 30px 20px 20px;
+          ">
                 <div class="card-body">
                     <h6 class="card-title mb-4">Price</h6>
                     <div class="row justify-content-center mb-3">
-                        <div class="col-4 text-end">Sub Total :</div>
-                        <div class="col-4">{{order.get_cart_total}}</div>
+                        <div class="col-4 text-end">Total :</div>
+                        <div class="col-4">{{order.get_cart_totall}}</div>
                     </div>
-                    <div class="row justify-content-center mb-3">
-                        <div class="col-4 text-end">Shipping :</div>
-                        <div class="col-4">Free</div>
+
+                    <div id="discountdiv" class="row justify-content-center mb-3 d-none">
+                        <div class="col-4 text-end">Discount :</div>
+                        <div class="col-4"><span class="text-danger" id="discount"></span></div>
                     </div>
-                    <!-- <div class="row justify-content-center mb-3">
-                        <div class="col-4 text-end">Tax(18%) :</div>
-                        <div class="col-4">259.70</div>
-                    </div> -->
-                    <div class="row justify-content-center">
+
+                    <div id="offerdiv" class="row justify-content-center mb-3 d-none">
+                        <div class="col-4 text-end">Offer Applied :</div>
+                        <div class="col-4"><span class="text-danger" id="lessedmoney"></span></div>
+                    </div>
+
+                    <div id="normal" class="row justify-content-center">
                         <div class="col-4 text-end">
-                            <strong>Total :</strong>
+                            <strong>Sub Total :</strong>
                         </div>
                         <div class="col-4">
-                            <strong>{{order.get_cart_total}}</strong>
+                            <strong id="total">{{order.get_cart_totall}}</strong>
                         </div>
                     </div>
                 </div>
@@ -321,49 +357,50 @@
 </script>
 
 
-
-<!-- <script>
-
-    var total = '{{order.get_cart_total}}'
-
-    function completeOrder() {
-        var url = "{% url 'proceed' %}"
-    }
-    // Render the PayPal button into #paypal-button-container
-    paypal.Buttons({
-
-        // Set up the transaction
-        createOrder: function (data, actions) {
-            return actions.order.create({
-                purchase_units: [{
-                    amount: {
-                        value: total
-                    }
-                }]
-            });
-        },
-
-        // Finalize the transaction
-        onApprove: function (data, actions) {
-            return actions.order.capture().then(function (orderData) {
-                // Successful capture! For demo purposes:
-                console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-                var transaction = orderData.purchase_units[0].payments.captures[0];
-                alert('Transaction ' + transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
-
-                // Replace the above to show a success message within this page, e.g.
-                // const element = document.getElementById('paypal-button-container');
-                // element.innerHTML = '';
-                // element.innerHTML = '<h3>Thank you for your payment!</h3>';
-                // Or go to another URL:  actions.redirect('thank_you.html');
-            });
+<script>
+    $('#submit_coupon').on('click', function (e) {
+        let messages = []
+        input_code = $('#coupon_input').val()
+        if (input_code == '' || input_code == null) {
+            $("#blank").removeClass("d-none");
         }
+        else {
+            data = { 'input_code': input_code }
+            $.ajax({
+                url: "{% url 'verifycoupon' %}",
+                data: data,
+                dataType: 'json',
+                success: function (resp) {
+                    if (resp.percentage == null || resp.percentage == '') {
+                        $("#invalid").removeClass("d-none");
+                    }
+                    else if (resp.percentage == 'used') {
+                        $("#used").removeClass("d-none");
+                    }
+                    else {
+
+                        $("#couponprice").text(resp.total_amount);
+                        $("#coupon").removeClass("d-none");
+                        $("#expire").addClass("d-none");
+                        $("#used").addClass("d-none");
+                        $("#invalid").addClass("d-none");
+                        $("#blank").addClass("d-none");
+                        $("#applied").removeClass("d-none");
+                        $("#offerdiv").removeClass("d-none");
+                        $("#discount").text(resp.percentage + "%");
+                        $("#discountdiv").removeClass("d-none");
+                        $('#lessedmoney').text("-" + resp.lessedmoney);
 
 
-    }).render('#paypal-button-container');
-</script> -->
+                    }
+                }
+            })
+        }
+    });
+</script>
 
-<!-- <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
 <script>
     $(document).ready(function () {
         $('.paywith_razorpay').click(function (e) {

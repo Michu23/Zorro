@@ -12,4 +12,6 @@ admin.site.register(OrderItem)
 admin.site.register(Address)
 admin.site.register(Pay)
 admin.site.register(PriceType)
+admin.site.register(CouponDetail)
+admin.site.register(CouponUsed)
 

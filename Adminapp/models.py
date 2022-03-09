@@ -38,10 +38,14 @@ class Product(models.Model):
     btype=models.ForeignKey(Brand,on_delete=models.SET_NULL,null=True)
     stocks=models.IntegerField(null=True)
     
-    
+    def priceinr(self):
+        total=self.price
+        totalinr = format_currency(total, 'INR', locale='en_IN')
+        return totalinr
     
     def __str__(self):
         return self.name
+        
     
     
     

@@ -1,0 +1,168 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+
+
+
+<!-- Modal -->
+<div class="modal fade " id="hihi" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="" method="post">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add coupon</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    {% csrf_token %}
+                    {{couponform|crispy}}
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-outline-success">Save changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- content -->
+<div class="content ">
+
+    <div class="mb-4">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">
+                        <i class="bi bi-globe2 small me-2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Products</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-md-flex gap-4 align-items-center">
+                        <div class="d-none d-md-flex">
+                            <h4>All Coupons </h4>
+                        </div>
+                        <div class="d-md-flex gap-4 align-items-center">
+                            <form class="mb-3 mb-md-0">
+                                <div class="row g-3">
+
+                                </div>
+                            </form>
+                        </div>
+                        <div class="dropdown ms-auto">
+
+
+                            <button id="btn" class="btn btn-primary btn-icon">
+                                <i class="bi bi-plus-circle"></i> Add Coupon
+                            </button>
+
+
+
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-custom table-lg mb-0" id="products">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input class="form-check-input select-all" type="checkbox"
+                                    data-select-all-target="#products" id="defaultCheck1">
+                            </th>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th>Percentage</th>
+                            <th>Created</th>
+                            <th>Exp Date</th>
+                            <th>Use Count</th>
+                            <th>Money Lessed</th>
+                            <th>Status</th>
+                            <th>Options</th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for coupon in coupons %}
+                        <tr>
+                            <td>
+                                <input class="form-check-input" type="checkbox">
+                            </td>
+                            <td>
+                                <a href="#">#{{coupon.id}}</a>
+                            </td>
+
+                            <td>{{coupon.name}}</td>
+                            <td>
+                                <span class="text-success">{{coupon.code}}</span>
+                            </td>
+                            <td>%{{coupon.percentage|floatformat:0}}</td>
+                            <td>{{coupon.created}}</td>
+                            <td>{{coupon.expdate}}</td>
+                            <td>{{coupon.count|floatformat:0}}</td>
+                            <td>{{coupon.lossinr}}</td>
+                            <td>
+
+                                <span class="badge bg-info p-2">{{coupon.active}}</span>
+                            </td>
+                            <td class="text-end">
+                                <div class="d-flex">
+                                    <div class="dropdown ms-auto">
+                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-floating"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            <i class="bi bi-three-dots"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <a href="{% url 'EditCoupons' coupon.id %}" class="dropdown-item">Edit</a>
+                                            <a href="{% url 'DeleteCoupons' coupon.id %}" type="button"
+                                                class="dropdown-item">Delete</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- ./ content -->
+
+<script>
+    $('#btn').click(function () {
+        $('#hihi').modal('show');
+    });
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="sweetalert2.all.min.js"></script>
+<script src="sweetalert2.min.js"></script>
+<link rel="stylesheet" href="sweetalert2.min.css">
+
+
+{% endblock %}

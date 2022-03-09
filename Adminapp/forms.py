@@ -1,6 +1,7 @@
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from .models import *
+from Userapp.models import *
 from django import forms
 
 
@@ -36,6 +37,11 @@ class MyBrandForm(forms.ModelForm):
 class MyPriceForm(forms.ModelForm):
     class Meta:
         model=PriceType
+        fields='__all__'
+
+class MyCouponForm(forms.ModelForm):
+    class Meta:
+        model=CouponDetail
         fields='__all__'
         
         

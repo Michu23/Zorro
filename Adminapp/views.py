@@ -22,16 +22,19 @@ def adminlogin(request):
     if request.method == 'POST':
         admin = request.POST.get('username')
         password = request.POST.get('password')
-        if admin == 'supermichu' and password == 'django':
-            try:
-                user=authenticate(username=admin,password=password)
-            except:
-                print("Hello")
-            if user is not None:
+        
+        try:
+            user=authenticate(username=admin,password=password)
+        except:
+            print("Hello")
+        if user is not None:    
+            if user.is_staff==True:
                 login(request,user)
                 return redirect('AdminHome')
             else:
-                messages.error(request,'You are not Admin')
+                messages.error(request,"You're not an admin")
+        else:
+            messages.error(request,"Invalid details")
     return render (request,"adminlogin.html")
 
 @never_cache
@@ -208,44 +211,44 @@ def cancelorder(request, id):
 
 
 def admincats(request):
-    brands=Brand.objects.all()
-    cats=Catogery.objects.all()
-    form= MyCatForm()
-    if request.method == 'POST':
-        form = MyCatForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.error(request,"Successfully added")
-            return redirect("AdminCats")
-        else:
-            messages.error(request,"Error")
-    context={'form':form,'cats':cats,'brands':brands}
+    # brands=Brand.objects.all()
+    # cats=Catogery.objects.all()
+    # form= MyCatForm()
+    # if request.method == 'POST':
+    #     form = MyCatForm(request.POST)
+    #     if form.is_valid():
+    #         form.save()
+    #         messages.error(request,"Successfully added")
+    #         return redirect("AdminCats")
+    #     else:
+    #         messages.error(request,"Error")
+    # context={'form':form,'cats':cats,'brands':brands}
     return render (request, "catogeries.html",context)
 
 def addcats(request,pk):
-    page="edit"
-    cats = Catogery.objects.get(id=pk)
-    form = MyCatForm(instance=cats)
-    if request.method == 'POST': 
-        form = MyCatForm(request.POST,instance=cats)
-        if form.is_valid():
-            form.save()
-            messages.success(request,'Updated Successfully')
-            return redirect('AdminCats')
-    formm= MyCatForm()
-    if request.method == 'POST':
-        formm = MyCatForm(request.POST)
-        if formm.is_valid():
-            formm.save()
-            messages.error(request,"Successfully added")
-            return redirect("AdminCats")
-        else:
-            messages.error(request,"Error")
+    # page="edit"
+    # cats = Catogery.objects.get(id=pk)
+    # form = MyCatForm(instance=cats)
+    # if request.method == 'POST': 
+    #     form = MyCatForm(request.POST,instance=cats)
+    #     if form.is_valid():
+    #         form.save()
+    #         messages.success(request,'Updated Successfully')
+    #         return redirect('AdminCats')
+    # formm= MyCatForm()
+    # if request.method == 'POST':
+    #     formm = MyCatForm(request.POST)
+    #     if formm.is_valid():
+    #         formm.save()
+    #         messages.error(request,"Successfully added")
+    #         return redirect("AdminCats")
+    #     else:
+    #         messages.error(request,"Error")
     return render(request,'catogeries.html',{'form':form,'formm':formm,'page':page})
 
 def delcats(request,pk):
-    cats = Catogery.objects.get(id=pk)
-    cats.delete()
+    # cats = Catogery.objects.get(id=pk)
+    # cats.delete()
     return redirect("AdminCats")
 
 # def adminbrands(request):
@@ -263,24 +266,62 @@ def delcats(request,pk):
 #     context={'form':form,'cats':cats,'brands':brands,'page':page}
 #     return render (request, "catogeries.html",context)
 
-def addbrands(request,pk):
-    page="editbrand"
-    cats=Catogery.objects.all()
-    brands = Brand.objects.get(id=pk)
-    form = MyBrandForm(instance=brands)
+# def addbrands(request,pk):
+#     page="editbrand"
+#     cats=Catogery.objects.all()
+#     brands = Brand.objects.get(id=pk)
+#     form = MyBrandForm(instance=brands)
+#     if request.method == 'POST': 
+#         form = MyBrandForm(request.POST,instance=brands)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request,'Updated Successfully')
+#             return redirect('AdminCats')
+#     return render(request,'catogeries.html',{'form':form,'page':page,'cats':cats})
+
+# def delbrands(request,pk):
+#     brands = Brand.objects.get(id=pk)
+#     brands.delete()
+#     return redirect("AdminCats")
+
+
+def couponsused(request):
+    coupons = CouponUsed.objects.all()
+    context={'coupons': coupons}
+    return render(request,'couponused.html',context)
+
+def admincoupons(request):
+    coupons= CouponDetail.objects.all()
+    couponform= MyCouponForm()
+    if request.method == 'POST':
+        couponform = MyCouponForm(request.POST)
+        if couponform.is_valid():
+            couponform.save()
+            messages.error(request,"Successfully added")
+            return redirect("AdminCoupons")
+        else:
+            messages.error(request,"Error")
+    context= {'coupons':coupons,'couponform':couponform}
+    return render (request, 'coupons.html',context)
+
+def editcoupons(request,id):
+    print("/////////////////////hi")
+    coup = CouponDetail.objects.get(id=id)
+    form = MyCouponForm(instance=coup)
     if request.method == 'POST': 
-        form = MyBrandForm(request.POST,instance=brands)
+        print("/////////////////////hi")
+        form = MyCouponForm(request.POST,instance=coup)
         if form.is_valid():
             form.save()
             messages.success(request,'Updated Successfully')
-            return redirect('AdminCats')
-    return render(request,'catogeries.html',{'form':form,'page':page,'cats':cats})
+            return redirect('AdminCoupons')
+        else:
+            messages.error(request,"Error")
+    context={'form':form,'coup':coup}
+    return render(request,'editcoupon.html',context)
 
-def delbrands(request,pk):
-    brands = Brand.objects.get(id=pk)
-    brands.delete()
-    return redirect("AdminCats")
-
+def deletecoupons(request,id):
+    return render(request,'coupons.html') 
 
 
 

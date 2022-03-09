@@ -35,11 +35,10 @@ urlpatterns = [
    path('razorpay/',views.razorpay,name='razorpay'),
    path('payrazor/',views.payrazor,name='payrazor'),
    path('paypal/',views.paypal,name='paypal'),
+   path('verifycoupon/',views.verifycoupon,name='verifycoupon'),
    
-   
-   
-   
-   
+
+   path('invoicedetails/',views.invoicedetails,name='invoicedetails'),
    # path('updatecart/', views.updatecart, name='updatecart'),
    
    

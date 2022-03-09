@@ -142,6 +142,78 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="m-1">
+  <h5 class="m-1">Items:   {{order.get_cart_item}}</h5>
+  <h5 class="m-1 " id="b_offer">Total:   <i class="fas fa-rupee-sign"  ></i>{{order.get_cart_total}}</h5>
+  <div class=" d-none" id="old_price">
+      <div class="d-flex">
+          <h6 class="m-1 "><del> Total:   <i class="fas fa-rupee-sign"></i><span id="old_price_val"></span></del></h6>
+          <h6 class="m-1 text-success">- <span id="a_offer_percent" >20</span>%</h6>
+      </div>    
+  </div>
+  <h5 class="m-1 d-none" id="a_offer">Total:   <i class="fas fa-rupee-sign"></i> <span id="a_offer_val"> {{order.get_cart_total}} </span> </h5>
+  <p class="text-success d-none coupon-success" >*coupon applied</p>
+  <div class="">
+  {% if order.coupon_used %}
+  <p class="text-success  coupon-success" >*coupon applied</p>
+  {% endif %}
+
+  </div>
+  
+  
+</div>
+{% if order.coupon_used == False %}
+<div class="m-2" style="position: relative;">
+  <button class="btn btn-success m-1" id="coupon_ask_btn">Use Coupon</button>
+  <div class="coupon_apply d-none  bg-light"  style="width: 100%; height: 100%;">
+      <div id="coupon-form "  class="d-flex">
+          <input type="text" id="input_code" name="coupon_code" value="" required>
+          <button class="btn btn-primary" id="coupon_submit_btnn">Apply</button>
+      </div>
+      <div text-danger id="error"></div>
+  </div>
+</div>
+{% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 {% extends 'adminbase.html' %}
 
 {% block title%}

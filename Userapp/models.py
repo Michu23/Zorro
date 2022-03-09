@@ -63,23 +63,33 @@ class Order(models.Model):
 	date_ordered = models.DateTimeField(auto_now_add=True)
 	complete = models.BooleanField(default=False)
 	status = models.CharField(max_length = 200,choices = STATUS, default = 'New', null=True)
+	coupon_used=models.BooleanField(default=False, null=True , blank=True )
 
 	def __str__(self):
 		return str(self.id)
 
+	
 	@property
 	def get_cart_total(self):
 		order_items = self.orderitem_set.all()
 		total = sum([item.gettotal for item in order_items])
-		return total
+		if self.coupon_used == False:
+			return total
+		else :
+			total = total - self.couponused.loss
+			return total
 
-	
 	@property
 	def get_cart_totall(self):
 		order_items = self.orderitem_set.all()
 		total = sum([item.gettotal for item in order_items])
-		totalinr = format_currency(total, 'INR', locale='en_IN')
-		return totalinr
+		if self.coupon_used == False:
+			totalinr = format_currency(total, 'INR', locale='en_IN')
+			return totalinr
+		else :
+			total = total - self.couponused.loss
+			totalinr = format_currency(total, 'INR', locale='en_IN')
+			return totalinr
  
 	@property
 	def get_cart_items(self):
@@ -87,7 +97,6 @@ class Order(models.Model):
 		total = sum([item.quantity for item in order_items])
 		return total
 
-	
 class OrderItem(models.Model):
 	product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
 	order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, blank=True)
@@ -107,8 +116,6 @@ class OrderItem(models.Model):
 		total = self.product.price * self.quantity
 		totalinr = format_currency(total, 'INR', locale='en_IN')
 		return totalinr
-
-
 
 status_list = (
         ('None','None'),
@@ -130,35 +137,33 @@ class Pay(models.Model):
 class CouponDetail(models.Model):
     name = models.CharField(max_length=30,null= True, blank=True)
     code = models.CharField(max_length=30)
-    offer_percentage = models.FloatField(max_length=30,default=0)
-    created_date = models.DateField(auto_now_add=True)
-    exp_date = models.DateField(null=True, blank=True)
-    use_count= models.FloatField(max_length=30,default=0)
-    total_lessed_money = models.FloatField(max_length=30,default=0)
+    percentage = models.FloatField(max_length=30,default=0)
+    created = models.DateField(auto_now_add=True)
+    expdate = models.DateField(null=True, blank=True)
+    count= models.FloatField(max_length=30,default=0)
+    loss = models.FloatField(max_length=30,default=0)
     active = models.BooleanField(default=True,null=True)
     
     def __str__(self):
-		return self.name
+        return self.name
 
-class UseCoupon(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE) 
-    fororder = models.OneToOneField(Orderdetail, on_delete=models.SET_NULL, null=True)
+	# def lossinr(self):
+	# 	total = self.loss
+	# 	totalinr = format_currency(total, 'INR', locale='en_IN')
+	# 	return totalinr
+
+class CouponUsed(models.Model):
+    user = models.OneToOneField(Users, on_delete=models.CASCADE) 
+    order = models.OneToOneField(Order, on_delete=models.SET_NULL, null=True)
     coupon = models.ForeignKey(CouponDetail, on_delete=models.CASCADE, blank=True, null=True)
-    used = models.BooleanField(default=False,)
-    lessed_money = models.FloatField(max_length=30,default=0)
+    used = models.BooleanField(default=False)
+    loss = models.FloatField(max_length=30,default=0)
     
-    def __str__(self):
-		return self.user
-    
-    
-    
-    
-    
-
-
-
+    @property
+    def lossinr(self):
+        total = self.loss
+        totalinr = format_currency(total, 'INR', locale='en_IN')
+        return totalinr
 
 
 	
-    
-

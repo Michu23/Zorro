@@ -184,6 +184,63 @@
                     </a>
                 </li>
                 {% endif %}
+                {% if catogeries %}
+                <li>
+                    <a class="active" href="{% url 'AdminCats' %}">
+                        <span class="nav-link-icon">
+                            <i class="bi bi-archive"></i>
+                        </span>
+                        <span>Catogeries</span>
+                    </a>
+                </li>
+                {% else %}
+                <li>
+                    <a href="{% url 'AdminCats' %}">
+                        <span class="nav-link-icon">
+                            <i class="bi bi-archive"></i>
+                        </span>
+                        <span>Catogeries</span>
+                    </a>
+                </li>
+                {% endif %}
+                {% if Coupons %}
+                <li>
+                    <a class="active" href="{% url 'AdminCoupons' %}">
+                        <span class="nav-link-icon">
+                            <i class="bi bi-wallet"></i>
+                        </span>
+                        <span>Coupons</span>
+                    </a>
+                </li>
+                {% else %}
+                <li>
+                    <a href="{% url 'AdminCoupons' %}">
+                        <span class="nav-link-icon">
+                            <i class="bi bi-wallet"></i>
+                        </span>
+                        <span>Coupons</span>
+                    </a>
+                </li>
+                {% endif %}
+                {% if couponused %}
+                <li>
+                    <a class="active" href="{% url 'couponsused' %}">
+                        <span class="nav-link-icon">
+                            <i class="bi bi-wallet2"></i>
+                        </span>
+                        <span>Coupons used</span>
+                    </a>
+                </li>
+                {% else %}
+                <li>
+                    <a href="{% url 'couponsused' %}">
+                        <span class="nav-link-icon">
+                            <i class="bi bi-wallet2"></i>
+                        </span>
+                        <span>Coupons used</span>
+                    </a>
+                </li>
+                {% endif %}
 
 
 

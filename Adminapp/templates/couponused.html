@@ -1,0 +1,121 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+
+
+
+
+<!-- content -->
+<div class="content ">
+
+    <div class="mb-4">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">
+                        <i class="bi bi-globe2 small me-2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Products</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-md-flex gap-4 align-items-center">
+                        <div class="d-none d-md-flex">
+                            <h4>All Coupons </h4>
+                        </div>
+                        <div class="d-md-flex gap-4 align-items-center">
+                            <form class="mb-3 mb-md-0">
+                                <div class="row g-3">
+
+                                </div>
+                            </form>
+                        </div>
+                        <div class="dropdown ms-auto">
+
+
+                            <button id="btn" class="btn btn-primary btn-icon">
+                                <i class="bi bi-plus-circle"></i> Add Coupon
+                            </button>
+
+
+
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-custom table-lg mb-0" id="products">
+                    <thead>
+                        <tr class="justify-content-between">
+                            <th>
+                                <input class="form-check-input select-all" type="checkbox"
+                                    data-select-all-target="#products" id="defaultCheck1">
+                            </th>
+                            <th>ID</th>
+                            <th>Photo</th>
+                            <th>User</th>
+                            <th>Coupon</th>
+                            <th>Order</th>
+                            <th>Money Saved</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for coupon in coupons %}
+                        <tr class="justify-content-between">
+                            <td>
+                                <input class="form-check-input" type="checkbox">
+                            </td>
+                            <td>
+                                <a href="#">#{{coupon.id}}</a>
+                            </td>
+                            <td>
+                                <div class="avatar avatar-info">
+                                    <img src="{{coupon.user.propic.url}}" height="10%" width="60%"
+                                        class="rounded-circle" alt="..." />
+                                </div>
+                            </td>
+                            <td>{{coupon.user.username}}</td>
+                            <td>
+                                <span class="text-success">{{coupon.coupon.code}}</span>
+                            </td>
+                            <td><a href=""> #{{coupon.order}}</a></td>
+                            <td>{{coupon.lossinr}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- ./ content -->
+
+<script>
+    $('#btn').click(function () {
+        $('#hihi').modal('show');
+    });
+</script>
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="sweetalert2.all.min.js"></script>
+<script src="sweetalert2.min.js"></script>
+<link rel="stylesheet" href="sweetalert2.min.css">
+
+
+{% endblock %}
