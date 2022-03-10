@@ -168,7 +168,7 @@
             <a href="{% url 'Wishlist' %}"><img src="{% static 'img/icon/heart.png' %}" alt="" /></a>
             <a href="{% url 'UserCart' %}"><img src="{% static 'img/icon/cart.png' %}" alt="" />
               <span>0</span></a>
-            <div class="price">$0.00</div>
+            <div class="price">{{order.get_cart_totall}}</div>
           </div>
         </div>
       </div>

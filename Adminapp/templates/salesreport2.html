@@ -1,0 +1,163 @@
+{% extends 'adminbase.html' %}
+{% block content %}
+{% load static %}
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<!-- Datatable Dependency start -->
+<link rel="stylesheet" type="text/css"
+    href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.20/b-1.6.1/b-colvis-1.6.1/b-html5-1.6.1/b-print-1.6.1/r-2.2.3/datatables.min.css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript"
+    src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.20/b-1.6.1/b-colvis-1.6.1/b-html5-1.6.1/b-print-1.6.1/r-2.2.3/datatables.min.js"></script>
+
+<!-- Datatable Dependency end -->
+
+<style>
+    body {
+        background-color: #F1F4F5;
+    }
+
+    .card-header {
+        padding: 0.2rem 1.25rem;
+        /* margin-bottom: 0; */
+        background-color: #ffffff;
+        border-bottom: 0px;
+    }
+
+    .card-body {
+        padding: 0rem 1.25rem;
+    }
+
+    p {
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+
+    .card {
+        border-radius: 0px;
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    .flex-wrap {
+        margin-bottom: -35px;
+    }
+
+    div.dataTables_wrapper div.dataTables_paginate {
+        margin-top: -25px;
+    }
+
+    .page-item.active .page-link {
+        z-index: 1;
+        color: #fff;
+        background-color: #5D78FF;
+        border-color: #5D78FF;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $('#table_id').DataTable({
+
+            dom: 'Bfrtip',
+            responsive: true,
+            pageLength: 25,
+            // lengthMenu: [0, 5, 10, 20, 50, 100, 200, 500],
+
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+
+        });
+    });
+</script>
+
+<div class="container">
+
+    <div class="col-md-12">
+        <div class="card">
+
+            <div class="card-header">
+                <h4>Data Table Export</h4>
+                <p>Data table with print, pdf, csv</p>
+            </div>
+
+            <div class="card-body">
+
+                <table class="table table-bordered table-hover" id="table_id">
+                    <thead>
+                        <tr>
+                            <th data-priority="1">#</th>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th data-priority="2">Company</th>
+                            <th>Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Motiur Rahaman</td>
+                            <td>017178499**</td>
+                            <td>memotiur@gmail.com</td>
+                            <td>PixonLab</td>
+                            <td>Concord Regency, Panthapath, Dhaka</td>
+                        </tr>
+
+
+                        <tr>
+                            <td>2</td>
+                            <td>kunde.else</td>
+                            <td>+1.768.717.1544</td>
+                            <td>lehner.sonny@hotmail.com</td>
+                            <td>Muller, Stanton and Zieme</td>
+                            <td>43712 Quigley Street Apt. 869 South Taurean, NM 22014</td>
+                        </tr>
+
+                        <tr>
+                            <td>3</td>
+                            <td>ycormier</td>
+                            <td>228.870.5976 x74536</td>
+                            <td>crystel.ruecker@hotmail.com</td>
+                            <td>Sawayn Group</td>
+                            <td>28263 Liliane Island South Walkerborough, WI 77858-4350</td>
+                        </tr>
+
+                        <tr>
+                            <td>4</td>
+                            <td>slemke</td>
+                            <td>453-442-4607</td>
+                            <td>rolfson.melvin@hotmail.com</td>
+                            <td>Wisozk-Wiegand</td>
+                            <td>489 Maiya Island Lakinhaven, ND 75781</td>
+                        </tr>
+
+                        <tr>
+                            <td>5</td>
+                            <td>kaelyn07</td>
+                            <td>259.952.8948</td>
+                            <td>fleta.murray@gmail.com</td>
+                            <td>Kulas and Sons</td>
+                            <td>47260 VonRueden Landing Apt. 111 Lawrencefort, MS 48945</td>
+                        </tr>
+
+
+
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock %}

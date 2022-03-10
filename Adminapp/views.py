@@ -9,6 +9,10 @@ from django.contrib.auth import authenticate,login,logout
 from Userapp.models import Users
 from django.contrib import messages
 from django.db.models import Count,Sum
+from datetime import datetime,date,timedelta
+import xlwt
+import csv
+import datetime
 
 
 
@@ -323,6 +327,86 @@ def editcoupons(request,id):
 def deletecoupons(request,id):
     return render(request,'coupons.html') 
 
+
+# def export_csv(request):
+#     response['Content-Disposition'] = 'attachment; filename=Expenses' + \
+#         str(datetime.datetime.now())+'.csv'
+#     writer = csv.writer(response)
+#     writer.writerow(['Amount', 'Description', 'Category', 'Date'])
+#     expenses = Expense.objects.filter(owner=request.user)
+
+#     for expense in expenses:
+#         writer.writerow( [expense.amount, expense.description,
+#                              expense.category, expense.date])
+#     return response 
+
+    
+# def export_excel(request):
+#     response = HttpResponse(content_type='application/ms-excel')
+#     response ['Content-Disposition'] = 'attachment; filename-Expenses' +\
+#         str(datetime, datetime.now())+'.xls'
+#     wb = xlwt.Workbjiok(encoding='utf-8')
+#     ws.add_sheet('Expenses')
+                                           
+#     row_num = 0
+#     font_style = xlwt.XFStyle()
+#     font_style.font.bold = True
+#     columns = ['ID', 'Description', 'Category', 'Date']
+#     for col_num in range (len(columns) ):
+#         ws.write(row_num, col_num, columns (col_num), font_style)
+#     font_style = xlwt.XFStyle()
+#     rows = Expense.objects.filter(owner=request.user).values_list(
+#         'amount','description', 'category', 'date')
+
+#     for row in rows:
+#         row_num += 1
+#         for col_num in range(len(row)):
+#             ws.write(row_num, col_num, str(row[col_num]), font_style)
+
+#     wb.save(response)
+#     return response
+
+
+
+
+@never_cache
+def export_csv(request):
+    global order_data
+    order_data = Pay.objects.all()
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=SalesReport'+str(datetime.datetime.now())+'.csv'
+    writer = csv.writer(response)   
+    writer.writerow(['Id','Name','Payment','Items','Amount','Date and Time'])
+    for data in order_data:
+        writer.writerow([data.order.id, data.order.customer.username, data.method, data.order.get_cart_items,data.order.get_cart_totall , data.order.date_ordered])
+    return response
+
+@never_cache
+def export_excel(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=SalesReport'+str(datetime.datetime.now())+'.xls'
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Sales Report')
+    row_num = 0
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+    columns = ['Id','Name','Payment','Items','Amount','Date and Time']
+
+    for col_num in range(len(columns)):
+        ws.write(row_num,col_num,columns[col_num],font_style)
+
+    font_style = xlwt.XFStyle()
+    rows = order_data.values_list(
+        'id','order_customer','order_date','payment_total_amount','payment_payment_method'
+    )
+    for row in rows:
+        row_num = row_num + 1
+
+        for col_num in range(len(columns)):
+             ws.write(row_num,col_num,str(row[col_num]),font_style)
+
+    wb.save(response)
+    return response
 
 
 

@@ -19,6 +19,13 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 
+def userbase(request):
+    try:
+        order= Order.objects.get(complete=False)
+    except:
+        pass
+    return render(request, 'base.html',{'order':order})
+
 @never_cache
 def userlogin(request):
     if request.user.is_authenticated:
@@ -623,6 +630,7 @@ def paypal(request):
         order.status = 'Placed'
         order.complete=True
         order.save()
+        
         return JsonResponse({'status': 'Your order has been Placed Successfully'})
     
     
@@ -647,7 +655,7 @@ def verifycoupon(request):
     lessed_money = (order.get_cart_total * coupon.percentage / 100)
     old_price = order.get_cart_total
     try:
-        coupon_check = CouponUsed.objects.get(user = customer,coupon = coupon,used = True)
+        coupon_check = CouponUsed.objects.get(user = customer,coupon = coupon,used = True,applied=True)
         data = {'total_amount' : None,'percentage':'used',}
         return JsonResponse(data)
     except:
@@ -666,8 +674,6 @@ def verifycoupon(request):
         data = {'total_amount' : order.get_cart_total,'percentage':coupon.percentage,'old_price':old_price ,'lessedmoney' :lessedinr}
     return JsonResponse(data)
 
-
 def invoicedetails(request):
-    
     return render(request,'invoicedetails.html')
 

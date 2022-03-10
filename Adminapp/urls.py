@@ -35,5 +35,8 @@ urlpatterns = [
    path('admincoupons/',views.admincoupons,name='AdminCoupons'),
    path('editcoupons/<str:id>',views.editcoupons,name='EditCoupons'),
    path('deletecoupons/<str:id>',views.deletecoupons,name='DeleteCoupons'),
+
+   path('export_excel',views.export_excel,name='ExportExcel'),
+   path('export_csv',views.export_csv,name='ExportCSV'),
    
 ]
