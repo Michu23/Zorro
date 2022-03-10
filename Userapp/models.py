@@ -89,6 +89,7 @@ class Order(models.Model):
 		else :
 			total = total - self.couponused.loss
 			totalinr = format_currency(total, 'INR', locale='en_IN')
+			print(total)
 			return totalinr
  
 	@property
@@ -143,23 +144,10 @@ class CouponDetail(models.Model):
     count= models.FloatField(max_length=30,default=0)
     loss = models.FloatField(max_length=30,default=0)
     active = models.BooleanField(default=True,null=True)
-    applied = models.BooleanField(default=False,null=True, blank=True)
-    
+
     def __str__(self):
         return self.name
 
-
-
-
-
-
-
-
-
-    # def lossinr(self):
-	# 	total = self.loss
-	# 	totalinr = format_currency(total, 'INR', locale='en_IN')
-	# 	return totalinr
 
 class CouponUsed(models.Model):
     user = models.OneToOneField(Users, on_delete=models.CASCADE) 
@@ -167,19 +155,12 @@ class CouponUsed(models.Model):
     coupon = models.ForeignKey(CouponDetail, on_delete=models.CASCADE, blank=True, null=True)
     used = models.BooleanField(default=False)
     loss = models.FloatField(max_length=30,default=0)
-    
+
+
 	# @property
 	# def __str__(self):
 	# 	return self.coupon.name
 
-	# @property
-	# def lossinr(self):
-	# 	total = self.loss
-	# 	totalinr = format_currency(total, 'INR', locale='en_IN')
-	# 	return totalinr
-
-	# def hi(self):
-	# 	pass
 
 	
 

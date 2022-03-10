@@ -30,6 +30,7 @@ urlpatterns = [
    
    path('acceptorder/<str:id>',views.acceptorder,name='acceptorder'),
    path('cancelorder/<str:id>',views.cancelorder,name='cancelorder'),
+   path('deliverorder/<str:id>',views.deliverorder,name='deliverorder'),
    
    path('couponsused/',views.couponsused,name='couponsused'),
    path('admincoupons/',views.admincoupons,name='AdminCoupons'),

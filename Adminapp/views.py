@@ -48,7 +48,7 @@ def adminhome(request):
     
     placed = Order.objects.filter(status= 'Placed').count()
     shipped = Order.objects.filter(status= 'Shipped').count()
-    completed = Order.objects.filter(status= 'Completed').count()
+    completed = Order.objects.filter(status= 'Delivered').count()
     cancelled = Order.objects.filter(status= 'Cancelled').count()
     out_of_delivery = Order.objects.filter(status= 'Out Of Delevery').count()
     returned = Order.objects.filter(status= 'Return').count()
@@ -196,6 +196,13 @@ def acceptorder(request, id):
     order = Order.objects.get(id = id)
     items = OrderItem.objects.filter(order = order)
     order.status = 'Shipped'
+    order.save()
+    return redirect('AdminOrders')
+
+def deliverorder(request, id):
+    order = Order.objects.get(id = id)
+    items = OrderItem.objects.filter(order = order)
+    order.status = 'Delivered'
     order.save()
     return redirect('AdminOrders')
 

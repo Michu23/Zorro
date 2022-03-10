@@ -101,6 +101,8 @@
                         <span class="badge bg-danger p-2">{{order.status}}</span>
                         {% elif order.status == "Shipped"%}
                         <span class="badge bg-success p-2">{{order.status}}</span>
+                        {% elif order.status == "Delivered"%}
+                        <span class="badge bg-secondary p-2">{{order.status}}</span>
                         {% else %}
                         {% endif %}
                     </td>
@@ -110,14 +112,18 @@
                                 {% if order.status == "Placed" %}
                                 <a href="{% url 'acceptorder' order.id %}"><button
                                         class="btn btn-outline-success">Accept</button></a>
-                                {% else %}
-                                <a href=""><button class="btn btn-success opacity-0">Accept</button></a>
+                                {% elif order.status == "Shipped" %}
+                                <a href="{% url 'deliverorder' order.id %}"><button
+                                        class="btn btn-outline-success">Deliver</button></a>
                                 {% endif %}
                             </div>
                             <div>
                                 <div>
+                                    {% if order.status == "Delivered" %}
+                                    {% else %}
                                     <a href="{% url 'cancelorder' order.id %}"><button
                                             class="btn btn-outline-danger">Cancel</button></a>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div>
