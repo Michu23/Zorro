@@ -9,7 +9,7 @@ urlpatterns = [
    path('',views.adminlogin,name='AdminLogin'),
    
    path('admincats/',views.admincats,name='AdminCats'),
-   path('addcats/<str:pk>',views.addcats,name='AddCats'),
+   path('editcats/<str:pk>',views.editcats,name='EditCats'),
    path('delcats/<str:pk>',views.delcats,name='DelCats'),
    
    # path('adminbrands/',views.adminbrands,name='Adminbrands'),
@@ -30,6 +30,7 @@ urlpatterns = [
    
    path('acceptorder/<str:id>',views.acceptorder,name='acceptorder'),
    path('cancelorder/<str:id>',views.cancelorder,name='cancelorder'),
+   path('deliverorder/<str:id>',views.deliverorder,name='deliverorder'),
    
    path('couponsused/',views.couponsused,name='couponsused'),
    path('admincoupons/',views.admincoupons,name='AdminCoupons'),

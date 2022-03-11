@@ -338,7 +338,7 @@ def updateitem(request):
         'items':order.get_cart_items,
         'quantity':orderItem.quantity,
         'total':orderItem.get_total,
-        'cart_total':order.get_cart_total,
+        'cart_total':order.get_cart_totall,
         'productId':productId,
         'cur_stock':cur_stock,
         'flag':flag
@@ -495,7 +495,16 @@ def profileorder(request):
     orders =Order.objects.filter(customer=user,complete=True)
     items=OrderItem.objects.all()
     context={'orders':orders,'items':items}
-    return render (request, "profileorders.html",context)
+    return render (request, "profileorder.html",context)
+
+def profileorderdetails(request,id):
+    user = request.user
+    order = Order.objects.get(id=id)
+    items=order.orderitem_set.all()
+    context={'order':order,'items':items}
+    return render (request, "profileorderdetails.html",context)
+
+
 
 
 
@@ -549,7 +558,11 @@ def proceed(request):
         address_id = request.POST.get('address')
         address = Address.objects.get(id=address_id)
         user = request.user
-        order= Order.objects.get(customer=user,complete=False)
+        try:
+            order= Order.objects.get(customer=user,complete=False,status="BuyNow")
+        except:
+            order= Order.objects.get(customer=user,complete=False,status="New")
+
         items = order.orderitem_set.all()
         for item in items :
             ordered = item.quantity
@@ -574,7 +587,10 @@ def payrazor(request):
         user=request.user
         print("////////////////////")
         print(user)
-        order = Order.objects.get(customer = user,complete=False)
+        try:
+            order= Order.objects.get(customer=user,complete=False,status="BuyNow")
+        except:
+            order= Order.objects.get(customer=user,complete=False,status="New")
         total_amount =  order.get_cart_total
     return JsonResponse({'name':user.username,'email':user.email,'total':total_amount,'phone':user.phone })
 
@@ -583,7 +599,10 @@ def razorpay(request):
     user=request.user
     print(user)
     if request.method == 'POST': 
-        order= Order.objects.get(customer=user,complete=False)
+        try:
+            order= Order.objects.get(customer=user,complete=False,status="BuyNow")
+        except:
+            order= Order.objects.get(customer=user,complete=False,status="New")
         items = order.orderitem_set.all()
         for item in items :
             ordered = item.quantity
@@ -600,8 +619,6 @@ def razorpay(request):
         order.save()
         return JsonResponse({'status': 'Your order has been Placed Successfully'})
     
-
-
 @csrf_exempt
 def paypal(request):
     print("/////////////////////////////////activating paypal")
@@ -609,7 +626,10 @@ def paypal(request):
         print("/////////////////////////////////activating paypal")
 
         user = request.user
-        order= Order.objects.get(customer = user,complete=False)
+        try:
+            order= Order.objects.get(customer=user,complete=False,status="BuyNow")
+        except:
+            order= Order.objects.get(customer=user,complete=False,status="New")
         items = order.orderitem_set.all()
         for item in items :
             ordered = item.quantity

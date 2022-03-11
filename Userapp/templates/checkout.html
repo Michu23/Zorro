@@ -131,73 +131,7 @@
                         <div class="mb-4">
                             <div class="text-muted">Choose your payment method.</div>
                         </div>
-                        <!-- <div class="accordion accordion-with-radio" id="accordionExample">
 
-
-
-                            
-
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingOne">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                        <div class="form-check">
-                                            <input class="form-check-input payment" type="radio" name="payment"
-                                                id="paypalFlexRadioDefault">
-                                            <label class="form-check-label mb-0" for="paypalFlexRadioDefault">
-                                                Pay with Paypal
-                                            </label>
-                                        </div>
-                                    </button>
-                                </h2>
-                                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
-                                    data-bs-parent="#accordionExample">
-                                    <div class="accordion-body">
-                                        <div class="d-flex align-items-center">
-                                            <img width="50" class="me-3"
-                                                src="{% static 'assets/images/paypal-logo.png' %}" alt="...">
-                                            You will be redirected to PayPal website to complete your purchase securely.
-                                        </div>
-                                        <div id="paypal-button-container"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingThree">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#collapseThree" aria-expanded="false"
-                                        aria-controls="collapseThree">
-                                        <div class="form-check">
-                                            <input class="form-check-input payment" value="COD" type="radio"
-                                                name="payment" id="cashOnDeliveryFlexRadioDefault">
-                                            <label class="form-check-label mb-0" for="cashOnDeliveryFlexRadioDefault">
-                                                Cash on Delivery
-                                            </label>
-                                        </div>
-                                    </button>
-                                </h2>
-                                <div id="collapseThree" class="accordion-collapse collapse"
-                                    aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                                    <div class="accordion-body d-flex">
-                                        <div class="d-flex align-items-center">
-                                            <img width="50" class="me-3"
-                                                src="{% static 'assets/images/cash-on-delivery-logo.png' %}" alt="...">
-                                            Pay with cash when your order is delivered.
-                                        </div>
-                                        <div>
-                                            <button class="btn btn-primary btn-lg" id="proceed">Submit</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
-                        <!-- </section> -->
-
-                        <!-- <div class="my-2">
-                            <button
-                                class="btn btn-light text-dark paywith_razorpay btn-lg w-100 h-25"><strong>Razorpay</strong>
-                            </button>
-                        </div> -->
 
                         <div class="my-2">
                             <button id="razorpaybutton" class="btn btn-secondary btn-lg w-100 py-3"><img width="50"
@@ -373,12 +307,19 @@
                 success: function (resp) {
                     if (resp.percentage == null || resp.percentage == '') {
                         $("#invalid").removeClass("d-none");
+                        $("#expire").addClass("d-none");
+                        $("#used").addClass("d-none");
+                        $("#blank").addClass("d-none");
+                        $("#applied").addClass("d-none");
                     }
                     else if (resp.percentage == 'used') {
                         $("#used").removeClass("d-none");
+                        $("#expire").addClass("d-none");
+                        $("#invalid").addClass("d-none");
+                        $("#blank").addClass("d-none");
+                        $("#applied").addClass("d-none");
                     }
                     else {
-
                         $("#couponprice").text(resp.total_amount);
                         $("#coupon").removeClass("d-none");
                         $("#expire").addClass("d-none");
@@ -458,33 +399,7 @@
                 }
             });
 
-            //var options = {
-            //"key": "YOUR_KEY_ID", // Enter the Key ID generated from the Dashboard
-            //"amount": "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-            //"currency": "INR",
-            //"name": "Acme Corp",
-            //"description": "Test Transaction",
-            //"image": "https://example.com/your_logo",
-            //"order_id": "order_9A33XWu170gUtm", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-            //"handler": function (response) {
-            //alert(response.razorpay_payment_id);
-            //alert(response.razorpay_order_id);
-            //alert(response.razorpay_signature)
-            //},
-            //"prefill": {
-            //"name": "Gaurav Kumar",
-            //"email": "gaurav.kumar@example.com",
-            //"contact": "9999999999"
-            //},
-            //"notes": {
-            //  "address": "Razorpay Corporate Office"
-            // },
-            //"theme": {
-            // "color": "#3399cc"
-            //  }
-            //  };
-            //  var rzp1 = new Razorpay(options);
-            //  rzp1.open();
+
         });
 
     });

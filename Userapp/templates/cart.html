@@ -115,7 +115,7 @@
           ">
 
           <ul>
-            <li>Total items <span id="items">1</span></li>
+            <li>Total items <span id="items"></span></li>
             <li>
               Subtotal <span id="cart_total">{{order.get_cart_totall}}</span>
             </li>
@@ -209,8 +209,8 @@
 
         }
 
-        var total_id = "#" + productId + " #totall";
-        var item_id = " #items";
+        var total_id = "#" + productId + "#totall";
+        var item_id = "#items";
         var cart_total_id = " #cart_total";
         var quantity_id = "#" + productId + " #quantity";
 
@@ -225,8 +225,7 @@
 </script>
 <script>
   function guest(productId, action) {
-    // var productId = $(this).val()
-    //   var action = $(this).data("action")
+
     console.log('not logged in')
     if (action == 'increment') {
       if (cart[productId] == undefined) {
@@ -247,6 +246,7 @@
     console.log('CART:', cart)
     document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
     location.reload()
+    
   }
 </script>
 {% endblock %}

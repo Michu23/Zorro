@@ -170,7 +170,7 @@ def filterprice(request,id):
 def salesreport(request):
     pay=Pay.objects.all()
     context={'sales':'sales','pay':pay}
-    return render(request, "salesreport.html",context)
+    return render(request, "sales.html",context)
 
 
 def addproduct(request):
@@ -195,6 +195,13 @@ def acceptorder(request, id):
     order.save()
     return redirect('AdminOrders')
 
+def deliverorder(request, id):
+    order = Order.objects.get(id = id)
+    items = OrderItem.objects.filter(order = order)
+    order.status = 'Delivered'
+    order.save()
+    return redirect('AdminOrders')
+
 
 def cancelorder(request, id):
     order = Order.objects.get(id = id)
@@ -211,44 +218,35 @@ def cancelorder(request, id):
 
 
 def admincats(request):
-    # brands=Brand.objects.all()
-    # cats=Catogery.objects.all()
-    # form= MyCatForm()
-    # if request.method == 'POST':
-    #     form = MyCatForm(request.POST)
-    #     if form.is_valid():
-    #         form.save()
-    #         messages.error(request,"Successfully added")
-    #         return redirect("AdminCats")
-    #     else:
-    #         messages.error(request,"Error")
-    # context={'form':form,'cats':cats,'brands':brands}
-    return render (request, "catogeries.html",context)
+    brands=Brand.objects.all()
+    cats=Catogery.objects.all()
+    form= MyCatForm()
+    if request.method == 'POST':
+        form = MyCatForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.error(request,"Successfully added")
+            return redirect("AdminCats")
+        else:
+            messages.error(request,"Error")
+    context={'form':form,'cats':cats,'brands':brands}
+    return render (request, "cats.html",context)
 
-def addcats(request,pk):
-    # page="edit"
-    # cats = Catogery.objects.get(id=pk)
-    # form = MyCatForm(instance=cats)
-    # if request.method == 'POST': 
-    #     form = MyCatForm(request.POST,instance=cats)
-    #     if form.is_valid():
-    #         form.save()
-    #         messages.success(request,'Updated Successfully')
-    #         return redirect('AdminCats')
-    # formm= MyCatForm()
-    # if request.method == 'POST':
-    #     formm = MyCatForm(request.POST)
-    #     if formm.is_valid():
-    #         formm.save()
-    #         messages.error(request,"Successfully added")
-    #         return redirect("AdminCats")
-    #     else:
-    #         messages.error(request,"Error")
-    return render(request,'catogeries.html',{'form':form,'formm':formm,'page':page})
+def editcats(request,pk):
+    page="edit"
+    cats = Catogery.objects.get(id=pk)
+    formm = MyCatForm(instance=cats)
+    if request.method == 'POST': 
+        form = MyCatForm(request.POST,instance=cats)
+        if formm.is_valid():
+            formm.save()
+            messages.success(request,'Updated Successfully')
+            return redirect('AdminCats')
+    return render(request,'cats.html',{'formm':formm,'page':page})
 
 def delcats(request,pk):
-    # cats = Catogery.objects.get(id=pk)
-    # cats.delete()
+    cats = Catogery.objects.get(id=pk)
+    cats.delete()
     return redirect("AdminCats")
 
 # def adminbrands(request):

@@ -1,0 +1,146 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+
+{% load static %}
+
+<!-- Modal -->
+<div class="modal fade " id="hihihi" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="" method="post">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add coupon</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    {% csrf_token %}
+                    {{form|crispy}}
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-outline-success">Save changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- content -->
+
+<div class="content ">
+
+    <div class="mb-4">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">
+                        <i class="bi bi-globe2 small me-2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Products</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-md-flex gap-4 align-items-center">
+                        <div class="d-none d-md-flex">
+                            <h4>All Coupons </h4>
+                        </div>
+                        <div class="d-md-flex gap-4 align-items-center">
+                            <form class="mb-3 mb-md-0">
+                                <div class="row g-3">
+
+                                </div>
+                            </form>
+                        </div>
+                        <div class="dropdown ms-auto">
+
+
+                            <button id="btnn" class="btn btn-primary btn-icon">
+                                <i class="bi bi-plus-circle"></i> Add Catogery
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if page == "edit" %}
+            <form action="" method="post">
+
+                <h5 class="modal-title" id="exampleModalLabel">Add coupon</h5>
+
+                <div class="modal-body">
+                    {% csrf_token %}
+                    {{formm|crispy}}
+                </div>
+
+                <button type="submit" class="btn btn-outline-success">Save changes</button>
+
+        </div>
+        </form>
+        {% else %}
+        <div class="table-responsive w-50">
+            <table class="table table-custom table-lg mb-0  justify-content-between" id="product">
+                <thead>
+                    <tr>
+                        <th>
+                            <input class="form-check-input select-all" type="checkbox" data-select-all-target="#product"
+                                id="defaultCheck1">
+                        </th>
+                        <th>ID</th>
+                        <th>Category Name</th>
+                        <th>Actions</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for i in cats %}
+                    <tr>
+                        <td>
+                            <input class="form-check-input" type="checkbox">
+                        </td>
+                        <td>
+                            <a href="#">#{{i.id}}</a>
+                        </td>
+
+                        <td>{{i.name}}</td>
+
+
+                        <td>
+                            <div class="d-flex">
+                                <a href="{% url 'EditCats' i.id %}"><button
+                                        class="btn btn-outline-success m-2">Edit</button></a>
+                                <a href="{% url 'DelCats' i.id %}"><button
+                                        class="btn btn-outline-danger m-2">Delete</button></a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+    </div>
+
+</div>
+
+</div>
+<!-- ./ content -->
+
+<script>
+    $('#btnn').click(function () {
+        $('#hihihi').modal('show');
+    });
+</script>
+
+{% endblock %}

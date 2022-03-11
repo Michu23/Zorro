@@ -6,17 +6,17 @@ from Adminapp.models import *
 # Create your models here.
 
 class Users(AbstractUser):
-    phone = models.CharField(max_length=11,null=True)
-    adminstatus=models.BooleanField(blank=True,default=False,null=True)
-    propic=models.ImageField(upload_to='images',default="2950f96af23e53d8ba98351184c2c803_eW7MOkE.jpg" ,blank=True,null=True)
-    device = models.CharField( max_length=60 , null=True , blank=True )
-    
-    def __str__(self):
-        if self.username=="":
-            return self.device
-        else:
-            return self.username
-    
+	phone = models.CharField(max_length=11,null=True)
+	adminstatus=models.BooleanField(blank=True,default=False,null=True)
+	propic=models.ImageField(upload_to='images',default="2950f96af23e53d8ba98351184c2c803_eW7MOkE.jpg" ,blank=True,null=True)
+	device = models.CharField( max_length=60 , null=True , blank=True )
+	
+def __str__(self):
+		if self.username=="":
+			return self.device
+		else:
+			return self.username
+	
 
 
 AddType = (
@@ -73,23 +73,14 @@ class Order(models.Model):
 	def get_cart_total(self):
 		order_items = self.orderitem_set.all()
 		total = sum([item.gettotal for item in order_items])
-		if self.coupon_used == False:
-			return total
-		else :
-			total = total - self.couponused.loss
-			return total
+		return total
 
 	@property
 	def get_cart_totall(self):
-		order_items = self.orderitem_set.all()
-		total = sum([item.gettotal for item in order_items])
-		if self.coupon_used == False:
-			totalinr = format_currency(total, 'INR', locale='en_IN')
-			return totalinr
-		else :
-			total = total - self.couponused.loss
-			totalinr = format_currency(total, 'INR', locale='en_IN')
-			return totalinr
+		total = self.get_cart_total
+		totalinr = format_currency(total, 'INR', locale='en_IN')
+		return totalinr
+		
  
 	@property
 	def get_cart_items(self):
@@ -116,6 +107,8 @@ class OrderItem(models.Model):
 		total = self.product.price * self.quantity
 		totalinr = format_currency(total, 'INR', locale='en_IN')
 		return totalinr
+
+	
 
 status_list = (
         ('None','None'),
@@ -144,21 +137,10 @@ class CouponDetail(models.Model):
     loss = models.FloatField(max_length=30,default=0)
     active = models.BooleanField(default=True,null=True)
     
+
     def __str__(self):
         return self.name
 
-	# def lossinr(self):
-	# 	total = self.loss
-	# 	totalinr = format_currency(total, 'INR', locale='en_IN')
-	# 	return totalinr
-
-class CouponUsed(models.Model):
-    user = models.OneToOneField(Users, on_delete=models.CASCADE) 
-    order = models.OneToOneField(Order, on_delete=models.SET_NULL, null=True)
-    coupon = models.ForeignKey(CouponDetail, on_delete=models.CASCADE, blank=True, null=True)
-    used = models.BooleanField(default=False)
-    loss = models.FloatField(max_length=30,default=0)
-    
     @property
     def lossinr(self):
         total = self.loss
@@ -166,4 +148,17 @@ class CouponUsed(models.Model):
         return totalinr
 
 
+class CouponUsed(models.Model):
+    user = models.OneToOneField(Users, on_delete=models.CASCADE) 
+    order = models.OneToOneField(Order, on_delete=models.SET_NULL, null=True)
+    coupon = models.ForeignKey(CouponDetail, on_delete=models.CASCADE, blank=True, null=True)
+    used = models.BooleanField(default=False)
+    loss = models.FloatField(max_length=30,default=0)
+    applied = models.BooleanField(default=False,null=True,blank=True)
 	
+    @property
+    def lossinr(self):
+        total = self.loss
+        totalinr = format_currency(total, 'INR', locale='en_IN')
+        return totalinr
+

@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+<br><br><br><br><br><br><br>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+    integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+    crossorigin="anonymous"></script>
+<!-- content -->
+<div class="content container rounded-3">
+
+
+    <div class="buyer-profile-cover row bg-image mb-4 p-5 rounded-3" style="background-color: azure;">
+        <div class="container d-flex  align-items-center h-100 flex-column flex-md-row text-center row text-md-start">
+            <div class="col-md-4">
+                <img src="{{user.propic.url}}" height="10%" width="60%" class="rounded-circle" alt="..." />
+            </div>
+            <div class="my-4 my-md-0 col-md-8">
+                <h3 class="mb-1" style="text-transform: capitalize;"><strong>Hi {{user.username}},</strong></h3>
+                <h5 class="mb-3">Welcome to Zorro-Estore</h5>
+                <a href="{% url 'editprofile' %}" class="btn btn-primary btn-lg btn-icon">
+                    <i class="bi bi-pencil small"></i> Edit Account
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+    <br>
+    <div class="row">
+        <div class="col-md-4 rounded-3">
+            <div class="card">
+                <div class="card-body">
+                    <ul class="nav nav-pills flex-column gap-2">
+                        <li class="nav-item">
+                            <a class="nav-link " href="{% url 'ProfileDash' %}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link  active " href="{% url 'UserOrders' %}">My Orders</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="{% url 'UserAddress' %}">My Addresses</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="{% url 'Wishlist' %}">Wishlist</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="table-responsive">
+                <table class="table table-custom table-lg mb-0" id="orders">
+                    <thead>
+                        <tr>
+
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Date</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+
+                            <td>
+                                <a href="{% url 'AdminOrderDetail' order.id %}">#{{order.id}}</a>
+                            </td>
+                            <td>{{order.customer}}</td>
+                            <td>{{order.date_ordered|date}}</td>
+                            <td>{{order.get_cart_items}}</td>
+                            <td> {{order.get_cart_totall}}</td>
+                            <td>
+                                {% if order.status == "Placed" %}
+                                <span class="badge bg-secondary p-2">{{order.status}}</span>
+                                {% elif order.status == "Cancelled" %}
+                                <span class="badge bg-danger p-2">{{order.status}}</span>
+                                {% elif order.status == "Shipped"%}
+                                <span class="badge bg-success p-2">{{order.status}}</span>
+                                {% elif order.status == "Delivered" %}
+                                <span class="badge bg-info p-2">{{order.status}}</span>
+                                {% else %}
+                                {% endif %}
+                            </td>
+                            <td class="">
+                                <div class="d-flex justify-content-end">
+
+                                    <div>
+                                        {% if order.status == "Shipped" %}
+
+                                        {% elif order.status == "Delivered" %}
+                                        <div>
+                                            <a href="{% url 'returnorder' order.id %}"><button
+                                                    class="btn btn-outline-danger">Return</button></a>
+                                        </div>
+                                        {% else %}
+                                        <div>
+                                            <a href="{% url 'cancelorder' order.id %}"><button
+                                                    class="btn btn-outline-danger">Cancel</button></a>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="ps-3">
+                                        <div>
+                                            <a href="{% url 'UserOrderDeatils' order.id %}"><button
+                                                    class="btn btn-outline-dark">Details</button></a>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<!-- ./ content -->
+<script>
+
+    function myFunction() {
+        document.getElementById("btn").onclick = function () {
+            //disable
+            document.getElementById("btn").innerText = "Requested Cancellation"
+            document.getElementById("btn").style.backgroundColor = 'Red';
+            this.disabled = true;
+
+        }
+    }
+</script>
+
+{% endblock %}

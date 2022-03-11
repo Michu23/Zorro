@@ -37,40 +37,22 @@ class Product(models.Model):
     ptype=models.ForeignKey(PriceType,on_delete=models.SET_NULL,null=True)
     btype=models.ForeignKey(Brand,on_delete=models.SET_NULL,null=True)
     stocks=models.IntegerField(null=True)
-    
+    offer=models.BooleanField(null=True,blank=True,default=False)
+
+
     def priceinr(self):
         total=self.price
         totalinr = format_currency(total, 'INR', locale='en_IN')
         return totalinr
-    
+
+    def newprice(self):
+        offerp = self.price
+        if self.offer==True:
+            offerp = self.price - ((self.price)*(10/100))
+            return offerp
+        else:
+            return offerp
+
     def __str__(self):
         return self.name
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     

@@ -18,14 +18,21 @@ urlpatterns = [
    path('login/',views.userlogin,name='UserLogin'),
    path('logout/',views.userlogout,name='UserLogout'),
    path('remove/', views.remove, name='Remove'),
+
+
+
    path('profiledash/',views.profiledash,name='ProfileDash'),
    path('address/',views.address,name='UserAddress'),
    path('editaddress/<str:pk>',views.editaddress,name='EditUserAddress'),
    path('deleteaddress/<str:pk>',views.deleteaddress,name='DeleteUserAddress'),
    path('orders/',views.profileorder,name='UserOrders'),
+   path('orderdetails/<str:id>',views.profileorderdetails,name='UserOrderDeatils'),
    path('cancelorder/<str:id>',views.cancelorder,name="cancelorder"),
    path('returnorder/<str:id>',views.returnorder,name="returnorder"),
    path('wishlist/',views.wishlist,name='Wishlist'),
+
+
+
    path('product/<str:pk>',views.product,name='Product'),
    path('otplogin/',views.otplogin,name='OtpLogin'),
    path('otpverify/',views.otpverify,name='OtpVerify'),
