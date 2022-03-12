@@ -84,7 +84,7 @@
                     </thead>
                     <tbody>
 
-                        {% for product in products %}
+                        {% for product in productss %}
                         <tr>
                             <td>
                                 <input class="form-check-input" type="checkbox">
@@ -101,7 +101,7 @@
                             <td>
                                 <span class="text-success">{{product.stocks}}</span>
                             </td>
-                            <td>₹{{product.price}}</td>
+                            <td>{{product.newpriceinr}}</td>
                             <td>{{product.catogery}}</td>
                             <td class="text-end">
                                 <div class="d-flex">
@@ -169,47 +169,22 @@
                         <div class="bi bi-chevron-down"></div>
                     </div>
                     <div class="collapse show mt-4" id="categoriesCollapseExample">
-                        <div class="d-flex flex-column gap-3">
-                            <div class="form-check">
+                        <div class="d-flex flex-column ">
+                            <div class="form-check p-3 m-0">
                                 <input class="form-check-input" type="checkbox" id="categoryCheck1">
                                 <label class="form-check-label" for="categoryCheck1">
                                     All
                                 </label>
                             </div>
 
-                            {% for cat in catogeries %}
-                            <div class="form-check">
+                            {% for cat in catogeriess %}
+                            <div class="form-check p-3 m-0">
                                 <input class="form-check-input" type="checkbox" id="categoryCheck1">
                                 <label class="form-check-label" for="categoryCheck1">
-                                    {{cat.name}}({{cat.numpro}})
+                                    <a href="" style="color: black">{{cat.name}}({{cat.numpro}})</a>
                                 </label>
                             </div>
                             {% endfor %}
-
-                            <!-- <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="categoryCheck2">
-                                <label class="form-check-label" for="categoryCheck2">
-                                    Accessories
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="categoryCheck3">
-                                <label class="form-check-label" for="categoryCheck3">
-                                    Phone
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="categoryCheck4">
-                                <label class="form-check-label" for="categoryCheck4">
-                                    Headphone
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="categoryCheck5">
-                                <label class="form-check-label" for="categoryCheck5">
-                                    Camera
-                                </label>
-                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -222,8 +197,8 @@
                         <div class="bi bi-chevron-down"></div>
                     </div>
                     <div class="collapse show mt-4" id="categoriesCollapseExample3">
-                        <div class="d-flex flex-column gap-3">
-                            <div class="form-check">
+                        <div class="d-flex flex-column">
+                            <div class="form-check p-3 m-0">
                                 <input class="form-check-input" type="checkbox" id="categoryCheck1">
                                 <label class="form-check-label" for="categoryCheck1">
                                     All
@@ -231,10 +206,10 @@
                             </div>
 
                             {% for i in brands %}
-                            <div class="form-check">
+                            <div class="form-check p-3 m-0">
                                 <input class="form-check-input" type="checkbox" id="categoryCheck1">
                                 <label class="form-check-label" for="categoryCheck1">
-                                    {{i.bname}}({{i.bpro}})
+                                    <a href="" style="color: black">{{i.bname}}({{i.bpro}})</a>
                                 </label>
                             </div>
                             {% endfor %}
@@ -275,8 +250,8 @@
                         <div class="bi bi-chevron-down"></div>
                     </div>
                     <div class="collapse show mt-4" id="categoriesCollapseExample2">
-                        <div class="d-flex flex-column gap-3">
-                            <div class="form-check">
+                        <div class="d-flex flex-column">
+                            <div class="form-check p-3 m-0">
                                 <input class="form-check-input" type="checkbox" id="categoryCheck1">
                                 <label class="form-check-label" for="categoryCheck1">
                                     All
@@ -284,10 +259,10 @@
                             </div>
 
                             {% for i in ptypes %}
-                            <div class="form-check">
+                            <div class="form-check p-3 m-0">
                                 <input class="form-check-input" type="checkbox" id="categoryCheck1">
                                 <label class="form-check-label" for="categoryCheck1">
-                                    {{i.genre}}({{i.ppro}})
+                                    <a href="" style="color: black">{{i.genre}}({{i.ppro}})</a>
                                 </label>
                             </div>
                             {% endfor %}
@@ -350,14 +325,15 @@
 <script src="sweetalert2.all.min.js"></script>
 <script src="sweetalert2.min.js"></script>
 <link rel="stylesheet" href="sweetalert2.min.css">
-<script>
-    function myFunction() {
-        Swal.fire(
-            'Deleted!',
-            'Your product has been deleted.',
-            'success'
-        )
+
+<style>
+    .form-check {
+        padding: 1px;
     }
-</script>
+
+    .form-check:hover {
+        background-color: rgb(214, 214, 214);
+    }
+</style>
 
 {% endblock %}

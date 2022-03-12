@@ -1,9 +1,9 @@
 {% extends 'adminbase.html' %}
 {% block content %}
 
-<div class="container-fluid bg-dark text-light rounded">
-    <div class="container m-5 p-5 w-50 mx-auto ">
-        <h3 class="text-center text-white">Add the product</h3>
+<div class="container-fluid bg-white rounded">
+    <div class="container m-5 p-5 w-50 mx-auto box">
+        <h3 class="text-center text-dark">Edit the product</h3>
         <form method="POST" action="" enctype="multipart/form-data">
             {% csrf_token %}
             {% load crispy_forms_tags %}
@@ -13,5 +13,13 @@
             <button type="submit" class="btn btn-primary mt-3">Submit</button>
         </form>
     </div>
+    <style>
+        .box {
+            background-color: rgb(227, 255, 227);
+            border-radius: 20px;
+            border-width: 10px;
+            border-color: lightgreen;
+        }
+    </style>
 
     {% endblock %}

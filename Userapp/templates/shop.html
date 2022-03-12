@@ -11,7 +11,7 @@
                 <div class="breadcrumb__text">
                     <h4>Shop</h4>
                     <div class="breadcrumb__links">
-                        <a href="./index.html">Home</a>
+                        <a href="{% url 'UserHome' %}">Home</a>
                         <span>Shop</span>
                     </div>
                 </div>
@@ -216,12 +216,51 @@
                 </div>
                 <div class="row">
                     {% for product in products %}
+
+                    {% if product.stocks == 0 %}
+                    <div class="col-lg-4 col-md-6 col-sm-6 px-2">
+                        <div class="product__item rounded-3 pb-4"
+                            style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; padding: 10px;">
+                            <a href="{% url 'Product' product.id %}">
+                                <div class="product__item__pic set-bg" href="{% url 'Product' product.id %}"
+                                    data-setbg="{{product.image1.url}}">
+                                    <span class="label bg-dark text-white">Out of stock</span>
+
+                                    <ul class="product__hover">
+                                        <li><a href="#"><img src="{% static 'img/icon/heart.png' %}" alt=""></a></li>
+                                        <li><a href="{% url 'Product' product.id %}"><img
+                                                    src="{% static 'img/icon/search.png' %}" alt=""></a></li>
+                                    </ul>
+                                </div>
+                            </a>
+                            <div class="product__item__text">
+                                <h6>{{product.name}}</h6>
+                                <a class="outofstock add-cart update-cart" data-product="{{product.id}}"
+                                    data-action="add" style="cursor: pointer">+ Add
+                                    To Cart</a>
+
+                                <h5>{{product.newpriceinr}}</h5>
+
+                                <div class="product__color__select">
+                                    <div><button id="outofstock" class="outofstock rounded-4 mb-4 mt-0 pt-0"
+                                            style="height: 40px; width: 100px; background-color: white; border: none !important;"><a><span
+                                                    class="px-5 rounded-4 mb-2 mt-0 pt-0"
+                                                    style="display: table-cell;
+                                        vertical-align: top; color: black; background-color: aquamarine; margin-top: 0">Buy
+                                                    Now</span></a></button></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% elif product.offer == True %}
                     <div class="col-lg-4 col-md-6 col-sm-6">
                         <div class="product__item rounded-3"
                             style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; padding: 10px;">
                             <a href="{% url 'Product' product.id %}">
                                 <div class="product__item__pic set-bg" href="{% url 'Product' product.id %}"
                                     data-setbg="{{product.image1.url}}">
+                                    <span class="label bg-danger text-white">Sale</span>
+
                                     <ul class="product__hover">
                                         <li><a href="#"><img src="{% static 'img/icon/heart.png' %}" alt=""></a></li>
                                         <li><a href="{% url 'Product' product.id %}"><img
@@ -234,14 +273,14 @@
                                 <a class="add-cart update-cart" data-product="{{product.id}}" data-action="add"
                                     style="cursor: pointer">+ Add
                                     To Cart</a>
-                                <!-- <div class="rating">
-                                    <i class="fa fa-star-o"></i>
-                                    <i class="fa fa-star-o"></i>
-                                    <i class="fa fa-star-o"></i>
-                                    <i class="fa fa-star-o"></i>
-                                    <i class="fa fa-star-o"></i>
-                                </div> -->
-                                <h5>₹{{product.price}}</h5>
+
+                                <span class="d-flex">
+                                    <h5 class="px-2">{{product.newpriceinr}}</h5>
+                                    <p style="text-decoration: line-through;" class="text-muted">{{product.priceinr}}
+                                    </p>
+                                </span>
+
+
                                 <div class="product__color__select">
                                     <div><button class="btn  rounded-4 mb-4 mt-0 pt-0"
                                             style="height: 40px; width: 100px; background-color: white; "><a
@@ -254,6 +293,85 @@
                             </div>
                         </div>
                     </div>
+                    {% elif product.catogery.catoffer == True %}
+                    <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="product__item rounded-3"
+                            style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; padding: 10px;">
+                            <a href="{% url 'Product' product.id %}">
+                                <div class="product__item__pic set-bg" href="{% url 'Product' product.id %}"
+                                    data-setbg="{{product.image1.url}}">
+                                    <span class="label bg-danger text-white">Sale</span>
+
+                                    <ul class="product__hover">
+                                        <li><a href="#"><img src="{% static 'img/icon/heart.png' %}" alt=""></a></li>
+                                        <li><a href="{% url 'Product' product.id %}"><img
+                                                    src="{% static 'img/icon/search.png' %}" alt=""></a></li>
+                                    </ul>
+                                </div>
+                            </a>
+                            <div class="product__item__text">
+                                <h6>{{product.name}}</h6>
+                                <a class="add-cart update-cart" data-product="{{product.id}}" data-action="add"
+                                    style="cursor: pointer">+ Add
+                                    To Cart</a>
+
+
+                                <span class="d-flex">
+                                    <h5 class="px-2">{{product.newpriceinr}}</h5>
+                                    <p style="text-decoration: line-through;" class="text-muted">{{product.priceinr}}
+                                    </p>
+                                </span>
+
+
+                                <div class="product__color__select">
+                                    <div><button class="btn  rounded-4 mb-4 mt-0 pt-0"
+                                            style="height: 40px; width: 100px; background-color: white; "><a
+                                                href="{% url 'BuyNow' product.id %}"><span
+                                                    class="px-5 rounded-4 mb-2 mt-0 pt-0"
+                                                    style="display: table-cell;
+                                        vertical-align: top; color: black; background-color: aquamarine; margin-top: 0">Buy
+                                                    Now</span> </a></button></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% else %}
+                    <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="product__item rounded-3  pb-4"
+                            style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; padding: 10px;">
+                            <a href="{% url 'Product' product.id %}">
+                                <div class="product__item__pic set-bg" href="{% url 'Product' product.id %}"
+                                    data-setbg="{{product.image1.url}}">
+
+                                    <ul class="product__hover">
+                                        <li><a href="#"><img src="{% static 'img/icon/heart.png' %}" alt=""></a></li>
+                                        <li><a href="{% url 'Product' product.id %}"><img
+                                                    src="{% static 'img/icon/search.png' %}" alt=""></a></li>
+                                    </ul>
+                                </div>
+                            </a>
+                            <div class="product__item__text">
+                                <h6>{{product.name}}</h6>
+                                <a class="add-cart update-cart" data-product="{{product.id}}" data-action="add"
+                                    style="cursor: pointer">+ Add
+                                    To Cart</a>
+
+
+                                <h5>{{product.newpriceinr}}</h5>
+                                <div class="product__color__select">
+                                    <div><button class="btn  rounded-4 mb-4 mt-0 pt-0"
+                                            style="height: 40px; width: 100px; background-color: white; "><a
+                                                href="{% url 'BuyNow' product.id %}"><span
+                                                    class="px-5 rounded-4 mb-2 mt-0 pt-0"
+                                                    style="display: table-cell;
+                                        vertical-align: top; color: black; background-color: aquamarine; margin-top: 0">Buy
+                                                    Now</span> </a></button></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
                     {% endfor %}
 
                 </div>
@@ -278,6 +396,23 @@
 <script src="sweetalert2.min.js"></script>
 <link rel="stylesheet" href="sweetalert2.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('.outofstock').click(function (e) {
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Out of Stock!',
+                footer: '<a href="">Shop anything else </a>'
+
+            });
+
+        });
+    });
+</script>
+
 <script>
     $('.update-cart').on('click', function (e) {
         var product = $(this).data('product')

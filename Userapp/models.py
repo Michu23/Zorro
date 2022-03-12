@@ -56,7 +56,6 @@ STATUS = (
     ('RequestedReturn','RequestedReturn'),
     )
 
-
 class Order(models.Model):
 	customer = models.ForeignKey(Users, on_delete=models.SET_NULL, null=True, blank=True)
 	address = models.ForeignKey(Address,on_delete=models.SET_NULL, null=True)
@@ -76,10 +75,24 @@ class Order(models.Model):
 		return total
 
 	@property
+	def get_cart_oldtotal(self):
+		order_items = self.orderitem_set.all()
+		total = sum([item.getoldtotal for item in order_items])
+		return total
+
+	@property
 	def get_cart_totall(self):
 		total = self.get_cart_total
 		totalinr = format_currency(total, 'INR', locale='en_IN')
 		return totalinr
+
+	@property
+	def get_cart_oldtotall(self):
+		total = self.get_cart_oldtotal
+		totalinr = format_currency(total, 'INR', locale='en_IN')
+		return totalinr
+
+	
 		
  
 	@property
@@ -99,12 +112,18 @@ class OrderItem(models.Model):
 
 	@property
 	def gettotal(self):
-		total = self.product.price * self.quantity
+		total = self.product.newprice * self.quantity
 		return total
 
 	@property
-	def get_total(self):
+	def getoldtotal(self):
 		total = self.product.price * self.quantity
+		return total
+	
+
+	@property
+	def get_total(self):
+		total = self.product.newprice * self.quantity
 		totalinr = format_currency(total, 'INR', locale='en_IN')
 		return totalinr
 
@@ -156,9 +175,13 @@ class CouponUsed(models.Model):
     loss = models.FloatField(max_length=30,default=0)
     applied = models.BooleanField(default=False,null=True,blank=True)
 	
+    def __str__(self):
+        return self.coupon.code		
+
     @property
     def lossinr(self):
         total = self.loss
         totalinr = format_currency(total, 'INR', locale='en_IN')
         return totalinr
+
 

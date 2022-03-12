@@ -72,67 +72,84 @@
             </div>
 
             {% if page == "edit" %}
-            <form action="" method="post">
+            <div class="container w-50 form-group border-2 rounded-4 mt-5 pt-5">
+                <form action="" method="POST">
 
-                <h5 class="modal-title" id="exampleModalLabel">Add coupon</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Edit coupon</h5>
 
-                <div class="modal-body">
-                    {% csrf_token %}
-                    {{formm|crispy}}
-                </div>
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        {{formm|crispy}}
+                    </div>
 
-                <button type="submit" class="btn btn-outline-success">Save changes</button>
-
-        </div>
-        </form>
-        {% else %}
-        <div class="table-responsive w-50">
-            <table class="table table-custom table-lg mb-0  justify-content-between" id="product">
-                <thead>
-                    <tr>
-                        <th>
-                            <input class="form-check-input select-all" type="checkbox" data-select-all-target="#product"
-                                id="defaultCheck1">
-                        </th>
-                        <th>ID</th>
-                        <th>Category Name</th>
-                        <th>Actions</th>
-
-                    </tr>
-                </thead>
-                <tbody>
-
-                    {% for i in cats %}
-                    <tr>
-                        <td>
-                            <input class="form-check-input" type="checkbox">
-                        </td>
-                        <td>
-                            <a href="#">#{{i.id}}</a>
-                        </td>
-
-                        <td>{{i.name}}</td>
-
-
-                        <td>
-                            <div class="d-flex">
-                                <a href="{% url 'EditCats' i.id %}"><button
-                                        class="btn btn-outline-success m-2">Edit</button></a>
-                                <a href="{% url 'DelCats' i.id %}"><button
-                                        class="btn btn-outline-danger m-2">Delete</button></a>
-                            </div>
-                        </td>
-                    </tr>
+                    <button type="submit" class="btn btn-outline-success justify-content-end">Save changes</button>
+                    <a href="{% url 'AdminCats' %}"><button class="btn btn-outline-dark">Go back</button></a>
+                    {% for error in messages %}
+                    {{error}}
                     {% endfor %}
+                </form>
+            </div>
+            {% else %}
+            <div class="table-responsive ">
+                <table class="table table-custom table-lg mb-0  justify-content-between" id="product">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input class="form-check-input select-all" type="checkbox"
+                                    data-select-all-target="#product" id="defaultCheck1">
+                            </th>
+                            <th>ID</th>
+                            <th>Category Name</th>
+                            <th>Percentage</th>
+                            <th>Status</th>
+                            <th>Actions</th>
 
-                </tbody>
-            </table>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for i in cats %}
+                        <tr>
+                            <td>
+                                <input class="form-check-input" type="checkbox">
+                            </td>
+                            <td>
+                                <a href="#">#{{i.id}}</a>
+                            </td>
+
+                            <td>{{i.name}}</td>
+                            <td>{{i.catpercent}}</td>
+                            {% if i.catoffer == True %}
+                            <td>
+                                <span class="badge bg-info p-2">Applied</span>
+                            </td>
+                            {% else %}
+                            <td>
+
+                            </td>
+                            {% endif %}
+
+
+
+                            <td>
+                                <div class="d-flex">
+                                    <a href="{% url 'EditCats' i.id %}"><button
+                                            class="btn btn-outline-success m-2">Edit</button></a>
+                                    <a href="{% url 'DelCats' i.id %}"><button
+                                            class="btn btn-outline-danger m-2">Delete</button></a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+
         </div>
-        {% endif %}
 
     </div>
-
-</div>
 
 </div>
 <!-- ./ content -->

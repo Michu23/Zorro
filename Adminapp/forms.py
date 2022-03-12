@@ -8,7 +8,7 @@ from django import forms
 class ProductForm(ModelForm):
     class Meta:
         model = Product
-        fields = ('catogery','ptype','btype','name','stocks','description','price','image1','image2','image3','image4')
+        fields = ('catogery','ptype','btype','name','stocks','description','price','offerpercent','image1','image2','image3','image4')
         labels = {
             'catogery': 'Catogery :',
             'ptype': 'Price Type :',
@@ -17,10 +17,14 @@ class ProductForm(ModelForm):
             'stocks': 'Stocks : ',
             'description': 'Description : ',
             'price': 'Price : ',
+            'offerpercent': 'Offer Percent (%) :',
             'image1': 'Image 1 : ',
             'image2': 'Image 2 : ',
             'image3': 'Image 3 : ',
             'image4': 'Image 4 : ',
+        }
+        help_texts = {
+            'offerpercent': ('Enter the offerpercent you want to give if the offer is applied'),
         }
    
 class MyCatForm(forms.ModelForm):

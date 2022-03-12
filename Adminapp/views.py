@@ -1,5 +1,7 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
+from django.http import JsonResponse
+
 from .forms import *
 from .models import Product
 from Userapp.models import *
@@ -127,8 +129,25 @@ def adminproduct(request):
     catogeries = Catogery.objects.all().annotate(numpro=Count('product'))
     brands=Brand.objects.all().annotate(bpro=Count('product'))
     ptypes=PriceType.objects.all().annotate(ppro=Count('product'))
-    context = {'products':products,'catogeries':catogeries,'brands':brands,'ptypes':ptypes,'pro':'pro'}
+    context = {'productss':products,'catogeriess':catogeries,'brands':brands,'ptypes':ptypes,'pro':'pro'}
     return render(request, "productlist.html",context)
+
+def productoffer(request):
+    products = Product.objects.all().order_by('-price')
+    context = {'products':products,'offerpro':'offerpro'}
+    return render(request, "productoffer.html",context)
+
+def applyoffer(request):
+    pk=request.GET.get('productid')
+    product = Product.objects.get(id=pk)
+    if product.offer == False:
+        product.offer=True
+    else:
+        product.offer=False
+    status=product.offer
+    product.save()
+    status={'status':status}
+    return JsonResponse(status)
 
 @never_cache
 def filterview(request,id):
@@ -182,7 +201,9 @@ def addproduct(request):
             messages.success(request,'Product is Added')
             return redirect('AddProduct')
         else:
-            form.errors
+            messages.error(request,'Invalid Form')
+            return render(request,'addproduct.html',{'form':form})
+
     else:
         return render(request,'addproduct.html',{'form':form})
     return render(request,'addproduct.html')
@@ -237,11 +258,14 @@ def editcats(request,pk):
     cats = Catogery.objects.get(id=pk)
     formm = MyCatForm(instance=cats)
     if request.method == 'POST': 
-        form = MyCatForm(request.POST,instance=cats)
+        formm = MyCatForm(request.POST,instance=cats)
         if formm.is_valid():
             formm.save()
             messages.success(request,'Updated Successfully')
             return redirect('AdminCats')
+        else:
+            messages.error(request,'Form is not valid')
+            print(formm.errors)
     return render(request,'cats.html',{'formm':formm,'page':page})
 
 def delcats(request,pk):
@@ -249,38 +273,6 @@ def delcats(request,pk):
     cats.delete()
     return redirect("AdminCats")
 
-# def adminbrands(request):
-#     brands=Brand.objects.all()
-#     cats=Catogery.objects.all()
-#     form= MyCatForm()
-#     if request.method == 'POST':
-#         form = MyCatForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             messages.error(request,"Successfully added")
-#             return redirect("AdminCats")
-#         else:
-#             messages.error(request,"Error")
-#     context={'form':form,'cats':cats,'brands':brands,'page':page}
-#     return render (request, "catogeries.html",context)
-
-# def addbrands(request,pk):
-#     page="editbrand"
-#     cats=Catogery.objects.all()
-#     brands = Brand.objects.get(id=pk)
-#     form = MyBrandForm(instance=brands)
-#     if request.method == 'POST': 
-#         form = MyBrandForm(request.POST,instance=brands)
-#         if form.is_valid():
-#             form.save()
-#             messages.success(request,'Updated Successfully')
-#             return redirect('AdminCats')
-#     return render(request,'catogeries.html',{'form':form,'page':page,'cats':cats})
-
-# def delbrands(request,pk):
-#     brands = Brand.objects.get(id=pk)
-#     brands.delete()
-#     return redirect("AdminCats")
 
 
 def couponsused(request):

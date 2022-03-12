@@ -18,7 +18,6 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
-
 @never_cache
 def userlogin(request):
     if request.user.is_authenticated:
@@ -429,20 +428,12 @@ def userprofile(request):
     return render (request, "profile.html")
 
 def profiledash(request):
-    
     customers = Users.objects.all().count()
     orders = Order.objects.filter(customer=request.user).count()
     product_count = Product.objects.all().count()
     expense= Pay.objects.filter(payuser=request.user).aggregate(Sum("amount"))
-    
-    # expenseinr= format_currency(5433422.8012, 'INR', locale='en_IN')
-    # total_revenue = Pay.objects.filter(order.user=request.user).aggregate(Sum('amount'))
-    
     context= {'orders':orders,}
-    
     return render (request, "profiledash.html")
-
-
 
 @never_cache
 def editprofile(request):
@@ -505,12 +496,7 @@ def profileorderdetails(request,id):
     return render (request, "profileorderdetails.html",context)
 
 
-
-
-
-
-
-####################################   A D D R E S S  ##############################################################
+########################################################   A D D R E S S  ##############################################################
 
 def address(request):
     addr=Address.objects.filter(cust=request.user)

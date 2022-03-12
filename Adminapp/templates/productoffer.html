@@ -1,0 +1,188 @@
+{% extends 'adminbase.html' %}
+
+{% block content %}
+
+<!-- content -->
+<div class="content ">
+
+    <div class="mb-4">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">
+                        <i class="bi bi-globe2 small me-2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Products</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-md-flex gap-4 align-items-center">
+                        <div class="d-none d-md-flex">
+                            <h4> All Products </h4>
+                        </div>
+                        <div class="d-md-flex gap-4 align-items-center">
+                            <form class="mb-3 mb-md-0">
+                                <div class="row g-3">
+                                    <!-- <div class="col-md-6">
+                                        <select class="form-select">
+                                            <option>Sort by</option>
+                                            <option value="desc">Desc</option>
+                                            <option value="asc">Asc</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <select class="form-select">
+                                            <option value="10">10</option>
+                                            <option value="20">20</option>
+                                            <option value="30">30</option>
+                                            <option value="40">40</option>
+                                            <option value="50">50</option>
+                                        </select>
+                                    </div> -->
+                                </div>
+                            </form>
+                        </div>
+                        <div class="dropdown ms-auto">
+                            <!-- <a href="#" data-bs-toggle="dropdown" class="btn btn-primary dropdown-toggle"
+                                aria-haspopup="true" aria-expanded="false">Actions</a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a href="#" class="dropdown-item">Action</a>
+                                <a href="#" class="dropdown-item">Another action</a>
+                                <a href="#" class="dropdown-item">Something else here</a>
+                            </div> -->
+                            <a href="{% url 'AddProduct' %}">
+                                <button class="btn btn-primary btn-icon">
+                                    <i class="bi bi-plus-circle"></i> Catogeries
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-custom table-lg mb-0" id="products">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input class="form-check-input select-all" type="checkbox"
+                                    data-select-all-target="#products" id="defaultCheck1">
+                            </th>
+                            <th>ID</th>
+                            <th>Photo</th>
+                            <th>Name</th>
+                            <th>Offer</th>
+                            <th>Old Price</th>
+                            <th>New Price</th>
+                            <th>Status</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for product in products %}
+                        <tr>
+                            <td>
+                                <input class="form-check-input" type="checkbox">
+                            </td>
+                            <td>
+                                <a href="#">#{{product.id}}</a>
+                            </td>
+                            <td>
+                                <a href="{% url 'EditProduct' product.id %}">
+                                    <img src="{{product.image1.url}}" class="rounded" width="40" alt="...">
+                                </a>
+                            </td>
+                            <td>{{product.name}}</td>
+                            <td>
+                                <span class="text-success">{{product.offerpercent}}%</span>
+                            </td>
+                            <td>{{product.priceinr}}</td>
+                            <td>{{product.newpriceinr}}</td>
+                            {% if product.offer == True %}
+                            <td>
+                                <span class="badge bg-info p-2">Applied</span>
+                            </td>
+                            {% else %}
+                            <td>
+
+                            </td>
+                            {% endif %}
+
+                            {% if product.offer == False %}
+                            <td class="text-end">
+                                <button value="applied" data-id="{{ product.id }}"
+                                    class="btn apply btn-outline-success p-2 px-5 w-75">Apply</button>
+                            </td>
+                            {% else %}
+                            <td class="text-end">
+                                <button value="cancelled" data-id="{{ product.id }}"
+                                    class="btn apply btn-outline-danger p-2 px-5 w-75">Cancel</button>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- ./ content -->
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="sweetalert2.all.min.js"></script>
+<script src="sweetalert2.min.js"></script>
+<link rel="stylesheet" href="sweetalert2.min.css">
+<script>
+    $(document).ready(function () {
+        $('.apply').click(function (e) {
+
+            var val = $(this).val();
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "The offer will be " + val + " !!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, ' + val + ' it!'
+            }).then((result) => {
+
+
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        type: "GET",
+                        url: "{% url 'ApplyOffer' %}",
+                        data: {
+                            productid: $(this).data('id')
+                        },
+                        success: function (status) {
+                            Swal.fire(
+                                'Success!',
+                                'The offer has been ' + val + '.',
+                                'success',
+                            ).then((result) => {
+                                location.reload()
+                            })
+                        }
+                    })
+                }
+            })
+
+        })
+    })
+</script>
+
+{% endblock %}

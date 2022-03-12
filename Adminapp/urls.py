@@ -6,6 +6,10 @@ urlpatterns = [
    path('adminorders/',views.adminorders,name='AdminOrders'),
    path('orderdetails/<str:pk>',views.adminorderdetail,name='AdminOrderDetail'),
    path('adminproduct/',views.adminproduct,name='AdminProduct'),
+   path('productoffer/',views.productoffer,name='ProductOffer'),
+   path('applyoffer/',views.applyoffer,name='ApplyOffer'),
+
+
    path('',views.adminlogin,name='AdminLogin'),
    
    path('admincats/',views.admincats,name='AdminCats'),

@@ -146,6 +146,28 @@
                 </li>
                 {% endif %}
 
+                {% if offerpro %}
+
+                <li>
+                    <a class="active" href="{% url 'ProductOffer' %}">
+                        <span class="nav-link-icon">
+                            <i class="bi bi-truck"></i>
+                        </span>
+                        <span>Product offers</span>
+                    </a>
+                </li>
+                {% else %}
+
+                <li>
+                    <a href="{% url 'ProductOffer' %}">
+                        <span class="nav-link-icon">
+                            <i class="bi bi-truck"></i>
+                        </span>
+                        <span>Product offers</span>
+                    </a>
+                </li>
+                {% endif %}
+
 
 
                 <li>
@@ -329,7 +351,16 @@
 
         </div>
         <!-- ./ header -->
-
+        {% for message in messages %}
+        <div class="container-fluid p-0">
+            <div class="alert {{ message.tags }} alert-dismissible px-5" role="alert">
+                {{ message }}
+                <button type="button" class="btn" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="True">&times;</span>
+                </button>
+            </div>
+        </div>
+        {% endfor %}
         {% block content %}
 
         {% endblock %}
