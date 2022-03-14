@@ -77,11 +77,12 @@
     <div class="offcanvas__text">
       {% if user.is_authenticated %}
       <strong>
-      <a style="cursor: pointer; color: black; text-decoration: none" href="{% url 'ProfileDash' %}">My Profile</a><br>
+        <a style="cursor: pointer; color: black; text-decoration: none" href="{% url 'ProfileDash' %}">My
+          Profile</a><br>
 
 
-      <a style="cursor: pointer" id="logout">Sign
-        out</a>
+        <a style="cursor: pointer" class="logout">Sign
+          out</a>
       </strong>
 
 
@@ -115,7 +116,7 @@
                 <a href="{% url 'ProfileDash' %}">My Profile</a>
 
 
-                <a style="color: white; cursor: pointer" id="logout">Sign
+                <a style="color: white; cursor: pointer" class="logout">Sign
                   out</a>
 
 
@@ -321,7 +322,7 @@
 
   <script>
     $(document).ready(function () {
-      $('#logout').click(function (e) {
+      $('.logout').click(function (e) {
 
         Swal.fire({
           title: 'Are you sure?',

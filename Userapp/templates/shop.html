@@ -4,6 +4,14 @@
 {% load static %}
 
 <!-- Breadcrumb Section Begin -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 <section class="breadcrumb-option">
     <div class="container">
         <div class="row">
@@ -227,7 +235,7 @@
                                     <span class="label bg-dark text-white">Out of stock</span>
 
                                     <ul class="product__hover">
-                                        <li><a href="#"><img src="{% static 'img/icon/heart.png' %}" alt=""></a></li>
+                                        <li><a href=""><i class="fa-thin fa-heart"></i></a></li>
                                         <li><a href="{% url 'Product' product.id %}"><img
                                                     src="{% static 'img/icon/search.png' %}" alt=""></a></li>
                                     </ul>
@@ -254,9 +262,9 @@
                     </div>
                     {% elif product.offer == True %}
                     <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="product__item rounded-3"
+                        <div class=" rounded-3"
                             style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; padding: 10px;">
-                            
+
                             <a href="{% url 'Product' product.id %}">
                                 <div class="product__item__pic set-bg" href="{% url 'Product' product.id %}"
                                     data-setbg="{{product.image1.url}}">

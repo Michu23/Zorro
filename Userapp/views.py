@@ -255,10 +255,12 @@ def usershop(request):
     if request.user.is_authenticated:
         customer=request.user
     else:
-        device=request.COOKIES['device']
-        print("////////",device)
-        customer,created=Users.objects.get_or_create(device=device)
-        order,created= Order.objects.get_or_create(customer=customer,complete=False)
+        try:
+            device=request.COOKIES['device']
+            customer,created=Users.objects.get_or_create(device=device)
+            order,created= Order.objects.get_or_create(customer=customer,complete=False)
+        except:
+            return redirect("UserLogin")
         
     products = Product.objects.all()
     catogeries = Catogery.objects.all().annotate(numpro=Count('product'))
