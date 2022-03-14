@@ -56,6 +56,12 @@ STATUS = (
     ('RequestedReturn','RequestedReturn'),
     )
 
+OFFERS = (
+    ('None','None'),
+    ('ProductOffer','ProductOffer'),
+    ('CatogeryOffer','CatogeryOffer'),
+    )
+
 class Order(models.Model):
 	customer = models.ForeignKey(Users, on_delete=models.SET_NULL, null=True, blank=True)
 	address = models.ForeignKey(Address,on_delete=models.SET_NULL, null=True)
@@ -63,16 +69,21 @@ class Order(models.Model):
 	complete = models.BooleanField(default=False)
 	status = models.CharField(max_length = 200,choices = STATUS, default = 'New', null=True)
 	coupon_used=models.BooleanField(default=False, null=True , blank=True )
+	offer_used= models.CharField(max_length = 50,choices = OFFERS, default = 'None', null=True)
 
 	def __str__(self):
-		return str(self.id)
+		return str(self.customer)
 
 	
 	@property
 	def get_cart_total(self):
 		order_items = self.orderitem_set.all()
 		total = sum([item.gettotal for item in order_items])
-		return total
+		if self.coupon_used== False:
+			return total
+		else :
+			total = total - self.couponused.loss
+			return total
 
 	@property
 	def get_cart_oldtotal(self):
@@ -168,7 +179,7 @@ class CouponDetail(models.Model):
 
 
 class CouponUsed(models.Model):
-    user = models.OneToOneField(Users, on_delete=models.CASCADE) 
+    user = models.ForeignKey(Users, on_delete=models.CASCADE, null=True, blank=True) 
     order = models.OneToOneField(Order, on_delete=models.SET_NULL, null=True)
     coupon = models.ForeignKey(CouponDetail, on_delete=models.CASCADE, blank=True, null=True)
     used = models.BooleanField(default=False)

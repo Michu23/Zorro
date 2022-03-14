@@ -73,7 +73,7 @@
                   </div>
                 </td>
                 <td class="cart__price">
-                  <span id="totall"> {{i.get_total}}</span>
+                  <span id="{{i.product.id}}totall"> {{i.get_total}}</span>
                 </td>
                 <p><span id="stockmsg" class="text-danger"></span></p>
                 <td style="cursor: pointer" class="cart__close">
@@ -209,7 +209,7 @@
 
         }
 
-        var total_id = "#" + productId + "#totall";
+        var total_id = "#" + productId + "totall";
         var item_id = "#items";
         var cart_total_id = " #cart_total";
         var quantity_id = "#" + productId + " #quantity";
@@ -223,7 +223,7 @@
     });
   });
 </script>
-<script>
+<!-- <script>
   function guest(productId, action) {
 
     console.log('not logged in')
@@ -248,5 +248,5 @@
     location.reload()
     
   }
-</script>
+</script> -->
 {% endblock %}

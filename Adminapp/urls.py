@@ -11,6 +11,7 @@ urlpatterns = [
 
 
    path('',views.adminlogin,name='AdminLogin'),
+   path('adminlogout',views.adminlogout,name='AdminLogout'),
    
    path('admincats/',views.admincats,name='AdminCats'),
    path('editcats/<str:pk>',views.editcats,name='EditCats'),

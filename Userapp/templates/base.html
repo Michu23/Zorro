@@ -75,7 +75,20 @@
     </div>
     <div id="mobile-menu-wrap"></div>
     <div class="offcanvas__text">
-      <p>Free shipping, 30-day return or refund guarantee.</p>
+      {% if user.is_authenticated %}
+      <strong>
+      <a style="cursor: pointer; color: black; text-decoration: none" href="{% url 'ProfileDash' %}">My Profile</a><br>
+
+
+      <a style="cursor: pointer" id="logout">Sign
+        out</a>
+      </strong>
+
+
+      {% else %}
+      <a href="{% url 'UserLogin' %}">Sign in</a>
+      {% endif %}
+
     </div>
   </div>
   <!-- Offcanvas Menu End -->
@@ -102,29 +115,9 @@
                 <a href="{% url 'ProfileDash' %}">My Profile</a>
 
 
-                <a href="" id="createCampaignBtn" data-toggle="modal" data-target="#exampleModalCenterlogout">Sign
+                <a style="color: white; cursor: pointer" id="logout">Sign
                   out</a>
 
-                <div class="modal fade" id="exampleModalCenterlogout" tabindex="-1" role="dialog"
-                  aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="false">
-                  <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content bg-dark text-light">
-                      <div class="modal-header">
-                        <h4 class="modal-title text-white" id="exampleModalLongTitle">Logout</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body text-left">
-                        Are you sure you want to logout?
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-danger">Logout</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
 
 
                 {% else %}
@@ -244,7 +237,7 @@
               <script>
                 document.write(new Date().getFullYear());
               </script>
-              2020
+
             </p>
             <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
           </div>
@@ -253,6 +246,8 @@
     </div>
   </footer>
   <!-- Footer Section End -->
+
+
 
   <!-- Search Begin -->
   <div class="search-model">
@@ -303,32 +298,53 @@
       }
       return cookieValue;
     }
-
-
     function uuidv4() {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
       });
     }
-
-
-
-
     let device = getCookie('device')
 
     if (device == null || device == undefined) {
       device = uuidv4()
     }
-
     document.cookie = 'device=' + device + ";domain=;path=/"
-
   </script>
+
+
   <style>
     .item-action-buttons {
       display: none !important;
     }
   </style>
+
+  <script>
+    $(document).ready(function () {
+      $('#logout').click(function (e) {
+
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "The account will be logged out!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, Logout!'
+        }).then((result) => {
+
+
+          if (result.isConfirmed) {
+
+            location = '{% url "UserLogout" %}';
+
+          }
+        })
+
+      });
+    });
+  </script>
+
 </body>
 
 </html>

@@ -102,6 +102,9 @@
                                     <div>
                                         {% if order.status == "Shipped" %}
 
+                                        {% elif order.status == "Cancelled" %}
+
+
                                         {% elif order.status == "Delivered" %}
                                         <div>
                                             <a href="{% url 'returnorder' order.id %}"><button
@@ -109,7 +112,7 @@
                                         </div>
                                         {% else %}
                                         <div>
-                                            <a href="{% url 'cancelorder' order.id %}"><button
+                                            <a href="{% url 'usercancelorder' order.id %}"><button
                                                     class="btn btn-outline-danger">Cancel</button></a>
                                         </div>
                                         {% endif %}

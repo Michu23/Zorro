@@ -43,6 +43,7 @@ class Product(models.Model):
     offer=models.BooleanField(null=True,blank=True,default=False)
     offerpercent=models.IntegerField(validators=[MinValueValidator(0),MaxValueValidator(100)],null=True,blank=True,default=5)
     offerbuycount=models.BooleanField(null=True,blank=True,default=0)
+    wishlist=models.BooleanField(null=True,blank=True,default=False)
 
 
 
@@ -70,6 +71,25 @@ class Product(models.Model):
         else:
             return offerp
 
+    @property
+    def offerused(self):
+        offerp = self.price
+        productoffer = self.offerpercent
+        catoffer = self.catogery.catpercent
+        if self.offer==True and self.catogery.catoffer==False:
+            return str("productoffer")
+        elif self.offer==False and self.catogery.catoffer==True:
+            return str("catoffer")
+        elif self.offer==True and self.catogery.catoffer==True:
+            if self.catogery.catpercent > self.offerpercent:
+                return str("catoffer")
+            elif self.catogery.catpercent < self.offerpercent:
+                return str("productoffer")
+            else:
+                return str("productoffer")
+
+        else:
+            return str("Not used")
 
 
     @property

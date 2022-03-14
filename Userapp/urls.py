@@ -27,11 +27,9 @@ urlpatterns = [
    path('deleteaddress/<str:pk>',views.deleteaddress,name='DeleteUserAddress'),
    path('orders/',views.profileorder,name='UserOrders'),
    path('orderdetails/<str:id>',views.profileorderdetails,name='UserOrderDeatils'),
-   path('cancelorder/<str:id>',views.cancelorder,name="cancelorder"),
-   path('returnorder/<str:id>',views.returnorder,name="returnorder"),
+   path('cancelorder/<str:id>',views.cancelorder,name="usercancelorder"),
+   path('returnorder/<str:id>',views.returnorder,name="userreturnorder"),
    path('wishlist/',views.wishlist,name='Wishlist'),
-
-
 
    path('product/<str:pk>',views.product,name='Product'),
    path('otplogin/',views.otplogin,name='OtpLogin'),
@@ -44,8 +42,8 @@ urlpatterns = [
    path('paypal/',views.paypal,name='paypal'),
    path('verifycoupon/',views.verifycoupon,name='verifycoupon'),
    
-
    path('invoicedetails/',views.invoicedetails,name='invoicedetails'),
+   path('wishlist/',views.wishlist,name="wishlist"),
    # path('updatecart/', views.updatecart, name='updatecart'),
    
    

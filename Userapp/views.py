@@ -12,7 +12,6 @@ from django.db.models import Count,Sum
 from django.http import JsonResponse
 from decouple import config
 from django.views.decorators.csrf import csrf_exempt
-from .utils import *
 from babel.numbers import format_currency
 from django.contrib.auth.decorators import login_required
 
@@ -100,23 +99,34 @@ def otpverify(request):
     return render(request,'otpverify.html')
 
 
+def wishlist(request):
+    id=request.GET.get("val")
+    product = Product.objects.get(id=id)
+    if product.wishlist ==True:
+        product.wishlist==False
+    else:
+        product.wishlist==True
+    response= {'':''}
+    return JsonResponse(response)
+    
+
+
+
+
 
 ####################################### SIGNUP ###################################################
 
 @never_cache
 def userreg(request):
-    global regform
+    global regform,uname
     Users.objects.filter(is_active=False).delete()
     
-    try:
-        device= request.COOKIES['device']
-        user= Users.objects.get(device=device)
-    except:
-        pass
+    device = request.COOKIES['device']
+    customer, created = Users.objects.get_or_create(device=device)
     
-    form= MyUserFormUser()
+    form= MyUserFormUser(instance=customer)
     if request.method == 'POST':
-        form = MyUserFormUser(request.POST)
+        form = MyUserFormUser(request.POST,instance=customer)
         uname=request.POST.get("username")
         print(uname)
         umail=request.POST.get("email")
@@ -159,7 +169,6 @@ def userreg(request):
         else:
             messages.error(request,"Username , email or phone already taken")
                 
-        
     context={'form':form}
     return render(request, "reg.html",context)
 
@@ -200,12 +209,13 @@ def signupotpverify(request):
             regform.is_active=True
             regform.save()
             num=number[3:]
-            
             print(num)
             user=Users.objects.get(phone=num)
+            guest= Users.objects.get(username=uname)
+            guest.device=""
+            guest.save()
             try:
                 del request.session['phone']
-                Users.objects.get(username=username).update(device=None)
             except:
                 pass
             login(request,user)
@@ -227,10 +237,13 @@ def userhome(request):
     if request.user.is_authenticated:
         customer=request.user
     else:
-        device=request.COOKIES['device']
-        print("////////////////////////////",device)
-        customer,created=Users.objects.get_or_create(device=device)
-        order,created= Order.objects.get_or_create(customer=customer,complete=False)
+        try:
+            device=request.COOKIES['device']
+            print("////////////////////////////",device)
+            customer,created=Users.objects.get_or_create(device=device)
+            order,created= Order.objects.get_or_create(customer=customer,complete=False)
+        except:
+            return redirect("UserLogin")
         
     return render(request, "userindex.html")
 
@@ -635,6 +648,12 @@ def paypal(request):
 @never_cache
 def verifycoupon(request):
     customer = request.user
+    try:
+        coup = CouponUsed.objects.get(user=customer,used=True,applied=False)
+        coup.delete()
+    except:
+        pass
+
     print("///////////////////////")
     input_code = request.GET.get('input_code')
     print(input_code)
@@ -643,33 +662,47 @@ def verifycoupon(request):
     except :
         data = {'total_amount' : None,'percentage':None,}
         return JsonResponse(data)
-    last = Order.objects.filter(customer = customer).order_by('-id')[0]
-    if last.status == 'BuyNow' :
-        order = Order.objects.get(customer = customer,status = 'BuyNow')
-        items = OrderItem.objects.get(order = order)
-    else :
-        order= Order.objects.get(customer = customer,status = 'New')  
-        items = order.orderitem_set.all()
-    lessed_money = (order.get_cart_total * coupon.percentage / 100)
-    old_price = order.get_cart_total
+
     try:
-        coupon_check = CouponUsed.objects.get(user = customer,coupon = coupon,used = True)
+        last = Order.objects.filter(customer = customer).order_by('-id')[0]
+        if last.status == 'BuyNow' :
+            order = Order.objects.get(customer = customer,status = 'BuyNow',complete=False)
+            items = OrderItem.objects.get(order = order)
+            order.coupon_used=False
+            order.save()
+
+        else :
+            order= Order.objects.get(customer = customer,status = 'New',complete=False)  
+            items = order.orderitem_set.all()
+            order.coupon_used=False
+            order.save()
+    except:
+        pass
+    lessed_money = (order.get_cart_oldtotal * coupon.percentage / 100)
+    print(order.get_cart_oldtotal)
+    print("/////////////////////")
+    print(lessed_money)
+    old_price = order.get_cart_oldtotal
+    try:
+        coupon_check = CouponUsed.objects.get(user = customer,coupon = coupon,used = True,applied = True)
         data = {'total_amount' : None,'percentage':'used',}
         return JsonResponse(data)
     except:
         apply_coupon = CouponUsed.objects.create(user = customer,coupon = coupon,order = order, used = True,loss =  lessed_money)
-        order.coupon_used = True
+
         CouponUsed.objects.get(user=customer,coupon=coupon).save()
         coupon.count = coupon.count + 1
         coupon.loss = coupon.loss +lessed_money
+        order.coupon_used=True
         print(coupon.loss)
         coupon.save()
         order.save()
         print('///////////////////////////////////////////')
         print(lessed_money)
         print(order.get_cart_total)
+        print(order.get_cart_totall)
         lessedinr = format_currency(lessed_money, 'INR', locale='en_IN')
-        data = {'total_amount' : order.get_cart_total,'percentage':coupon.percentage,'old_price':old_price ,'lessedmoney' :lessedinr}
+        data = {'total_amount' : order.get_cart_totall,'percentage':coupon.percentage,'old_price':old_price ,'lessedmoney' :lessedinr}
     return JsonResponse(data)
 
 

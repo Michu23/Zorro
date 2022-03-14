@@ -39,6 +39,11 @@ def adminlogin(request):
             messages.error(request,"Invalid details")
     return render (request,"adminlogin.html")
 
+
+def adminlogout(request):
+    logout(request)
+    return redirect("AdminLogin")
+
 @never_cache
 def adminhome(request):
     

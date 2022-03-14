@@ -256,18 +256,24 @@
                     <div class="col-lg-4 col-md-6 col-sm-6">
                         <div class="product__item rounded-3"
                             style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; padding: 10px;">
+                            
                             <a href="{% url 'Product' product.id %}">
                                 <div class="product__item__pic set-bg" href="{% url 'Product' product.id %}"
                                     data-setbg="{{product.image1.url}}">
                                     <span class="label bg-danger text-white">Sale</span>
 
                                     <ul class="product__hover">
-                                        <li><a href="#"><img src="{% static 'img/icon/heart.png' %}" alt=""></a></li>
+                                        <li><label class="switch">
+                                                <input type="checkbox" value="" id="wishlisht">
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </li>
                                         <li><a href="{% url 'Product' product.id %}"><img
                                                     src="{% static 'img/icon/search.png' %}" alt=""></a></li>
                                     </ul>
                                 </div>
                             </a>
+
                             <div class="product__item__text">
                                 <h6>{{product.name}}</h6>
                                 <a class="add-cart update-cart" data-product="{{product.id}}" data-action="add"
@@ -411,6 +417,24 @@
 
         });
     });
+</script>
+
+<script>
+    $('#wishlist').click(function (e) {
+
+        var val = $(this).val();
+
+        $.ajax({
+            type: 'GET',
+            url: "{% url 'wishlist' %}",
+            data: {
+                val: val
+            },
+            dataType: 'json',
+            success: function (response) {
+            }
+        });
+    })
 </script>
 
 <script>
