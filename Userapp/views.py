@@ -99,14 +99,29 @@ def otpverify(request):
     return render(request,'otpverify.html')
 
 
+@never_cache
 def wishlist(request):
-    id=request.GET.get("val")
-    product = Product.objects.get(id=id)
-    if product.wishlist ==True:
-        product.wishlist==False
-    else:
-        product.wishlist==True
-    response= {'':''}
+    print("//////////////////////////////////////")
+    if request.user.is_authenticated:
+        customer = request.user
+    else :
+        device = request.COOKIES['device']
+        customer, created = CustomUser.objects.get_or_create(device=device)
+    productId = request.GET.get('productId')
+    print(productId)
+    action = request.GET.get('action')
+    print(action)
+    product = Product.objects.get(id=productId)
+    
+
+    if action == 'add'  :
+       wishes, created= Wishlist.objects.get_or_create(useradded = customer, productadded=product)
+    else :
+        wishes = Wishlist.objects.get(useradded = customer, productadded=product)
+        wishes.delete()
+
+
+    response = {'items':'flag'}
     return JsonResponse(response)
     
 
@@ -263,10 +278,11 @@ def usershop(request):
             return redirect("UserLogin")
         
     products = Product.objects.all()
+    wishes= Wishlist.objects.filter(useradded = customer).values_list('productadded',flat=True)
     catogeries = Catogery.objects.all().annotate(numpro=Count('product'))
     brands=Brand.objects.all().annotate(bpro=Count('product'))
     ptypes=PriceType.objects.all().annotate(ppro=Count('product'))
-    context = {'products':products,'catogeries':catogeries,'brands':brands,'ptypes':ptypes}
+    context = {'products':products,'catogeries':catogeries,'brands':brands,'ptypes':ptypes,'wishes':wishes}
     return render(request, "shop.html",context)
 
 @never_cache
@@ -469,10 +485,6 @@ def editprofile(request):
             print(form.errors)
     return render(request,"editprofile.html",{'form':form})
 
-
-
-def wishlist(request):
-    return render (request, "wishlist.html")
 
 
 def cancelorder(request, id):

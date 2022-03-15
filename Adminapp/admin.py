@@ -15,4 +15,5 @@ admin.site.register(PriceType)
 admin.site.register(Brand)
 admin.site.register(CouponDetail)
 admin.site.register(CouponUsed)
+admin.site.register(Wishlist)
 

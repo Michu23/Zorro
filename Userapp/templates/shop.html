@@ -4,13 +4,7 @@
 {% load static %}
 
 <!-- Breadcrumb Section Begin -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <section class="breadcrumb-option">
     <div class="container">
@@ -225,169 +219,233 @@
                 <div class="row">
                     {% for product in products %}
 
+
                     {% if product.stocks == 0 %}
-                    <div class="col-lg-4 col-md-6 col-sm-6 px-2">
-                        <div class="product__item rounded-3 pb-4"
+
+                    <div class="col-lg-4 col-md-6 col-sm-6 wished{{product.id}}">
+                        <div class=" rounded-3"
                             style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; padding: 10px;">
                             <a href="{% url 'Product' product.id %}">
                                 <div class="product__item__pic set-bg" href="{% url 'Product' product.id %}"
                                     data-setbg="{{product.image1.url}}">
                                     <span class="label bg-dark text-white">Out of stock</span>
-
-                                    <ul class="product__hover">
-                                        <li><a href=""><i class="fa-thin fa-heart"></i></a></li>
-                                        <li><a href="{% url 'Product' product.id %}"><img
-                                                    src="{% static 'img/icon/search.png' %}" alt=""></a></li>
-                                    </ul>
                                 </div>
                             </a>
                             <div class="product__item__text">
-                                <h6>{{product.name}}</h6>
-                                <a class="outofstock add-cart update-cart" data-product="{{product.id}}"
-                                    data-action="add" style="cursor: pointer">+ Add
-                                    To Cart</a>
+                                <div class="d-flex justify-content-between">
+                                    <h6>{{product.name}}</h6>
+                                    <div>
+                                        <!-- <i class="fa fa-heart-o" style="font-size:22px;"></i>
+                                        <i class="fa fa-heart" style="font-size:22px;color:red"></i> -->
+                                        <span class="d-flex" style="position: absolute; top: 0; right: 0;">
 
+                                            <div class="{% if product.id not in wishes %}d-none{% endif %}"
+                                                id="add_wishh">
+                                                <button class="btn wish "
+                                                    style="background: none; border: none; text-decoration: none;"
+                                                    data-id="{{product.id}}" data-action="remove">
+                                                    <i class="fa fa-heart" style="font-size:22px;color:red"></i>
+
+                                                </button>
+                                            </div>
+
+                                            <div class="{% if product.id in wishes %}d-none{% endif %}"
+                                                id="remove_wish">
+                                                <button class="btn wishh"
+                                                    style="background: none; border: none; text-decoration: none;"
+                                                    data-id="{{product.id}}" data-action="add">
+                                                    <i class="fa fa-heart-o" style="font-size:22px;"></i>
+
+                                                </button>
+                                            </div>
+
+                                        </span>
+                                    </div>
+                                </div>
                                 <h5>{{product.newpriceinr}}</h5>
-
                                 <div class="product__color__select">
-                                    <div><button id="outofstock" class="outofstock rounded-4 mb-4 mt-0 pt-0"
-                                            style="height: 40px; width: 100px; background-color: white; border: none !important;"><a><span
-                                                    class="px-5 rounded-4 mb-2 mt-0 pt-0"
-                                                    style="display: table-cell;
-                                        vertical-align: top; color: black; background-color: aquamarine; margin-top: 0">Buy
-                                                    Now</span></a></button></div>
                                 </div>
                             </div>
+                            <div class="d-flex mt-3">
+                                <a class="add-cart update-cart outofstockk" data-product="{{product.id}}"
+                                    data-action="add" style="cursor: pointer"><button class="btn btn-dark">+ Add
+                                        To Cart</button></a>
+                                <button class="btn btn-info text-white rounded-4 px-3 mx-2 outofstockk"><a>Buy
+                                        Now </a></button>
+                            </div>
+
                         </div>
                     </div>
                     {% elif product.offer == True %}
-                    <div class="col-lg-4 col-md-6 col-sm-6">
+                    <div class="col-lg-4 col-md-6 col-sm-6 wished{{product.id}}">
                         <div class=" rounded-3"
                             style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; padding: 10px;">
-
                             <a href="{% url 'Product' product.id %}">
                                 <div class="product__item__pic set-bg" href="{% url 'Product' product.id %}"
                                     data-setbg="{{product.image1.url}}">
                                     <span class="label bg-danger text-white">Sale</span>
-
-                                    <ul class="product__hover">
-                                        <li><label class="switch">
-                                                <input type="checkbox" value="" id="wishlisht">
-                                                <span class="slider round"></span>
-                                            </label>
-                                        </li>
-                                        <li><a href="{% url 'Product' product.id %}"><img
-                                                    src="{% static 'img/icon/search.png' %}" alt=""></a></li>
-                                    </ul>
                                 </div>
                             </a>
-
                             <div class="product__item__text">
-                                <h6>{{product.name}}</h6>
-                                <a class="add-cart update-cart" data-product="{{product.id}}" data-action="add"
-                                    style="cursor: pointer">+ Add
-                                    To Cart</a>
+                                <span class="d-flex justify-content-between">
+                                    <h6>{{product.name}}</h6>
+                                    <div>
+                                        <!-- <i class="fa fa-heart-o" style="font-size:22px;"></i>
+                                        <i class="fa fa-heart" style="font-size:22px;color:red"></i> -->
+                                        <span class="" style="position: absolute; top: 0; right: 0;">
 
+                                            <div class="{% if product.id not in wishes %}d-none{% endif %}"
+                                                id="add_wish">
+                                                <button class="btn wish "
+                                                    style="background: none; border: none; text-decoration: none;"
+                                                    data-id="{{product.id}}" data-action="remove">
+                                                    <i class="fas fa-heart text-danger "></i>
+                                                </button>
+                                            </div>
+
+                                            <div class="{% if product.id in wishes %}d-none{% endif %}"
+                                                id="remove_wish">
+                                                <button class="btn wish"
+                                                    style="background: none; border: none; text-decoration: none;"
+                                                    data-id="{{product.id}}" data-action="add">
+                                                    <i class="far fa-heart"></i>
+                                                </button>
+                                            </div>
+
+                                        </span>
+                                    </div>
+                                </span>
                                 <span class="d-flex">
                                     <h5 class="px-2">{{product.newpriceinr}}</h5>
                                     <p style="text-decoration: line-through;" class="text-muted">{{product.priceinr}}
                                     </p>
                                 </span>
-
-
-                                <div class="product__color__select">
-                                    <div><button class="btn  rounded-4 mb-4 mt-0 pt-0"
-                                            style="height: 40px; width: 100px; background-color: white; "><a
-                                                href="{% url 'BuyNow' product.id %}"><span
-                                                    class="px-5 rounded-4 mb-2 mt-0 pt-0"
-                                                    style="display: table-cell;
-                                        vertical-align: top; color: black; background-color: aquamarine; margin-top: 0">Buy
-                                                    Now</span> </a></button></div>
-                                </div>
                             </div>
+                            <div class="d-flex">
+                                <a class="add-cart update-cart" data-product="{{product.id}}" data-action="add"
+                                    style="cursor: pointer"><button class="btn btn-dark">+ Add
+                                        To Cart</button></a>
+                                <button class="btn btn-info text-white rounded-4 px-3 mx-2"><a
+                                        href="{% url 'BuyNow' product.id %}">Buy
+                                        Now </a></button>
+                            </div>
+
                         </div>
                     </div>
                     {% elif product.catogery.catoffer == True %}
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="product__item rounded-3"
+                    <div class="col-lg-4 col-md-6 col-sm-6 wished{{product.id}}">
+                        <div class=" rounded-3"
                             style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; padding: 10px;">
                             <a href="{% url 'Product' product.id %}">
                                 <div class="product__item__pic set-bg" href="{% url 'Product' product.id %}"
                                     data-setbg="{{product.image1.url}}">
                                     <span class="label bg-danger text-white">Sale</span>
-
-                                    <ul class="product__hover">
-                                        <li><a href="#"><img src="{% static 'img/icon/heart.png' %}" alt=""></a></li>
-                                        <li><a href="{% url 'Product' product.id %}"><img
-                                                    src="{% static 'img/icon/search.png' %}" alt=""></a></li>
-                                    </ul>
                                 </div>
                             </a>
                             <div class="product__item__text">
-                                <h6>{{product.name}}</h6>
-                                <a class="add-cart update-cart" data-product="{{product.id}}" data-action="add"
-                                    style="cursor: pointer">+ Add
-                                    To Cart</a>
+                                <span class="d-flex justify-content-between">
+                                    <h6>{{product.name}}</h6>
+                                    <div>
+                                        <!-- <i class="fa fa-heart-o" style="font-size:22px;"></i>
+                                        <i class="fa fa-heart" style="font-size:22px;color:red"></i> -->
+                                        <span class="" style="position: absolute; top: 0; right: 0;">
 
+                                            <div class="{% if product.id not in wishes %}d-none{% endif %}"
+                                                id="add_wish">
+                                                <button class="btn wish "
+                                                    style="background: none; border: none; text-decoration: none;"
+                                                    data-id="{{product.id}}" data-action="remove">
+                                                    <i class="fas fa-heart text-danger "></i>
+                                                </button>
+                                            </div>
 
+                                            <div class="{% if product.id in wishes %}d-none{% endif %}"
+                                                id="remove_wish">
+                                                <button class="btn wish"
+                                                    style="background: none; border: none; text-decoration: none;"
+                                                    data-id="{{product.id}}" data-action="add">
+                                                    <i class="far fa-heart"></i>
+                                                </button>
+                                            </div>
+
+                                        </span>
+                                    </div>
+                                </span>
                                 <span class="d-flex">
                                     <h5 class="px-2">{{product.newpriceinr}}</h5>
                                     <p style="text-decoration: line-through;" class="text-muted">{{product.priceinr}}
                                     </p>
                                 </span>
-
-
-                                <div class="product__color__select">
-                                    <div><button class="btn  rounded-4 mb-4 mt-0 pt-0"
-                                            style="height: 40px; width: 100px; background-color: white; "><a
-                                                href="{% url 'BuyNow' product.id %}"><span
-                                                    class="px-5 rounded-4 mb-2 mt-0 pt-0"
-                                                    style="display: table-cell;
-                                        vertical-align: top; color: black; background-color: aquamarine; margin-top: 0">Buy
-                                                    Now</span> </a></button></div>
-                                </div>
                             </div>
+                            <div class="d-flex ">
+                                <a class="add-cart update-cart" data-product="{{product.id}}" data-action="add"
+                                    style="cursor: pointer"><button class="btn btn-dark">+ Add
+                                        To Cart</button></a>
+                                <button class="btn btn-info text-white rounded-4 px-3 mx-2"><a
+                                        href="{% url 'BuyNow' product.id %}">Buy
+                                        Now </a></button>
+                            </div>
+
                         </div>
                     </div>
 
                     {% else %}
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="product__item rounded-3  pb-4"
+                    <div class="col-lg-4 col-md-6 col-sm-6 wished{{product.id}}">
+                        <div class=" rounded-3"
                             style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; padding: 10px;">
                             <a href="{% url 'Product' product.id %}">
                                 <div class="product__item__pic set-bg" href="{% url 'Product' product.id %}"
                                     data-setbg="{{product.image1.url}}">
-
-                                    <ul class="product__hover">
-                                        <li><a href="#"><img src="{% static 'img/icon/heart.png' %}" alt=""></a></li>
-                                        <li><a href="{% url 'Product' product.id %}"><img
-                                                    src="{% static 'img/icon/search.png' %}" alt=""></a></li>
-                                    </ul>
                                 </div>
+
                             </a>
                             <div class="product__item__text">
-                                <h6>{{product.name}}</h6>
-                                <a class="add-cart update-cart" data-product="{{product.id}}" data-action="add"
-                                    style="cursor: pointer">+ Add
-                                    To Cart</a>
+                                <span class="d-flex justify-content-between">
 
+                                    <h6>{{product.name}}</h6>
+                                    <div>
+                                        <!-- <i class="fa fa-heart-o" style="font-size:22px;"></i>
+                                        <i class="fa fa-heart" style="font-size:22px;color:red"></i> -->
+                                        <span class="" style="position: absolute; top: 0; right: 0;">
 
+                                            <div class="{% if product.id not in wishes %}d-none{% endif %}"
+                                                id="add_wish">
+                                                <button class="btn wish "
+                                                    style="background: none; border: none; text-decoration: none;"
+                                                    data-id="{{product.id}}" data-action="remove">
+                                                    <i class="fas fa-heart text-danger "></i>
+                                                </button>
+                                            </div>
+
+                                            <div class="{% if product.id in wishes %}d-none{% endif %}"
+                                                id="remove_wish">
+                                                <button class="btn wish"
+                                                    style="background: none; border: none; text-decoration: none;"
+                                                    data-id="{{product.id}}" data-action="add">
+                                                    <i class="far fa-heart"></i>
+                                                </button>
+                                            </div>
+
+                                        </span>
+                                    </div>
+
+                                </span>
                                 <h5>{{product.newpriceinr}}</h5>
                                 <div class="product__color__select">
-                                    <div><button class="btn  rounded-4 mb-4 mt-0 pt-0"
-                                            style="height: 40px; width: 100px; background-color: white; "><a
-                                                href="{% url 'BuyNow' product.id %}"><span
-                                                    class="px-5 rounded-4 mb-2 mt-0 pt-0"
-                                                    style="display: table-cell;
-                                        vertical-align: top; color: black; background-color: aquamarine; margin-top: 0">Buy
-                                                    Now</span> </a></button></div>
                                 </div>
+                            </div>
+                            <div class="d-flex mt-3">
+                                <a class="add-cart update-cart" data-product="{{product.id}}" data-action="add"
+                                    style="cursor: pointer"><button class="btn btn-dark">+ Add
+                                        To Cart</button></a>
+                                <button class="btn btn-info text-white rounded-4 px-3 mx-2"><a
+                                        href="{% url 'BuyNow' product.id %}">Buy
+                                        Now </a></button>
                             </div>
                         </div>
                     </div>
                     {% endif %}
                     {% endfor %}
-
                 </div>
                 <!-- <div class="row">
                     <div class="col-lg-12">
@@ -413,13 +471,13 @@
 
 <script>
     $(document).ready(function () {
-        $('.outofstock').click(function (e) {
+        $('.outofstockk').click(function (e) {
 
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
                 text: 'Out of Stock!',
-                footer: '<a href="">Shop anything else </a>'
+                footer: '<a href="">Continue shopiing</a>'
 
             });
 
@@ -427,23 +485,7 @@
     });
 </script>
 
-<script>
-    $('#wishlist').click(function (e) {
 
-        var val = $(this).val();
-
-        $.ajax({
-            type: 'GET',
-            url: "{% url 'wishlist' %}",
-            data: {
-                val: val
-            },
-            dataType: 'json',
-            success: function (response) {
-            }
-        });
-    })
-</script>
 
 <script>
     $('.update-cart').on('click', function (e) {

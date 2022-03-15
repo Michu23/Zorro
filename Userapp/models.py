@@ -72,7 +72,7 @@ class Order(models.Model):
 	offer_used= models.CharField(max_length = 50,choices = OFFERS, default = 'None', null=True)
 
 	def __str__(self):
-		return str(self.customer)
+		return str(self.complete)
 
 	
 	@property
@@ -196,3 +196,11 @@ class CouponUsed(models.Model):
         return totalinr
 
 
+class Wishlist(models.Model):
+	useradded=models.ForeignKey(Users, on_delete=models.CASCADE, null=True, blank=True) 
+	productadded=models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
+
+	def __str__(self):
+		return self.useradded.username
+
+		

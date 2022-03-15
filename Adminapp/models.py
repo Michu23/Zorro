@@ -43,7 +43,6 @@ class Product(models.Model):
     offer=models.BooleanField(null=True,blank=True,default=False)
     offerpercent=models.IntegerField(validators=[MinValueValidator(0),MaxValueValidator(100)],null=True,blank=True,default=5)
     offerbuycount=models.BooleanField(null=True,blank=True,default=0)
-    wishlist=models.BooleanField(null=True,blank=True,default=False)
 
 
 

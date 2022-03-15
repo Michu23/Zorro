@@ -969,7 +969,7 @@ ol {
 }
 
 .product__item:hover .product__item__text h6 {
-  opacity: 0;
+  opacity: 1 !important;
 }
 
 .product__item:hover .product__item__text .product__color__select {
@@ -3907,4 +3907,9 @@ ol {
   outline: none !important;
   box-shadow: none !important;
   border: none !important;
+}
+
+
+@media (min-width: 768){
+  
 }

@@ -31,7 +31,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-8 col-sm-12 col-xs-12">
             <div id="checkout-form-wizard">
                 <h3 class="mb-2">Shipping</h3>
                 <section class="card card-body mb-0" style="
@@ -127,6 +127,150 @@
                             </div>
                         </div>
                 </section>
+                <div class="surprise mt-3 d-block d-sm-none
+                	d-none d-sm-block d-md-none d-none d-md-block d-lg-none">
+                    <div class=" card mb-4" style="
+                box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+                padding: 30px 30px 20px 20px; background-color:white
+              ">
+                        {% if page == 'BuyNow' %}
+                        <div class="card-body">
+
+                            {% if order.get_cart_oldtotall == order.get_cart_totall %}
+                            <div class="list-group list-group-flush">
+                                <div class="list-group-item d-flex px-0">
+                                    <a href="{% url 'Product' product.id %}" style="cursor: pointer" class="me-3">
+                                        <img src="{{product.image1.url}}" class="rounded" width="60" alt="">
+                                    </a>
+                                    <div>
+                                        <a href="{% url 'Product' product.id %}" style="cursor: pointer">
+                                            <h5><strong>{{product.name}}</strong></h5>
+                                        </a>
+                                        <div>
+                                            <h5 class="px-2">{{product.newpriceinr}}</h5>
+
+                                        </div>
+                                    </div>
+                                    <div class="text-end ms-auto"></div>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="list-group list-group-flush">
+                                <div class="list-group-item d-flex px-0">
+                                    <a href="{% url 'Product' product.id %}" style="cursor: pointer" class="me-3">
+                                        <img src="{{product.image1.url}}" class="rounded" width="60" alt="">
+                                    </a>
+                                    <div>
+                                        <a href="{% url 'Product' product.id %}" style="cursor: pointer">
+                                            <h5><strong>{{product.name}}</strong></h5>
+                                        </a>
+                                        <div>
+                                            <h5 class="px-2"><strong>{{product.newpriceinr}}</strong></h5>
+                                            <p style="text-decoration: line-through;" class="text-muted">
+                                                {{product.priceinr}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="text-end ms-auto"></div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                        </div>
+                        {% else %}
+                        <div class="card-body my-0 p-0 ">
+                            {% for i in items %}
+
+                            <div class="list-group list-group-flush my-2 ps-4">
+                                <div class="list-group-item d-flex px-0">
+                                    <a href="{% url 'Product' i.product.id %}" style="cursor: pointer" class="me-3">
+                                        <img src="{{i.product.image1.url}}" class="rounded" width="60" alt="">
+                                    </a>
+                                    <div>
+                                        <a href="{% url 'Product' i.product.id %}" style="cursor: pointer">
+                                            <h6><strong>{{i.product.name}}</strong></h6>
+                                        </a>
+                                        <div>{{i.quantity}} items x {{i.product.newpriceinr}}</div>
+                                        <div><strong>Total= {{i.get_total}}</strong> </div>
+                                    </div>
+                                    <div class="text-end ms-auto"></div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-12" style="
+              box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+              padding: 30px 30px 20px 20px; background-color:white; height: 200px
+            ">
+
+                        <div class="cart__discount">
+                            <div><strong>Discount codes</strong></div>
+
+
+                            <div id="applied" class="text-success px-2 py-0 m-0 d-none">&#10004; Coupon applied</div>
+
+                            <form class="mb-3 mt-2">
+                                <input type="text" placeholder="Coupon code" id="coupon_input" />
+                                <button id="submit_coupon" type="button">Apply</button>
+                            </form>
+
+
+                            <div id="expire" class="text-danger px-2 py-0 m-0 d-none">&#x274C; Coupon expired</div>
+                            <div id="used" class="text-danger px-2 py-0 m-0 d-none">&#x274C; Coupon already used</div>
+                            <div id="invalid" class="text-danger px-2 py-0 m-0 d-none">&#x274C; Coupon invalid</div>
+                            <div id="blank" class="text-danger px-2 py-0 m-0 d-none">&#x274C; Invalid entry</div>
+                        </div>
+                    </div>
+                    <div class="card my-4 p-0" style="
+                box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+                padding: 30px 30px 20px 20px;
+              ">
+                        {% if order.get_cart_oldtotall == order.get_cart_totall %}
+                        {% else %}
+                        <div class="container-fluid p-0">
+                            <div class="alert alert-success alert-dismissible px-5" role="alert">
+                                Congratulations, Offer Applied
+                                <button type="button" class="btn" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="True">&times;</span>
+                                </button>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <div class="row justify-content-center mb-3">
+                                <div class="col-5 text-end">Total :</div>
+                                <div class="col-7">{{order.get_cart_oldtotall}}</div>
+                            </div>
+
+                            <div id="discountdiv" class="row justify-content-center mb-3 d-none">
+                                <div class="col-5 text-end">Discount :</div>
+                                <div class="col-7"><span class="text-danger" id="discount"></span></div>
+                            </div>
+
+
+                            <div id="offerdiv" class="row justify-content-center mb-3 d-none">
+                                <div class="col-5 text-end">Offer Applied :</div>
+                                <div class="col-7"><span class="text-danger" id="lessedmoney"></span></div>
+                            </div>
+
+                            <div id="offerdiv" class="row justify-content-center mb-3 d-none">
+                                <div class="col-5 text-end">Offer Applied :</div>
+                                <div class="col-7"><span class="text-danger" id="lessedmoney"></span></div>
+                            </div>
+
+                            <div id="normal" class="row justify-content-center">
+                                <div class="col-5 text-end">
+                                    <strong>Sub Total :</strong>
+                                </div>
+                                <div class="col-7">
+                                    <strong id="totalll">{{order.get_cart_totall}}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="my-3">
                     <h3 class="mb-2">Payment</h3>
                     <section class="card card-body mb-0" style="
@@ -166,145 +310,151 @@
             </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-4 d-none  d-lg-block d-xl-block
+        
+        ">
             <h3 class="mb-2">Order Summary</h3>
-            <div class="card mb-4" style="
+            <div class="surprise d-none d-sm-block
+            d-sm-none d-md-block
+            d-md-none d-lg-block d-md-none d-lg-block">
+                <div class="card mb-4" style="
             box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
             padding: 30px 30px 20px 20px; background-color:white
           ">
-                {% if page == 'BuyNow' %}
-                <div class="card-body">
+                    {% if page == 'BuyNow' %}
+                    <div class="card-body">
 
-                    {% if order.get_cart_oldtotall == order.get_cart_totall %}
-                    <div class="list-group list-group-flush">
-                        <div class="list-group-item d-flex px-0">
-                            <a href="{% url 'Product' product.id %}" style="cursor: pointer" class="me-3">
-                                <img src="{{product.image1.url}}" class="rounded" width="60" alt="">
-                            </a>
-                            <div>
-                                <a href="{% url 'Product' product.id %}" style="cursor: pointer">
-                                    <h5><strong>{{product.name}}</strong></h5>
+                        {% if order.get_cart_oldtotall == order.get_cart_totall %}
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item d-flex px-0">
+                                <a href="{% url 'Product' product.id %}" style="cursor: pointer" class="me-3">
+                                    <img src="{{product.image1.url}}" class="rounded" width="60" alt="">
                                 </a>
                                 <div>
-                                    <h5 class="px-2">{{product.newpriceinr}}</h5>
+                                    <a href="{% url 'Product' product.id %}" style="cursor: pointer">
+                                        <h5><strong>{{product.name}}</strong></h5>
+                                    </a>
+                                    <div>
+                                        <h5 class="px-2">{{product.newpriceinr}}</h5>
 
+                                    </div>
                                 </div>
+                                <div class="text-end ms-auto"></div>
                             </div>
-                            <div class="text-end ms-auto"></div>
                         </div>
+                        {% else %}
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item d-flex px-0">
+                                <a href="{% url 'Product' product.id %}" style="cursor: pointer" class="me-3">
+                                    <img src="{{product.image1.url}}" class="rounded" width="60" alt="">
+                                </a>
+                                <div>
+                                    <a href="{% url 'Product' product.id %}" style="cursor: pointer">
+                                        <h5><strong>{{product.name}}</strong></h5>
+                                    </a>
+                                    <div>
+                                        <h5 class="px-2"><strong>{{product.newpriceinr}}</strong></h5>
+                                        <p style="text-decoration: line-through;" class="text-muted">
+                                            {{product.priceinr}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="text-end ms-auto"></div>
+                            </div>
+                        </div>
+                        {% endif %}
+
                     </div>
                     {% else %}
-                    <div class="list-group list-group-flush">
-                        <div class="list-group-item d-flex px-0">
-                            <a href="{% url 'Product' product.id %}" style="cursor: pointer" class="me-3">
-                                <img src="{{product.image1.url}}" class="rounded" width="60" alt="">
-                            </a>
-                            <div>
-                                <a href="{% url 'Product' product.id %}" style="cursor: pointer">
-                                    <h5><strong>{{product.name}}</strong></h5>
+                    <div class="card-body my-0 p-0 ">
+                        {% for i in items %}
+
+                        <div class="list-group list-group-flush my-2 ps-4">
+                            <div class="list-group-item d-flex px-0">
+                                <a href="{% url 'Product' i.product.id %}" style="cursor: pointer" class="me-3">
+                                    <img src="{{i.product.image1.url}}" class="rounded" width="60" alt="">
                                 </a>
                                 <div>
-                                    <h5 class="px-2"><strong>{{product.newpriceinr}}</strong></h5>
-                                    <p style="text-decoration: line-through;" class="text-muted">
-                                        {{product.priceinr}}
-                                    </p>
+                                    <a href="{% url 'Product' i.product.id %}" style="cursor: pointer">
+                                        <h6><strong>{{i.product.name}}</strong></h6>
+                                    </a>
+                                    <div>{{i.quantity}} items x {{i.product.newpriceinr}}</div>
+                                    <div><strong>Total= {{i.get_total}}</strong> </div>
                                 </div>
+                                <div class="text-end ms-auto"></div>
                             </div>
-                            <div class="text-end ms-auto"></div>
                         </div>
+                        {% endfor %}
                     </div>
                     {% endif %}
-
                 </div>
-                {% else %}
-                <div class="card-body my-0 p-0 ">
-                    {% for i in items %}
-
-                    <div class="list-group list-group-flush my-2 ps-4">
-                        <div class="list-group-item d-flex px-0">
-                            <a href="{% url 'Product' i.product.id %}" style="cursor: pointer" class="me-3">
-                                <img src="{{i.product.image1.url}}" class="rounded" width="60" alt="">
-                            </a>
-                            <div>
-                                <a href="{% url 'Product' i.product.id %}" style="cursor: pointer">
-                                    <h6><strong>{{i.product.name}}</strong></h6>
-                                </a>
-                                <div>{{i.quantity}} items x {{i.product.newpriceinr}}</div>
-                                <div><strong>Total= {{i.get_total}}</strong> </div>
-                            </div>
-                            <div class="text-end ms-auto"></div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-                {% endif %}
-            </div>
-            <div class="col-md-12" style="
+                <div class="col-md-12" style="
           box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
           padding: 30px 30px 20px 20px; background-color:white; height: 200px
         ">
 
-                <div class="cart__discount">
-                    <div><strong>Discount codes</strong></div>
+                    <div class="cart__discount">
+                        <div><strong>Discount codes</strong></div>
 
 
-                    <div id="applied" class="text-success px-2 py-0 m-0 d-none">&#10004; Coupon applied</div>
+                        <div id="applied" class="text-success px-2 py-0 m-0 d-none">&#10004; Coupon applied</div>
 
-                    <form class="mb-3 mt-2">
-                        <input type="text" placeholder="Coupon code" id="coupon_input" />
-                        <button id="submit_coupon" type="button">Apply</button>
-                    </form>
+                        <form class="mb-3 mt-2">
+                            <input type="text" placeholder="Coupon code" id="coupon_input" />
+                            <button id="submit_coupon" type="button">Apply</button>
+                        </form>
 
 
-                    <div id="expire" class="text-danger px-2 py-0 m-0 d-none">&#x274C; Coupon expired</div>
-                    <div id="used" class="text-danger px-2 py-0 m-0 d-none">&#x274C; Coupon already used</div>
-                    <div id="invalid" class="text-danger px-2 py-0 m-0 d-none">&#x274C; Coupon invalid</div>
-                    <div id="blank" class="text-danger px-2 py-0 m-0 d-none">&#x274C; Invalid entry</div>
+                        <div id="expire" class="text-danger px-2 py-0 m-0 d-none">&#x274C; Coupon expired</div>
+                        <div id="used" class="text-danger px-2 py-0 m-0 d-none">&#x274C; Coupon already used</div>
+                        <div id="invalid" class="text-danger px-2 py-0 m-0 d-none">&#x274C; Coupon invalid</div>
+                        <div id="blank" class="text-danger px-2 py-0 m-0 d-none">&#x274C; Invalid entry</div>
+                    </div>
                 </div>
-            </div>
-            <div class="card my-4 p-0" style="
+                <div class="card my-4 p-0" style="
             box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
             padding: 30px 30px 20px 20px;
           ">
-                {% if order.get_cart_oldtotall == order.get_cart_totall %}
-                {% else %}
-                <div class="container-fluid p-0">
-                    <div class="alert alert-success alert-dismissible px-5" role="alert">
-                        Congratulations, Offer Applied
-                        <button type="button" class="btn" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="True">&times;</span>
-                        </button>
-                    </div>
-                </div>
-                {% endif %}
-                <div class="card-body">
-                    <div class="row justify-content-center mb-3">
-                        <div class="col-5 text-end">Total :</div>
-                        <div class="col-7">{{order.get_cart_oldtotall}}</div>
-                    </div>
-
-                    <div id="discountdiv" class="row justify-content-center mb-3 d-none">
-                        <div class="col-5 text-end">Discount :</div>
-                        <div class="col-7"><span class="text-danger" id="discount"></span></div>
-                    </div>
-
-
-                    <div id="offerdiv" class="row justify-content-center mb-3 d-none">
-                        <div class="col-5 text-end">Offer Applied :</div>
-                        <div class="col-7"><span class="text-danger" id="lessedmoney"></span></div>
-                    </div>
-
-                    <div id="offerdiv" class="row justify-content-center mb-3 d-none">
-                        <div class="col-5 text-end">Offer Applied :</div>
-                        <div class="col-7"><span class="text-danger" id="lessedmoney"></span></div>
-                    </div>
-
-                    <div id="normal" class="row justify-content-center">
-                        <div class="col-5 text-end">
-                            <strong>Sub Total :</strong>
+                    {% if order.get_cart_oldtotall == order.get_cart_totall %}
+                    {% else %}
+                    <div class="container-fluid p-0">
+                        <div class="alert alert-success alert-dismissible px-5" role="alert">
+                            Congratulations, Offer Applied
+                            <button type="button" class="btn" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="True">&times;</span>
+                            </button>
                         </div>
-                        <div class="col-7">
-                            <strong id="totalll">{{order.get_cart_totall}}</strong>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <div class="row justify-content-center mb-3">
+                            <div class="col-5 text-end">Total :</div>
+                            <div class="col-7">{{order.get_cart_oldtotall}}</div>
+                        </div>
+
+                        <div id="discountdiv" class="row justify-content-center mb-3 d-none">
+                            <div class="col-5 text-end">Discount :</div>
+                            <div class="col-7"><span class="text-danger" id="discount"></span></div>
+                        </div>
+
+
+                        <div id="offerdiv" class="row justify-content-center mb-3 d-none">
+                            <div class="col-5 text-end">Offer Applied :</div>
+                            <div class="col-7"><span class="text-danger" id="lessedmoney"></span></div>
+                        </div>
+
+                        <div id="offerdiv" class="row justify-content-center mb-3 d-none">
+                            <div class="col-5 text-end">Offer Applied :</div>
+                            <div class="col-7"><span class="text-danger" id="lessedmoney"></span></div>
+                        </div>
+
+                        <div id="normal" class="row justify-content-center">
+                            <div class="col-5 text-end">
+                                <strong>Sub Total :</strong>
+                            </div>
+                            <div class="col-7">
+                                <strong id="totalll">{{order.get_cart_totall}}</strong>
+                            </div>
                         </div>
                     </div>
                 </div>
