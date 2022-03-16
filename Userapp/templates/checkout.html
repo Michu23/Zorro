@@ -400,15 +400,15 @@
                         <div id="applied" class="text-success px-2 py-0 m-0 d-none">&#10004; Coupon applied</div>
 
                         <form class="mb-3 mt-2">
-                            <input type="text" placeholder="Coupon code" id="coupon_input" />
-                            <button id="submit_coupon" type="button">Apply</button>
+                            <input type="text" placeholder="Coupon code" class="coupon_input">
+                            <button class="submit_coupon" type="button">Apply</button>
                         </form>
 
 
-                        <div id="expire" class="text-danger px-2 py-0 m-0 d-none">&#x274C; Coupon expired</div>
-                        <div id="used" class="text-danger px-2 py-0 m-0 d-none">&#x274C; Coupon already used</div>
-                        <div id="invalid" class="text-danger px-2 py-0 m-0 d-none">&#x274C; Coupon invalid</div>
-                        <div id="blank" class="text-danger px-2 py-0 m-0 d-none">&#x274C; Invalid entry</div>
+                        <div class="expire text-danger px-2 py-0 m-0 d-none">&#x274C; Coupon expired</div>
+                        <div class="used text-danger px-2 py-0 m-0 d-none">&#x274C; Coupon already used</div>
+                        <div class="invalid text-danger px-2 py-0 m-0 d-none">&#x274C; Coupon invalid</div>
+                        <div class="blank text-danger px-2 py-0 m-0 d-none">&#x274C; Invalid entry</div>
                     </div>
                 </div>
                 <div class="card my-4 p-0" style="
@@ -434,26 +434,26 @@
 
                         <div id="discountdiv" class="row justify-content-center mb-3 d-none">
                             <div class="col-5 text-end">Discount :</div>
-                            <div class="col-7"><span class="text-danger" id="discount"></span></div>
+                            <div class="col-7"><span class="text-danger discount"></span></div>
                         </div>
 
 
                         <div id="offerdiv" class="row justify-content-center mb-3 d-none">
                             <div class="col-5 text-end">Offer Applied :</div>
-                            <div class="col-7"><span class="text-danger" id="lessedmoney"></span></div>
+                            <div class="col-7"><span class="text-danger lessedmoney"></span></div>
                         </div>
 
                         <div id="offerdiv" class="row justify-content-center mb-3 d-none">
                             <div class="col-5 text-end">Offer Applied :</div>
-                            <div class="col-7"><span class="text-danger" id="lessedmoney"></span></div>
+                            <div class="col-7"><span class="text-danger lessedmoney"></span></div>
                         </div>
 
-                        <div id="normal" class="row justify-content-center">
+                        <div class="row justify-content-center normal">
                             <div class="col-5 text-end">
                                 <strong>Sub Total :</strong>
                             </div>
                             <div class="col-7">
-                                <strong id="totalll">{{order.get_cart_totall}}</strong>
+                                <strong class="totalll">{{order.get_cart_totall}}</strong>
                             </div>
                         </div>
                     </div>
@@ -499,11 +499,11 @@
 
 
 <script>
-    $('#submit_coupon').on('click', function (e) {
+    $('.submit_coupon').on('click', function (e) {
         let messages = []
-        input_code = $('#coupon_input').val()
+        input_code = $('.coupon_input').val()
         if (input_code == '' || input_code == null) {
-            $("#blank").removeClass("d-none");
+            $(".blank").removeClass("d-none");
         }
         else {
             data = { 'input_code': input_code }
@@ -513,31 +513,31 @@
                 dataType: 'json',
                 success: function (resp) {
                     if (resp.percentage == null || resp.percentage == '') {
-                        $("#invalid").removeClass("d-none");
-                        $("#expire").addClass("d-none");
-                        $("#used").addClass("d-none");
-                        $("#blank").addClass("d-none");
-                        $("#applied").addClass("d-none");
+                        $(".invalid").removeClass("d-none");
+                        $(".expire").addClass("d-none");
+                        $(".used").addClass("d-none");
+                        $(".blank").addClass("d-none");
+                        $(".applied").addClass("d-none");
                     }
                     else if (resp.percentage == 'used') {
-                        $("#used").removeClass("d-none");
-                        $("#expire").addClass("d-none");
-                        $("#invalid").addClass("d-none");
-                        $("#blank").addClass("d-none");
-                        $("#applied").addClass("d-none");
+                        $(".used").removeClass("d-none");
+                        $(".expire").addClass("d-none");
+                        $(".invalid").addClass("d-none");
+                        $(".blank").addClass("d-none");
+                        $(".applied").addClass("d-none");
                     }
                     else {
                         $("#totalll").text(resp.total_amount);
                         $("#coupon").removeClass("d-none");
-                        $("#expire").addClass("d-none");
-                        $("#used").addClass("d-none");
-                        $("#invalid").addClass("d-none");
-                        $("#blank").addClass("d-none");
-                        $("#applied").removeClass("d-none");
-                        $("#offerdiv").removeClass("d-none");
-                        $("#discount").text(resp.percentage + "%");
-                        $("#discountdiv").removeClass("d-none");
-                        $('#lessedmoney').text("-" + resp.lessedmoney);
+                        $(".expire").addClass("d-none");
+                        $(".used").addClass("d-none");
+                        $(".invalid").addClass("d-none");
+                        $(".blank").addClass("d-none");
+                        $(".applied").removeClass("d-none");
+                        $(".offerdiv").removeClass("d-none");
+                        $(".expirediscount").text(resp.percentage + "%");
+                        $(".discountdiv").removeClass("d-none");
+                        $('.lessedmoney').text("-" + resp.lessedmoney);
 
 
                     }

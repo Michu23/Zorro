@@ -1,0 +1,318 @@
+{% for product in products %}
+
+
+{% if product.stocks == 0 %}
+
+<div class="col-lg-4 col-md-6 col-sm-6 wished{{product.id}}">
+    <div class=" rounded-3" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; padding: 10px;">
+        <a href="{% url 'Product' product.id %}">
+            <div class="product__item__pic set-bg" href="{% url 'Product' product.id %}"
+                data-setbg="{{product.image1.url}}">
+                <img src="{{product.image1.url}}">
+                <span class="label bg-dark text-white">Out of stock</span>
+            </div>
+        </a>
+        <div class="product__item__text">
+            <div class="d-flex justify-content-between">
+                <h6>{{product.name}}</h6>
+                <div>
+                    <!-- <i class="fa fa-heart-o" style="font-size:22px;"></i>
+                        <i class="fa fa-heart" style="font-size:22px;color:red"></i> -->
+                    <span class="d-flex" style="position: absolute; top: 0; right: 0;">
+
+                        <div class="{% if product.id not in wishes %}d-none{% endif %}" id="add_wish">
+                            <button class="btn wishh " style="background: none; border: none; text-decoration: none;"
+                                data-id="{{product.id}}" data-action="remove">
+                                <i class="fa fa-heart" style="font-size:22px;color:red"></i>
+
+                            </button>
+                        </div>
+
+                        <div class="{% if product.id in wishes %}d-none{% endif %}" id="remove_wish">
+                            <button class="btn wishh" style="background: none; border: none; text-decoration: none;"
+                                data-id="{{product.id}}" data-action="add">
+                                <i class="fa fa-heart-o" style="font-size:22px;"></i>
+
+                            </button>
+                        </div>
+
+                    </span>
+                </div>
+            </div>
+            <h5>{{product.newpriceinr}}</h5>
+            <div class="product__color__select">
+            </div>
+        </div>
+        <div class="d-flex mt-3">
+            <a class="add-cart update-cart outofstockk" data-product="{{product.id}}" data-action="add"
+                style="cursor: pointer"><button class="btn btn-dark">+ Add
+                    To Cart</button></a>
+            <button class="btn btn-info text-white rounded-4 px-3 mx-2 outofstockk"><a>Buy
+                    Now </a></button>
+        </div>
+
+    </div>
+</div>
+{% elif product.offer == True %}
+<div class="col-lg-4 col-md-6 col-sm-6 wished{{product.id}}">
+    <div class=" rounded-3" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; padding: 10px;">
+        <a href="{% url 'Product' product.id %}">
+            <div class="product__item__pic set-bg" href="{% url 'Product' product.id %}"
+                data-setbg="{{product.image1.url}}">
+                <img src="{{product.image1.url}}">
+                <span class="label bg-danger text-white">Sale</span>
+            </div>
+        </a>
+        <div class="product__item__text">
+            <span class="d-flex justify-content-between">
+                <h6>{{product.name}}</h6>
+                <div>
+                    <span class="d-flex" style="position: absolute; top: 0; right: 0;">
+
+                        <div class="{% if product.id not in wishes %}d-none{% endif %}" id="add_wish">
+                            <button class="btn wishh " style="background: none; border: none; text-decoration: none;"
+                                data-id="{{product.id}}" data-action="remove">
+                                <i class="fa fa-heart" style="font-size:22px;color:red"></i>
+
+                            </button>
+                        </div>
+
+                        <div class="{% if product.id in wishes %}d-none{% endif %}" id="remove_wish">
+                            <button class="btn wishh" style="background: none; border: none; text-decoration: none;"
+                                data-id="{{product.id}}" data-action="add">
+                                <i class="fa fa-heart-o" style="font-size:22px;"></i>
+
+                            </button>
+                        </div>
+
+                    </span>
+                </div>
+            </span>
+            <span class="d-flex">
+                <h5 class="px-2">{{product.newpriceinr}}</h5>
+                <p style="text-decoration: line-through;" class="text-muted">{{product.priceinr}}
+                </p>
+            </span>
+        </div>
+        <div class="d-flex">
+            <a class="add-cart update-cart" data-product="{{product.id}}" data-action="add"
+                style="cursor: pointer"><button class="btn btn-dark">+ Add
+                    To Cart</button></a>
+            <button class="btn btn-info text-white rounded-4 px-3 mx-2"><a href="{% url 'BuyNow' product.id %}">Buy
+                    Now </a></button>
+        </div>
+
+    </div>
+</div>
+{% elif product.catogery.catoffer == True %}
+<div class="col-lg-4 col-md-6 col-sm-6 wished{{product.id}}">
+    <div class=" rounded-3" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; padding: 10px;">
+        <a href="{% url 'Product' product.id %}">
+            <div class="product__item__pic set-bg" href="{% url 'Product' product.id %}"
+                data-setbg="{{product.image1.url}}">
+                <img src="{{product.image1.url}}">
+                <span class="label bg-danger text-white">Sale</span>
+            </div>
+        </a>
+        <div class="product__item__text">
+            <span class="d-flex justify-content-between">
+                <h6>{{product.name}}</h6>
+                <div>
+                    <span class="d-flex" style="position: absolute; top: 0; right: 0;">
+
+                        <div class="{% if product.id not in wishes %}d-none{% endif %}" id="add_wish">
+                            <button class="btn wishh " style="background: none; border: none; text-decoration: none;"
+                                data-id="{{product.id}}" data-action="remove">
+                                <i class="fa fa-heart" style="font-size:22px;color:red"></i>
+
+                            </button>
+                        </div>
+
+                        <div class="{% if product.id in wishes %}d-none{% endif %}" id="remove_wish">
+                            <button class="btn wishh" style="background: none; border: none; text-decoration: none;"
+                                data-id="{{product.id}}" data-action="add">
+                                <i class="fa fa-heart-o" style="font-size:22px;"></i>
+
+                            </button>
+                        </div>
+
+                    </span>
+                </div>
+            </span>
+            <span class="d-flex">
+                <h5 class="px-2">{{product.newpriceinr}}</h5>
+                <p style="text-decoration: line-through;" class="text-muted">{{product.priceinr}}
+                </p>
+            </span>
+        </div>
+        <div class="d-flex ">
+            <a class="add-cart update-cart" data-product="{{product.id}}" data-action="add"
+                style="cursor: pointer"><button class="btn btn-dark">+ Add
+                    To Cart</button></a>
+            <button class="btn btn-info text-white rounded-4 px-3 mx-2"><a href="{% url 'BuyNow' product.id %}">Buy
+                    Now </a></button>
+        </div>
+
+    </div>
+</div>
+
+{% else %}
+<div class="col-lg-4 col-md-6 col-sm-6 wished{{product.id}}">
+    <div class=" rounded-3" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; padding: 10px;">
+        <a href="{% url 'Product' product.id %}">
+            <div class="product__item__pic set-bg" href="{% url 'Product' product.id %}"
+                data-setbg="{{product.image1.url}}">
+                <img src="{{product.image1.url}}">
+            </div>
+
+        </a>
+        <div class="product__item__text">
+            <span class="d-flex justify-content-between">
+
+                <h6>{{product.name}}</h6>
+                <div>
+                    <span class="d-flex" style="position: absolute; top: 0; right: 0;">
+
+                        <div class="{% if product.id not in wishes %}d-none{% endif %}" id="add_wish">
+                            <button class="btn wishh " style="background: none; border: none; text-decoration: none;"
+                                data-id="{{product.id}}" data-action="remove">
+                                <i class="fa fa-heart" style="font-size:22px;color:red"></i>
+
+                            </button>
+                        </div>
+
+                        <div class="{% if product.id in wishes %}d-none{% endif %}" id="remove_wish">
+                            <button class="btn wishh" style="background: none; border: none; text-decoration: none;"
+                                data-id="{{product.id}}" data-action="add">
+                                <i class="fa fa-heart-o" style="font-size:22px;"></i>
+
+                            </button>
+                        </div>
+
+                    </span>
+                </div>
+
+            </span>
+            <h5>{{product.newpriceinr}}</h5>
+            <div class="product__color__select">
+            </div>
+        </div>
+        <div class="d-flex mt-3">
+            <a class="add-cart update-cart" data-product="{{product.id}}" data-action="add"
+                style="cursor: pointer"><button class="btn btn-dark">+ Add
+                    To Cart</button></a>
+            <button class="btn btn-info text-white rounded-4 px-3 mx-2"><a href="{% url 'BuyNow' product.id %}">Buy
+                    Now </a></button>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+
+<script>
+    $(document).ready(function () {
+        $('.outofstockk').click(function (e) {
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Out of Stock!',
+                footer: '<a href="">Continue shopiing</a>'
+
+            });
+
+        });
+    });
+</script>
+<script>
+    $('.update-cart').on('click', function (e) {
+        var product = $(this).data('product')
+        var action = $(this).data('action')
+        console.log(product)
+        console.log(action)
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'updateitem' %}",
+            data: {
+                productId: product,
+                action: action,
+                csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            dataType: 'json',
+            success: function (response) {
+            }
+        });
+        Swal.fire(
+            'Added to cart!',
+            'Your item have added to cart',
+            'success'
+        )
+    });
+</script>
+
+<script>
+    $('.wishh').on('click', function (e) {
+        var product = $(this).data('id')
+        var action = $(this).data('action')
+        $.ajax({
+
+            url: "{% url 'Wishlist' %}",
+            data: {
+                productId: product,
+                action: action,
+
+            },
+            dataType: 'json',
+            success: function (response) {
+
+                if (action == 'remove') {
+
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+
+                    Toast.fire({
+                        icon: 'warning',
+                        title: 'Removing from wishlist'
+                    })
+
+
+                    $('.wished' + product + ' #remove_wish').removeClass("d-none");
+                    $('.wished' + product + ' #add_wish').addClass("d-none");
+
+                }
+                else {
+
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Adding to wishlist'
+                    })
+
+                    $('.wished' + product + ' #add_wish').removeClass("d-none");
+                    $('.wished' + product + ' #remove_wish').addClass("d-none");
+
+                }
+            }
+        });
+    });
+</script>

@@ -30,8 +30,8 @@
             <div class="col-lg-3">
                 <div class="shop__sidebar">
                     <div class="shop__sidebar__search">
-                        <form action="#">
-                            <input type="text" placeholder="Search...">
+                        <form action="{% url 'search' %}" method="GET">
+                            <input type="text" name="keyword" placeholder="Search...">
                             <button type="submit"><span class="icon_search"></span></button>
                         </form>
                     </div>
@@ -46,9 +46,9 @@
                                         <div class="shop__sidebar__categories">
                                             <ul style="height: fit-content;">
                                                 {% for catogery in catogeries %}
-                                                <li class="list-group-item"><input class="filter-checkbox cats"
-                                                        data-filter="cats" type="checkbox"
-                                                        value="{{catogery.name}}"><span class="ps-3"><a
+                                                <li class="list-group-item">
+                                                    <input class="filter-checkbox" data-filter="catogery"
+                                                        type="checkbox" value="{{catogery.id}}"><span class="ps-3"><a
                                                             href="{% url 'FilterView' catogery.id %}"
                                                             class>{{catogery.name}}({{catogery.numpro}})</a></span></input>
                                                 </li>
@@ -69,8 +69,8 @@
 
                                                 {% for brand in brands %}
                                                 <li class="list-group-item"><input class="filter-checkbox brands"
-                                                        data-filter="brands" type="checkbox"
-                                                        value="{{brand.bname}}"><span class="ps-3"><a
+                                                        data-filter="brands" type="checkbox" value="{{brand.id}}"><span
+                                                        class="ps-3"><a
                                                             href="{% url 'FilterBrand' brand.id %}">{{brand.bname}}({{brand.bpro}})</a></span></input>
                                                 </li>
                                                 {% endfor %}
@@ -89,9 +89,9 @@
                                         <div class="shop__sidebar__price">
                                             <ul>
                                                 {% for ptype in ptypes %}
-                                                <li class="list-group-item"><input class="filter-checkbox brands"
-                                                        data-filter="ptype" type="checkbox"
-                                                        value="{{ptype.genre}}"><span class="ps-3"><a
+                                                <li class="list-group-item"><input class="filter-checkbox"
+                                                        data-filter="ptype" type="checkbox" value="{{ptype.id}}"><span
+                                                        class="ps-3"><a
                                                             href="{% url 'FilterPrice' ptype.id %}">{{ptype.genre}}({{ptype.ppro}})</a></span></input>
                                                 </li>
                                                 {% endfor %}
@@ -216,9 +216,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+
+                <div class="row" id="mainshop">
+
+
                     {% for product in products %}
 
+                    
 
                     {% if product.stocks == 0 %}
 
@@ -240,8 +244,8 @@
                                         <span class="d-flex" style="position: absolute; top: 0; right: 0;">
 
                                             <div class="{% if product.id not in wishes %}d-none{% endif %}"
-                                                id="add_wishh">
-                                                <button class="btn wish "
+                                                id="add_wish">
+                                                <button class="btn wishh "
                                                     style="background: none; border: none; text-decoration: none;"
                                                     data-id="{{product.id}}" data-action="remove">
                                                     <i class="fa fa-heart" style="font-size:22px;color:red"></i>
@@ -290,25 +294,25 @@
                                 <span class="d-flex justify-content-between">
                                     <h6>{{product.name}}</h6>
                                     <div>
-                                        <!-- <i class="fa fa-heart-o" style="font-size:22px;"></i>
-                                        <i class="fa fa-heart" style="font-size:22px;color:red"></i> -->
-                                        <span class="" style="position: absolute; top: 0; right: 0;">
+                                        <span class="d-flex" style="position: absolute; top: 0; right: 0;">
 
                                             <div class="{% if product.id not in wishes %}d-none{% endif %}"
                                                 id="add_wish">
-                                                <button class="btn wish "
+                                                <button class="btn wishh "
                                                     style="background: none; border: none; text-decoration: none;"
                                                     data-id="{{product.id}}" data-action="remove">
-                                                    <i class="fas fa-heart text-danger "></i>
+                                                    <i class="fa fa-heart" style="font-size:22px;color:red"></i>
+
                                                 </button>
                                             </div>
 
                                             <div class="{% if product.id in wishes %}d-none{% endif %}"
                                                 id="remove_wish">
-                                                <button class="btn wish"
+                                                <button class="btn wishh"
                                                     style="background: none; border: none; text-decoration: none;"
                                                     data-id="{{product.id}}" data-action="add">
-                                                    <i class="far fa-heart"></i>
+                                                    <i class="fa fa-heart-o" style="font-size:22px;"></i>
+
                                                 </button>
                                             </div>
 
@@ -346,25 +350,25 @@
                                 <span class="d-flex justify-content-between">
                                     <h6>{{product.name}}</h6>
                                     <div>
-                                        <!-- <i class="fa fa-heart-o" style="font-size:22px;"></i>
-                                        <i class="fa fa-heart" style="font-size:22px;color:red"></i> -->
-                                        <span class="" style="position: absolute; top: 0; right: 0;">
+                                        <span class="d-flex" style="position: absolute; top: 0; right: 0;">
 
                                             <div class="{% if product.id not in wishes %}d-none{% endif %}"
                                                 id="add_wish">
-                                                <button class="btn wish "
+                                                <button class="btn wishh "
                                                     style="background: none; border: none; text-decoration: none;"
                                                     data-id="{{product.id}}" data-action="remove">
-                                                    <i class="fas fa-heart text-danger "></i>
+                                                    <i class="fa fa-heart" style="font-size:22px;color:red"></i>
+
                                                 </button>
                                             </div>
 
                                             <div class="{% if product.id in wishes %}d-none{% endif %}"
                                                 id="remove_wish">
-                                                <button class="btn wish"
+                                                <button class="btn wishh"
                                                     style="background: none; border: none; text-decoration: none;"
                                                     data-id="{{product.id}}" data-action="add">
-                                                    <i class="far fa-heart"></i>
+                                                    <i class="fa fa-heart-o" style="font-size:22px;"></i>
+
                                                 </button>
                                             </div>
 
@@ -404,25 +408,25 @@
 
                                     <h6>{{product.name}}</h6>
                                     <div>
-                                        <!-- <i class="fa fa-heart-o" style="font-size:22px;"></i>
-                                        <i class="fa fa-heart" style="font-size:22px;color:red"></i> -->
-                                        <span class="" style="position: absolute; top: 0; right: 0;">
+                                        <span class="d-flex" style="position: absolute; top: 0; right: 0;">
 
                                             <div class="{% if product.id not in wishes %}d-none{% endif %}"
                                                 id="add_wish">
-                                                <button class="btn wish "
+                                                <button class="btn wishh "
                                                     style="background: none; border: none; text-decoration: none;"
                                                     data-id="{{product.id}}" data-action="remove">
-                                                    <i class="fas fa-heart text-danger "></i>
+                                                    <i class="fa fa-heart" style="font-size:22px;color:red"></i>
+
                                                 </button>
                                             </div>
 
                                             <div class="{% if product.id in wishes %}d-none{% endif %}"
                                                 id="remove_wish">
-                                                <button class="btn wish"
+                                                <button class="btn wishh"
                                                     style="background: none; border: none; text-decoration: none;"
                                                     data-id="{{product.id}}" data-action="add">
-                                                    <i class="far fa-heart"></i>
+                                                    <i class="fa fa-heart-o" style="font-size:22px;"></i>
+
                                                 </button>
                                             </div>
 
@@ -463,6 +467,7 @@
     </div>
 </section>
 <!-- Shop Section End -->
+<script src="{% static 'js/product-filter.js' %}"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="sweetalert2.all.min.js"></script>
 <script src="sweetalert2.min.js"></script>
@@ -484,9 +489,6 @@
         });
     });
 </script>
-
-
-
 <script>
     $('.update-cart').on('click', function (e) {
         var product = $(this).data('product')
@@ -513,7 +515,7 @@
     });
 </script>
 
-<script>
+<!-- <script>
     $(document).ready(function () {
         $(".ajaxLoader").hide();
         // Product Filter Start
@@ -542,28 +544,28 @@
                     console.log(res);
                     $("#filteredProducts").html(res.data);
                     $(".ajaxLoader").hide();
-                }
+                },
             });
         });
         // End
 
         // Filter Product According to the price
-        $("#maxPrice").on('blur', function () {
-            var _min = $(this).attr('min');
-            var _max = $(this).attr('max');
-            var _value = $(this).val();
-            console.log(_value, _min, _max);
-            if (_value < parseInt(_min) || _value > parseInt(_max)) {
-                alert('Values should be ' + _min + '-' + _max);
-                $(this).val(_min);
-                $(this).focus();
-                $("#rangeInput").val(_min);
-                return false;
-            }
-        });
+        //  $("#maxPrice").on('blur', function () {
+        //      var _min = $(this).attr('min');
+        //      var _max = $(this).attr('max');
+        //      var _value = $(this).val();
+        //      console.log(_value, _min, _max);
+        //      if (_value < parseInt(_min) || _value > parseInt(_max)) {
+        //          alert('Values should be ' + _min + '-' + _max);
+        //          $(this).val(_min);
+        //          $(this).focus();
+        //          $("#rangeInput").val(_min);
+        //          return false;
+        //      }
+        //  });
         // End
     });
-</script>
+</script> -->
 
 
 {% endblock %}

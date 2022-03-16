@@ -716,3 +716,44 @@ $ (document).ready(function(){
 </script>
 
 {% endblock %}
+@never_cache
+@login_required(login_url='signin')
+def coupon_verify(request):
+    customer = request.user
+    input_code = request.GET.get('input_code')
+    try :
+        coupon = CouponDetail.objects.get(code=input_code)
+    except :
+        data = {'total_amount' : None,'percentage':None,}
+        return JsonResponse(data)
+    last = Order.objects.filter(cust = customer).order_by('-id')[0]
+    if last.status == 'BuyNow' :
+        order = Order.objects.get(cust = customer,status = 'BuyNow')
+        items = OrderItem.objects.get(order = order)
+    else :
+        order= Order.objects.get(cust = customer,status = 'New')  
+        items = order.orderitem_set.all()
+    lessed_money = (order.get_cart_total * coupon.offer_percentage / 100)
+    old_price = order.get_cart_total
+    try :
+        apply_coupon = CouponUsed.objects.filter(user = customer,coupon = coupon,used = False).first()
+        print(apply_coupon)
+    except:
+        data = {'total_amount' : None,'percentage':None,}
+        return JsonResponse(data)
+    if apply_coupon is None :
+        data = {'total_amount' : None,'percentage':'used',}
+        return JsonResponse(data)
+
+    apply_coupon.used = True
+    apply_coupon.order = order
+    apply_coupon.loss = int(lessed_money)
+    apply_coupon.save()
+    order.coupon_used = True
+    CouponUsed.objects.get(user=customer,coupon=coupon).save()
+    coupon.count = coupon.count + 1
+    coupon.loss = coupon.loss +lessed_money
+    coupon.save()
+    order.save()
+    data = {'total_amount' : order.get_cart_total,'percentage':coupon.offer_percentage,'old_price':old_price }
+    return JsonResponse(data)

@@ -72,7 +72,7 @@ class Order(models.Model):
 	offer_used= models.CharField(max_length = 50,choices = OFFERS, default = 'None', null=True)
 
 	def __str__(self):
-		return str(self.complete)
+		return str(self.id)
 
 	
 	@property

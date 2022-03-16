@@ -159,10 +159,10 @@
         <div class="col-lg-3 col-md-3">
           <div class="header__nav__option">
             <a href="#" class="search-switch"><img src="{% static 'img/icon/search.png' %}" alt="" /></a>
-            <a href="{% url 'Wishlist' %}"><img src="{% static 'img/icon/heart.png' %}" alt="" /></a>
+            <a href="{% url 'mywish' %}"><img src="{% static 'img/icon/heart.png' %}" alt="" /></a>
             <a href="{% url 'UserCart' %}"><img src="{% static 'img/icon/cart.png' %}" alt="" />
               <span>0</span></a>
-            <div class="price">$0.00</div>
+            <div class="price">{{order.get_cart_totall}}</div>
           </div>
         </div>
       </div>
@@ -254,8 +254,9 @@
   <div class="search-model">
     <div class="h-100 d-flex align-items-center justify-content-center">
       <div class="search-close-switch">+</div>
-      <form class="search-model-form">
-        <input type="text" id="search-input" placeholder="Search here....." />
+      <form action="{% url 'search' %}" class="search-model-form" method="GET">
+        <input type="text" name="keyword" id="search-input" placeholder="Search here.....">
+        <button type="submit" class="btn btn-dark"></button>
       </form>
     </div>
   </div>
@@ -350,10 +351,9 @@
     $('.wishh').on('click', function (e) {
       var product = $(this).data('id')
       var action = $(this).data('action')
-      alert("Im in")
       $.ajax({
 
-        url: "{% url 'wishlist' %}",
+        url: "{% url 'Wishlist' %}",
         data: {
           productId: product,
           action: action,
@@ -362,23 +362,114 @@
         dataType: 'json',
         success: function (response) {
 
-
           if (action == 'remove') {
 
-            $('.wished' + product + '#remove_wish').removeClass("d-none");
-            $('.wished' + product + '#add_wish').addClass("d-none");
+            const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+              }
+            })
+
+            Toast.fire({
+              icon: 'warning',
+              title: 'Removing from wishlist'
+            })
+
+
+            $('.wished' + product + ' #remove_wish').removeClass("d-none");
+            $('.wished' + product + ' #add_wish').addClass("d-none");
 
           }
           else {
 
-            $('.wished' + product + '#add_wish').removeClass("d-none");
-            $('.wished' + product + '#remove_wish').addClass("d-none");
+            const Toast = Swal.mixin({
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+              }
+            })
+
+            Toast.fire({
+              icon: 'success',
+              title: 'Adding to wishlist'
+            })
+
+            $('.wished' + product + ' #add_wish').removeClass("d-none");
+            $('.wished' + product + ' #remove_wish').addClass("d-none");
 
           }
         }
       });
     });
   </script>
+
+  <script>
+    $(document).ready(function () {
+      $(".ajaxLoader").hide();
+      // Product Filter Start
+      $(".filter-checkbox,#priceFilterBtn").on("click", function () {
+        var _filterObj = {};
+        var _minPrice = $("#maxPrice").attr("min");
+        var _maxPrice = $("#maxPrice").val();
+        _filterObj.minPrice = _minPrice;
+        _filterObj.maxPrice = _maxPrice;
+        $(".filter-checkbox").each(function (index, ele) {
+          var _filterVal = $(this).val();
+          var _filterKey = $(this).data("filter");
+          _filterObj[_filterKey] = Array.from(
+            document.querySelectorAll(
+              "input[data-filter=" + _filterKey + "]:checked"
+            )
+          ).map(function (el) {
+            return el.value;
+          });
+        });
+        console.log(_filterObj);
+
+        // Run Ajax
+        $.ajax({
+          url: "{% url 'filter_shop_products' %}",
+          data: _filterObj,
+          dataType: "json",
+
+          success: function (res) {
+            console.log(res);
+            $("#mainshop").html(res.data);
+          },
+        });
+      });
+      // End
+
+      // Filter Product According to the price
+      // $("#maxPrice").on('blur',function(){
+      // 	var _min=$(this).attr('min');
+      // 	var _max=$(this).attr('max');
+      // 	var _value=$(this).val();
+      // 	console.log(_value,_min,_max);2
+      // 	if(_value < parseInt(_min) || _value > parseInt(_max)){
+      // 		alert('Values should be '+_min+'-'+_max);
+      // 		$(this).val(_min);
+      // 		$(this).focus();
+      // 		$("#rangeInput").val(_min);
+      // 		return false;
+      // 	}
+      // });
+      // End
+    });
+
+  </script>
+
 
 </body>
 

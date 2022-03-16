@@ -14,6 +14,8 @@ from decouple import config
 from django.views.decorators.csrf import csrf_exempt
 from babel.numbers import format_currency
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from django.template.loader import render_to_string
 
 # Create your views here.
 
@@ -100,6 +102,27 @@ def otpverify(request):
 
 
 @never_cache
+def search(request):
+    user=request.user
+    if 'keyword' in request.GET:
+        keyword = request.GET['keyword']
+        if keyword:
+            products = Product.objects.order_by('-price').filter( Q(description__icontains=keyword) | Q(name__icontains=keyword) | Q(catogery__name__icontains=keyword) | Q(btype__bname__icontains=keyword) | Q(ptype__genre__icontains=keyword) | Q(price__icontains=keyword)  )
+            productcount = products.count()
+
+        else:
+            messages.error(request,"No results found")
+            return redirect("UserShop")
+
+    wishes= Wishlist.objects.filter(useradded = user).values_list('productadded',flat=True)
+    context = {'products':products,'productcount':productcount,'wishes':wishes}
+
+
+    return render (request,'shop.html',context)
+
+
+
+@never_cache
 def wishlist(request):
     print("//////////////////////////////////////")
     if request.user.is_authenticated:
@@ -112,7 +135,6 @@ def wishlist(request):
     action = request.GET.get('action')
     print(action)
     product = Product.objects.get(id=productId)
-    
 
     if action == 'add'  :
        wishes, created= Wishlist.objects.get_or_create(useradded = customer, productadded=product)
@@ -125,6 +147,21 @@ def wishlist(request):
     return JsonResponse(response)
     
 
+def mywish(request):
+    user=request.user
+    product=Product.objects.all()
+    wishes= Wishlist.objects.filter(useradded = user).values_list('productadded',flat=True)
+
+    wishlist= Wishlist.objects.filter(useradded = user)
+    return render (request, 'wishlist.html',{"wishlist": wishlist,'wishes':wishes})
+
+def removewish(request,id):
+    user=request.user
+    product=Product.objects.get(id=id)
+    print(product.name)
+    wishes= Wishlist.objects.filter(useradded =user,productadded=product)
+    wishes.delete()
+    return redirect("mywish")
 
 
 
@@ -246,6 +283,22 @@ def userlogout(request):
     logout(request)
     return redirect("UserHome")
 
+
+    if request.user.is_authenticated:
+        customer=request.user
+    else:
+        try:
+            device=request.COOKIES['device']
+            customer,created=Users.objects.get_or_create(device=device)
+            order,created= Order.objects.get_or_create(customer=customer,complete=False)
+        except:
+            return redirect("UserLogin")
+        
+    catogeries = Catogery.objects.all().annotate(numpro=Count('product'))
+    brands=Brand.objects.all().annotate(bpro=Count('product'))
+    ptypes=PriceType.objects.all().annotate(ppro=Count('product'))
+    context = {'products':products,'catogeries':catogeries,'brands':brands,'ptypes':ptypes,'wishes':wishes}
+
 @never_cache
 def userhome(request):
     
@@ -259,8 +312,15 @@ def userhome(request):
             order,created= Order.objects.get_or_create(customer=customer,complete=False)
         except:
             return redirect("UserLogin")
-        
-    return render(request, "userindex.html")
+    
+    products = Product.objects.all()
+    newproducts=Product.objects.all().order_by('-created')[:6]
+    bestproducts=Product.objects.all().order_by('-price')[:6]
+
+
+    wishes= Wishlist.objects.filter(useradded = customer).values_list('productadded',flat=True)
+    context = {'products':products,'wishes':wishes,'newproducts':newproducts,'bestproducts':bestproducts}
+    return render(request, "userindex.html",context)
 
 
 
@@ -321,6 +381,38 @@ def filterprice(request,id):
     context = {'products':products,'catogeries':catogeries,'brands':brands,'ptypes':ptypes}
     return render(request, "shop.html",context)
 
+
+@never_cache
+def filter_shop_products(request):
+    print("///////////////////")
+    print(request.GET)
+    if request.user.is_authenticated:
+        customer = request.user     
+    else :
+        try:
+            device = request.COOKIES['device']
+            customer, created = CustomUser.objects.get_or_create(device=device)
+        except :
+            return redirect("UserLogin")    
+    brands=request.GET.getlist('brands[]')
+    categories = request.GET.getlist('catogery[]')
+    ptype = request.GET.getlist('ptype[]')
+
+    print(ptype)
+    allProducts=Product.objects.all()
+    if len(brands)>0:
+        allProducts = allProducts.filter(btype__id__in=brands).distinct()
+    if len(categories)>0:
+        allProducts = allProducts.filter(catogery__id__in=categories).distinct()
+    if len(ptype)>0:
+        allProducts = allProducts.filter(ptype__id__in=ptype).distinct()
+    
+
+    wishes = Wishlist.objects.filter(useradded = customer)
+    print(wishes)
+    t=render_to_string('filter.html',{'products':allProducts,'wishes':wishes})  
+    return JsonResponse({'data': t})
+
 @never_cache
 def filter_data(request):
     return Jsonresponse({'data':'hello'})
@@ -330,7 +422,6 @@ def product(request,pk):
     product = Product.objects.get(id=pk)
     context = {'product':product}
     return render(request, "product.html",context)
-
 
 
 def updateitem(request):
@@ -345,6 +436,7 @@ def updateitem(request):
     print(productId)
     action = request.POST.get('action')
     product = Product.objects.get(id=productId)
+    print("/////////////////////////////////////////////////////")
     print(action)
     cur_stock = product.stocks
     order, created = Order.objects.get_or_create(customer = customer , status='New',complete=False)
@@ -545,7 +637,6 @@ def editaddress(request,pk):
     address = Address.objects.get(id=pk)
     form = MyAddressForm(instance=address)
     if request.method == 'POST':
-        
         form = MyAddressForm(request.POST,instance=address)
         if form.is_valid():
             form.save()
@@ -662,61 +753,42 @@ def paypal(request):
 @never_cache
 def verifycoupon(request):
     customer = request.user
-    try:
-        coup = CouponUsed.objects.get(user=customer,used=True,applied=False)
-        coup.delete()
-    except:
-        pass
-
-    print("///////////////////////")
     input_code = request.GET.get('input_code')
-    print(input_code)
     try :
         coupon = CouponDetail.objects.get(code=input_code)
     except :
         data = {'total_amount' : None,'percentage':None,}
         return JsonResponse(data)
-
-    try:
-        last = Order.objects.filter(customer = customer).order_by('-id')[0]
-        if last.status == 'BuyNow' :
-            order = Order.objects.get(customer = customer,status = 'BuyNow',complete=False)
-            items = OrderItem.objects.get(order = order)
-            order.coupon_used=False
-            order.save()
-
-        else :
-            order= Order.objects.get(customer = customer,status = 'New',complete=False)  
-            items = order.orderitem_set.all()
-            order.coupon_used=False
-            order.save()
+    last = Order.objects.filter(cust = customer).order_by('-id')[0]
+    if last.status == 'BuyNow' :
+        order = Order.objects.get(cust = customer,status = 'BuyNow')
+        items = OrderItem.objects.get(order = order)
+    else :
+        order= Order.objects.get(cust = customer,status = 'New')  
+        items = order.orderitem_set.all()
+    lessed_money = (order.get_cart_total * coupon.offer_percentage / 100)
+    old_price = order.get_cart_total
+    try :
+        apply_coupon = CouponUsed.objects.filter(user = customer,coupon = coupon,used = False).first()
+        print(apply_coupon)
     except:
-        pass
-    lessed_money = (order.get_cart_oldtotal * coupon.percentage / 100)
-    print(order.get_cart_oldtotal)
-    print("/////////////////////")
-    print(lessed_money)
-    old_price = order.get_cart_oldtotal
-    try:
-        coupon_check = CouponUsed.objects.get(user = customer,coupon = coupon,used = True,applied = True)
+        data = {'total_amount' : None,'percentage':None,}
+        return JsonResponse(data)
+    if apply_coupon is None :
         data = {'total_amount' : None,'percentage':'used',}
         return JsonResponse(data)
-    except:
-        apply_coupon = CouponUsed.objects.create(user = customer,coupon = coupon,order = order, used = True,loss =  lessed_money)
 
-        CouponUsed.objects.get(user=customer,coupon=coupon).save()
-        coupon.count = coupon.count + 1
-        coupon.loss = coupon.loss +lessed_money
-        order.coupon_used=True
-        print(coupon.loss)
-        coupon.save()
-        order.save()
-        print('///////////////////////////////////////////')
-        print(lessed_money)
-        print(order.get_cart_total)
-        print(order.get_cart_totall)
-        lessedinr = format_currency(lessed_money, 'INR', locale='en_IN')
-        data = {'total_amount' : order.get_cart_totall,'percentage':coupon.percentage,'old_price':old_price ,'lessedmoney' :lessedinr}
+    apply_coupon.used = True
+    apply_coupon.order = order
+    apply_coupon.loss = int(lessed_money)
+    apply_coupon.save()
+    order.coupon_used = True
+    CouponUsed.objects.get(user=customer,coupon=coupon).save()
+    coupon.count = coupon.count + 1
+    coupon.loss = coupon.loss +lessed_money
+    coupon.save()
+    order.save()
+    data = {'total_amount' : order.get_cart_totall,'percentage':coupon.percentage,'old_price':old_price ,'lessedmoney' :lessedinr}
     return JsonResponse(data)
 
 

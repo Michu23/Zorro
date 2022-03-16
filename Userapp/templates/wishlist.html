@@ -2,10 +2,9 @@
 
 {% block content %}
 {% load static %}
-<br>
+<br><br><br><br><br><br><br>
 <!-- content -->
 <div class="content container bg-light">
-    <br>
 
     <div class="buyer-profile-cover row bg-image mb-4 p-5" style="background-color: azure;">
         <div class="container d-flex  align-items-center h-100 flex-column flex-md-row text-center row text-md-start">
@@ -30,16 +29,19 @@
                 <div class="card-body">
                     <ul class="nav nav-pills flex-column gap-2">
                         <li class="nav-item">
-                            <a class="nav-link " href="{% url 'UserOrders' %}">Dashboard</a>
+                            <a class="nav-link  " href="{% url 'ProfileDash' %}">Dashboard</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link " href="{% url 'UserOrders' %}">My Orders</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link " href="{% url 'UserOrders' %}">My Addresses</a>
+                            <a class="nav-link " href="{% url 'UserAddress' %}">My Addresses</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link  active " href="{% url 'UserOrders' %}">Wishlist</a>
+                            <a class="nav-link  active" href="{% url 'mywish' %}">Wishlist</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="{% url 'password_change' %}">Change Password</a>
                         </li>
                     </ul>
                 </div>
@@ -47,39 +49,37 @@
         </div>
         <div class="col-md-8">
 
-            <h5 class="mb-4">My Wishlist</h5>
+            <h4 class="mb-4 text-center">_</h4>
             <div class="row g-4">
-                <div class="col-lg-4 col-md-6 col-sm-12">
+                {% for wishes in wishlist %}
+                <div class="col-lg-4 col-md-6 col-sm-12 wishes{{wishes.productadded.id}}">
                     <div class="card card-hover">
                         <a href="#">
-                            <img src="{% static 'assets/images/products/1.jpg' %}" class="card-img-top" alt="...">
+                            <img src="{{wishes.productadded.image1.url}}" class="card-img-top" alt="...">
                         </a>
                         <div class="card-body">
                             <a href="#">
-                                <h5 class="card-title mb-3">Headphone</h5>
+                                <h6 class="card-title mb-3">{{wishes.productadded.name}}</h6>
                             </a>
                             <div class="d-flex gap-3 mb-3 align-items-center">
-                                <del class="text-muted">$800</del>
-                                <h4 class="mb-0">$499.90</h4>
+
+                                <h6 class="mb-0">{{wishes.productadded.newpriceinr}}</h6>
                             </div>
-                            <div class="d-flex gap-2 mb-3">
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <span>(19)</span>
-                            </div>
-                            <div class="d-flex">
-                                <a href="#" class="btn btn-primary">Add to Cart</a>
-                                <a href="#" class="btn ms-auto text-danger">
-                                    <i class="bi bi-heart-fill"></i>
-                                </a>
+
+                            <div class="d-flex justify-content-between">
+                                <a class="add-cart update-cart" data-product="{{wishes.productadded.id}}"
+                                    data-action="add" style="cursor: pointer"><button class="btn btn-dark">+ Add
+                                        To Cart</button></a>
+
+                                <a href="{% url 'removewish' wishes.productadded.id %}"><button
+                                        class="btn btn-danger rounded-circle">X</button></a>
+
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 col-sm-12">
+                {% endfor %}
+                <!-- <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="card card-hover">
                         <a href="#">
                             <img src="{% static 'assets/images/products/3.jpg' %}" class="card-img-top" alt="...">
@@ -158,14 +158,41 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
 
         </div>
-
+        <br>
     </div>
-
+    <br>
 </div>
 <!-- ./ content -->
+<br>
+
+<script>
+    $('.update-cart').on('click', function (e) {
+        var product = $(this).data('product')
+        var action = $(this).data('action')
+        console.log(product)
+        console.log(action)
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'updateitem' %}",
+            data: {
+                productId: product,
+                action: action,
+                csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            dataType: 'json',
+            success: function (response) {
+            }
+        });
+        Swal.fire(
+            'Added to cart!',
+            'Your item have added to cart',
+            'success'
+        )
+    });
+</script>
 
 {% endblock %}

@@ -15,6 +15,7 @@ urlpatterns = [
    path('filterview/<str:id>',views.filterview,name='FilterView'),
    path('filterbrand/<str:id>',views.filterbrand,name='FilterBrand'),
    path('filterprice/<str:id>',views.filterprice,name='FilterPrice'),
+   path('filter_shop_products',views.filter_shop_products, name="filter_shop_products"),
    # path('filter-data',views.filter-data,name="filter-data"),
    path('login/',views.userlogin,name='UserLogin'),
    path('logout/',views.userlogout,name='UserLogout'),
@@ -25,6 +26,9 @@ urlpatterns = [
    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 
+   path('password/', auth_views.PasswordChangeView.as_view(template_name='changepassword.html'), name='password_change'),
+
+
 
    path('profiledash/',views.profiledash,name='ProfileDash'),
    path('address/',views.address,name='UserAddress'),
@@ -34,7 +38,6 @@ urlpatterns = [
    path('orderdetails/<str:id>',views.profileorderdetails,name='UserOrderDeatils'),
    path('cancelorder/<str:id>',views.cancelorder,name="usercancelorder"),
    path('returnorder/<str:id>',views.returnorder,name="userreturnorder"),
-   path('wishlist/',views.wishlist,name='Wishlist'),
 
    path('product/<str:pk>',views.product,name='Product'),
    path('otplogin/',views.otplogin,name='OtpLogin'),
@@ -46,9 +49,14 @@ urlpatterns = [
    path('payrazor/',views.payrazor,name='payrazor'),
    path('paypal/',views.paypal,name='paypal'),
    path('verifycoupon/',views.verifycoupon,name='verifycoupon'),
+
+   path('search/',views.search,name='search'),
    
    path('invoicedetails/',views.invoicedetails,name='invoicedetails'),
-   path('wishlist/',views.wishlist,name="wishlist"),
+   path('wishlist/',views.wishlist,name="Wishlist"),
+   path('mywish/',views.mywish,name='mywish'),
+   path('removewish/<str:id>',views.removewish,name='removewish'),
+
    # path('updatecart/', views.updatecart, name='updatecart'),
    
    
