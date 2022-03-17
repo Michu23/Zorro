@@ -11,6 +11,9 @@ from django.contrib.auth import authenticate,login,logout
 from Userapp.models import Users
 from django.contrib import messages
 from django.db.models import Count,Sum
+from django.db.models import Q
+from django.template.loader import render_to_string
+
 
 
 
@@ -89,6 +92,86 @@ def admincustomers(request):
     users = Users.objects.all().order_by('id')
     context = {'users':users,'cust':'cust'}
     return render(request, "customers.html",context)
+
+
+@never_cache
+def filtercust(request):
+    print("//////////////////////////")
+    user=request.user
+    if 'cust' in request.GET:
+        keyword = request.GET['cust']
+        if keyword:
+            cust = Users.objects.order_by('id').filter(Q(username__icontains=keyword) | Q(first_name__icontains=keyword) | Q(last_name__icontains=keyword) | Q(phone__icontains=keyword) | Q(email__icontains=keyword)  )
+            custcount = cust.count()
+
+    else:
+        messages.error(request,"No results found")
+        return redirect("AdminCustomers")
+
+    context = {'custcount':custcount,'users':cust}
+    return render (request,'customers.html',context)
+
+
+@never_cache
+def filter_shop(request):
+    print("///////////////////")
+    print(request.GET)
+    
+    brands=request.GET.getlist('brands[]')
+    categories = request.GET.getlist('catogery[]')
+    ptype = request.GET.getlist('ptype[]')
+
+    print(ptype)
+    allProducts=Product.objects.all()
+    if len(brands)>0:
+        allProducts = allProducts.filter(btype__id__in=brands).distinct()
+    if len(categories)>0:
+        allProducts = allProducts.filter(catogery__id__in=categories).distinct()
+    if len(ptype)>0:
+        allProducts = allProducts.filter(ptype__id__in=ptype).distinct()
+    
+    t=render_to_string('filteredpro.html',{'productss':allProducts})  
+    return JsonResponse({'data': t})
+
+
+@never_cache
+def filterorder(request):
+    print("//////////////////////////")
+    user=request.user
+    if 'order' in request.GET:
+        keyword = request.GET['order']
+        if keyword:
+            order = Order.objects.order_by('id').filter(Q(customer__username__icontains=keyword) | Q(address__address__icontains=keyword) | Q(date_ordered__icontains=keyword) | Q(status__icontains=keyword)  )
+            ordercount = order.count()
+        else:
+            messages.error(request,"No results found")
+            return redirect("AdminCustomers")
+
+    context = {'ordercount':ordercount,'orders':order}
+    return render (request,'order.html',context)
+
+
+@never_cache
+def filterpro(request):
+    user=request.user
+    if 'search' in request.GET:
+        keyword = request.GET['search']
+        if keyword:
+            products = Product.objects.order_by('-price').filter( Q(description__icontains=keyword) | Q(name__icontains=keyword) | Q(catogery__name__icontains=keyword) | Q(btype__bname__icontains=keyword) | Q(ptype__genre__icontains=keyword) | Q(price__icontains=keyword)  )
+            productcount = products.count()
+
+        else:
+            messages.error(request,"No results found")
+            return redirect("UserShop")
+    catogeries = Catogery.objects.all().annotate(numpro=Count('product'))
+    brands=Brand.objects.all().annotate(bpro=Count('product'))
+    ptypes=PriceType.objects.all().annotate(ppro=Count('product'))
+    context = {'productss':products,'productcount':productcount,'catogeriess':catogeries,'brands':brands,'ptypes':ptypes,'pro':'pro'}
+    return render (request,'productlist.html',context)
+
+
+
+
 
 def adminorders(request):
     orders=Order.objects.filter(complete=True).order_by('-date_ordered')

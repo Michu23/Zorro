@@ -9,6 +9,11 @@ urlpatterns = [
    path('productoffer/',views.productoffer,name='ProductOffer'),
    path('applyoffer/',views.applyoffer,name='ApplyOffer'),
 
+   path('filtercust/',views.filtercust,name='filtercust'),
+   path('filterorder/',views.filterorder,name='filterorder'),
+   path('filterpro/',views.filterpro,name='filterpro'),
+
+   path('filter_shop',views.filter_shop, name="filter_shop"),
 
    path('',views.adminlogin,name='AdminLogin'),
    path('adminlogout',views.adminlogout,name='AdminLogout'),

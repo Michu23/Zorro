@@ -716,6 +716,9 @@ $ (document).ready(function(){
 </script>
 
 {% endblock %}
+
+
+
 @never_cache
 @login_required(login_url='signin')
 def coupon_verify(request):

@@ -10,12 +10,12 @@
         <div class="card-body">
             <div class="d-md-flex">
                 <div class="d-md-flex gap-4 align-items-center">
-                    <form class="mb-3 mb-md-0">
+                    <form class="mb-3 mb-md-0" action="{% url 'filtercust' %}">
                         <div class="row g-3">
                             <div class="col-md-9">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Search">
-                                    <button class="btn btn-outline-light" type="button">
+                                    <input type="text" name="cust" class="form-control w-50" placeholder="Search">
+                                    <button class="btn btn-outline-light" type="submit">
                                         <i class="bi bi-search"></i>
                                     </button>
                                 </div>
@@ -497,12 +497,12 @@
 
             Swal.fire({
                 title: 'Are you sure?',
-                text: "The account will be blocked!",
+                text: "",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, block it!'
+                confirmButtonText: 'Yes'
             }).then((result) => {
 
                 if (result.isConfirmed) {
@@ -515,8 +515,8 @@
                         },
                         success: function (response) {
                             Swal.fire(
-                                'Deleted!',
-                                'Your account has been deleted.',
+                                'Changed',
+                                '',
                                 'success',
                             ).then((result) => {
                                 location.reload()

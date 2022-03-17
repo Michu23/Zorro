@@ -131,7 +131,7 @@
             {% for product in pricetype.product_set.all %}
             {% if product.stocks == 0 %}
 
-            <div class="new-arrivals col-lg-4 col-md-6 col-sm-6 wished{{product.id}}">
+            <div class="new-arrivals col-lg-4 col-md-6 col-sm-6 wished{{product.id}} my-2">
                 <div class=" rounded-3" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; padding: 10px;">
                     <a href="{% url 'Product' product.id %}">
                         <div class="product__item__pic set-bg" href="{% url 'Product' product.id %}"
@@ -183,7 +183,7 @@
                 </div>
             </div>
             {% elif product.offer == True %}
-            <div class="new-arrivals col-lg-4 col-md-6 col-sm-6 wished{{product.id}}">
+            <div class="new-arrivals col-lg-4 col-md-6 col-sm-6 wished{{product.id}} my-2">
                 <div class=" rounded-3" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; padding: 10px;">
                     <a href="{% url 'Product' product.id %}">
                         <div class="product__item__pic set-bg" href="{% url 'Product' product.id %}"
@@ -236,7 +236,7 @@
                 </div>
             </div>
             {% elif product.catogery.catoffer == True %}
-            <div class="new-arrivals col-lg-4 col-md-6 col-sm-6 wished{{product.id}}">
+            <div class="new-arrivals col-lg-4 col-md-6 col-sm-6 wished{{product.id}} my-2">
                 <div class=" rounded-3" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; padding: 10px;">
                     <a href="{% url 'Product' product.id %}">
                         <div class="product__item__pic set-bg" href="{% url 'Product' product.id %}"
@@ -290,7 +290,7 @@
             </div>
 
             {% else %}
-            <div class="new-arrivals col-lg-4 col-md-6 col-sm-6 wished{{product.id}}">
+            <div class="new-arrivals col-lg-4 col-md-6 col-sm-6 wished{{product.id}} my-2">
                 <div class=" rounded-3" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; padding: 10px;">
                     <a href="{% url 'Product' product.id %}">
                         <div class="product__item__pic set-bg" href="{% url 'Product' product.id %}"
@@ -347,7 +347,7 @@
             {% for product in bestproducts %}
             {% if product.stocks == 0 %}
 
-            <div class="hot-sales col-lg-4 col-md-6 col-sm-6 wished{{product.id}}">
+            <div class="hot-sales col-lg-4 col-md-6 col-sm-6 wished{{product.id}} my-2">
                 <div class=" rounded-3" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; padding: 10px;">
                     <a href="{% url 'Product' product.id %}">
                         <div class="product__item__pic set-bg" href="{% url 'Product' product.id %}"
@@ -399,7 +399,7 @@
                 </div>
             </div>
             {% elif product.offer == True %}
-            <div class="hot-sales col-lg-4 col-md-6 col-sm-6 wished{{product.id}}">
+            <div class="hot-sales col-lg-4 col-md-6 col-sm-6 wished{{product.id}} my-2">
                 <div class=" rounded-3" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; padding: 10px;">
                     <a href="{% url 'Product' product.id %}">
                         <div class="product__item__pic set-bg" href="{% url 'Product' product.id %}"
@@ -452,7 +452,7 @@
                 </div>
             </div>
             {% elif product.catogery.catoffer == True %}
-            <div class="hot-sales col-lg-4 col-md-6 col-sm-6 wished{{product.id}}">
+            <div class="hot-sales col-lg-4 col-md-6 col-sm-6 wished{{product.id}} my-2">
                 <div class=" rounded-3" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; padding: 10px;">
                     <a href="{% url 'Product' product.id %}">
                         <div class="product__item__pic set-bg" href="{% url 'Product' product.id %}"
@@ -506,7 +506,7 @@
             </div>
 
             {% else %}
-            <div class="hot-sales col-lg-4 col-md-6 col-sm-6 wished{{product.id}}">
+            <div class="hot-sales col-lg-4 col-md-6 col-sm-6 wished{{product.id}} my-2">
                 <div class=" rounded-3" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; padding: 10px;">
                     <a href="{% url 'Product' product.id %}">
                         <div class="product__item__pic set-bg" href="{% url 'Product' product.id %}"

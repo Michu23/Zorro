@@ -84,9 +84,7 @@
 
                     <button type="submit" class="btn btn-outline-success justify-content-end">Save changes</button>
                     <a href="{% url 'AdminCats' %}"><button class="btn btn-outline-dark">Go back</button></a>
-                    {% for error in messages %}
-                    {{error}}
-                    {% endfor %}
+                    
                 </form>
             </div>
             {% else %}

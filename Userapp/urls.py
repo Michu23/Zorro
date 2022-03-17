@@ -16,6 +16,12 @@ urlpatterns = [
    path('filterbrand/<str:id>',views.filterbrand,name='FilterBrand'),
    path('filterprice/<str:id>',views.filterprice,name='FilterPrice'),
    path('filter_shop_products',views.filter_shop_products, name="filter_shop_products"),
+
+
+   path('lowtohigh',views.lowtohigh, name="lowtohigh"),
+   path('hightolow',views.hightolow, name="hightolow"),
+
+
    # path('filter-data',views.filter-data,name="filter-data"),
    path('login/',views.userlogin,name='UserLogin'),
    path('logout/',views.userlogout,name='UserLogout'),

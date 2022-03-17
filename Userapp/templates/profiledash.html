@@ -4,98 +4,101 @@
 {% load static %}
 <br><br><br><br><br>
 <!-- content -->
-<div class="content container h-100">
-    <br><br>
+<section>
+    <div class="content container h-100">
+        <br><br>
 
-    <div class="buyer-profile-cover row bg-image mb-4 p-5 rounded-3" style="background-color: azure;">
-        <div class="container d-flex  align-items-center h-100 flex-column flex-md-row text-center row text-md-start">
-            <div class="col-md-4">
-                <img src="{{user.propic.url}}" height="10%" width="60%" class="rounded-circle" alt="..." />
-            </div>
-            <div class="my-4 my-md-0 col-md-8">
-                <h3 class="mb-1" style="text-transform: capitalize;"><strong>Hi {{user.username}},</strong></h3>
-                <h5 class="mb-3">Welcome to Zorro-Estore</h5>
-                <a href="{% url 'editprofile' %}" class="btn btn-primary btn-lg btn-icon">
-                    <i class="bi bi-pencil small"></i> Edit Account
-                </a>
+        <div class="buyer-profile-cover row bg-image mb-4 p-5 rounded-3" style="background-color: azure;">
+            <div
+                class="container d-flex  align-items-center h-100 flex-column flex-md-row text-center row text-md-start">
+                <div class="col-md-4">
+                    <img src="{{user.propic.url}}" height="10%" width="60%" class="rounded-circle" alt="..." />
+                </div>
+                <div class="my-4 my-md-0 col-md-8">
+                    <h3 class="mb-1" style="text-transform: capitalize;"><strong>Hi {{user.username}},</strong></h3>
+                    <h5 class="mb-3">Welcome to Zorro-Estore</h5>
+                    <a href="{% url 'editprofile' %}" class="btn btn-primary btn-lg btn-icon">
+                        <i class="bi bi-pencil small"></i> Edit Account
+                    </a>
+                </div>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-md-3 p-3">
+                <div class="card">
+                    <div class="card-body">
+                        <ul class="nav nav-pills flex-column gap-2">
+                            <li class="nav-item">
+                                <a class="nav-link  active " href="{% url 'ProfileDash' %}">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " href="{% url 'UserOrders' %}">My Orders</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " href="{% url 'UserAddress' %}">My Addresses</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " href="{% url 'mywish' %}">Wishlist</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " href="{% url 'password_change' %}">Change Password</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9 mt-3 pr-5">
+
+                <div class="row g-4 mb-4">
+                    <div class="col-md-4">
+                        <div class="card bg-cyan text-white-90">
+                            <div class="card-body d-flex align-items-center">
+                                <i class="bi bi-box-seam display-7 me-3"></i>
+                                <div>
+                                    <h4 class="mb-0">45</h4>
+                                    <span>My Orders</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-purple text-white-90">
+                            <div class="card-body d-flex align-items-center">
+                                <i class="bi bi-heart display-7 me-3"></i>
+                                <div>
+                                    <h4 class="mb-0">5</h4>
+                                    <span>My Wishlist</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-teal text-white-90">
+                            <div class="card-body d-flex align-items-center">
+                                <i class="bi bi-wallet2 display-7 me-3"></i>
+                                <div>
+                                    <h4 class="mb-0">$9,000</h4>
+                                    <span>My Profit</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h6 class="card-title mb-4">Income by Month</h6>
+                        <div id="profit"></div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+
     </div>
-
-    <div class="row">
-        <div class="col-md-3 p-3">
-            <div class="card">
-                <div class="card-body">
-                    <ul class="nav nav-pills flex-column gap-2">
-                        <li class="nav-item">
-                            <a class="nav-link  active " href="{% url 'ProfileDash' %}">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link " href="{% url 'UserOrders' %}">My Orders</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link " href="{% url 'UserAddress' %}">My Addresses</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link " href="{% url 'mywish' %}">Wishlist</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link " href="{% url 'password_change' %}">Change Password</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-9 mt-3 pr-5">
-
-            <div class="row g-4 mb-4">
-                <div class="col-md-4">
-                    <div class="card bg-cyan text-white-90">
-                        <div class="card-body d-flex align-items-center">
-                            <i class="bi bi-box-seam display-7 me-3"></i>
-                            <div>
-                                <h4 class="mb-0">45</h4>
-                                <span>My Orders</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card bg-purple text-white-90">
-                        <div class="card-body d-flex align-items-center">
-                            <i class="bi bi-heart display-7 me-3"></i>
-                            <div>
-                                <h4 class="mb-0">5</h4>
-                                <span>My Wishlist</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card bg-teal text-white-90">
-                        <div class="card-body d-flex align-items-center">
-                            <i class="bi bi-wallet2 display-7 me-3"></i>
-                            <div>
-                                <h4 class="mb-0">$9,000</h4>
-                                <span>My Profit</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h6 class="card-title mb-4">Income by Month</h6>
-                    <div id="profit"></div>
-                </div>
-            </div>
-
-
-        </div>
-
-    </div>
-
-</div>
+</section>
 <!-- ./ content -->
 
 {% endblock %}

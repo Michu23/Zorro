@@ -23,7 +23,7 @@
             <div class="d-md-flex gap-4 align-items-center">
                 <div class="d-none d-md-flex">All Orders</div>
                 <div class="d-md-flex gap-4 align-items-center">
-                    <form class="mb-3 mb-md-0">
+                    <form class="mb-3 mb-md-0" action="{% url 'filterorder' %}">
                         <div class="row g-3">
                             <div class="col-md-3">
                                 <select class="form-select">
@@ -41,10 +41,10 @@
                                     <option value="50">50</option>
                                 </select>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 ">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Search">
-                                    <button class="btn btn-outline-light" type="button">
+                                    <input type="text" class="form-control" name="order" placeholder="Search">
+                                    <button class="btn btn-outline-light" type="submit">
                                         <i class="bi bi-search"></i>
                                     </button>
                                 </div>
@@ -54,7 +54,7 @@
                 </div>
                 <div class="dropdown ms-auto">
 
-                    <a href="#" class="btn btn-dark " aria-haspopup="true" aria-expanded="false">Search</a>
+                    <a href="#" class="btn btn-dark d-none" aria-haspopup="true" aria-expanded="false">Search</a>
                 </div>
             </div>
         </div>
@@ -400,7 +400,7 @@
         </table>
     </div>
 
-    <nav class="mt-4" aria-label="Page navigation example">
+    <!-- <nav class="mt-4" aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
             <li class="page-item">
                 <a class="page-link" href="#" aria-label="Previous">
@@ -416,7 +416,7 @@
                 </a>
             </li>
         </ul>
-    </nav>
+    </nav> -->
 
 </div>
 <!-- ./ content -->
