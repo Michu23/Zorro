@@ -25,23 +25,8 @@
                 <div class="d-md-flex gap-4 align-items-center">
                     <form class="mb-3 mb-md-0" action="{% url 'filterorder' %}">
                         <div class="row g-3">
-                            <div class="col-md-3">
-                                <select class="form-select">
-                                    <option>Sort by</option>
-                                    <option value="desc">Desc</option>
-                                    <option value="asc">Asc</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <select class="form-select">
-                                    <option value="10">10</option>
-                                    <option value="20">20</option>
-                                    <option value="30">30</option>
-                                    <option value="40">40</option>
-                                    <option value="50">50</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 ">
+
+                            <div class="col-md-12 ">
                                 <div class="input-group">
                                     <input type="text" class="form-control" name="order" placeholder="Search">
                                     <button class="btn btn-outline-light" type="submit">
@@ -86,7 +71,7 @@
                     </td>
                     <td>{{order.customer}}</td>
                     <td>{{order.date_ordered}}</td>
-                    <td> ₹{{order.get_cart_total}}</td>
+                    <td> {{order.get_cart_totall}}</td>
                     <td>
                         {% if order.status == "Placed" %}
                         <span class="badge bg-info p-2">{{order.status}}</span>

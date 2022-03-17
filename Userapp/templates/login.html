@@ -17,15 +17,13 @@
       <input type="password" class="form-control" name="password" id="exampleInputPassword1" required />
     </div>
     <div class="mb-3 form-check">
-      {% for error in messages %}
-      <p class="text-danger">{{error}}</p>
-      {% endfor %}
+
       <div class="d-flex justify-content-between">
         <div class="text-center">
           New here? <a href="{% url 'UserReg' %}">Sign up!</a>
         </div>
-        <div class="text-center">
-          <a href="{% url 'OtpLogin' %}">OTP login</a>
+        <div class="text-end">
+          <a href="{% url 'OtpLogin' %}">OTP login</a><br>
           <a href="{% url 'reset_password' %}">Reset password</a>
         </div>
       </div>

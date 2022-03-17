@@ -93,7 +93,7 @@
                     </div>
                     <h4 class="mb-3">Total Revenue</h4>
                     <div class="d-flex mb-3">
-                        <div class="display-7">{{total_revenue.amount__sum}}</div>
+                        <div class="display-7">₹{{total_revenue.amount__sum}}</div>
                         <div class="ms-auto" id="total-orders"></div>
                     </div>
                     <div class="text-success">
@@ -194,23 +194,23 @@
         </div>
 
 
-        <div class="row p-2 mt-4">
+        <div class="row p-2 my-4">
 
-            <div class="col-md-6 text-center">
+            <div class="col-md-6 text-center my-4">
                 <h2 class="main-title">Payment Methods</h2>
                 <canvas id="paymentchart" width="400" height="400">
 
                 </canvas>
 
             </div>
-            <div class="col-md-6 text-center">
+            <div class="col-md-6 text-center my-4">
                 <h2 class="main-title">Order Status</h2>
                 <canvas id="orderchart" width="400" height="400">
 
                 </canvas>
 
             </div>
-            <div class="col-md-6 text-center">
+            <!-- <div class="col-md-6 text-center">
                 <h2 class="main-title">Products Available</h2>
                 <canvas id="productchart" width="400" height="400">
 
@@ -226,7 +226,7 @@
 
                 </canvas>
 
-            </div>
+            </div> -->
         </div>
     </div>
 
@@ -791,7 +791,7 @@
 
 
     <script>
-        var xValues = ['placed', 'shipped', 'out of delivery', 'completed', 'cancelled', 'returned'];
+        var xValues = ['Placed', 'Shipped', 'Delivered', 'completed', 'Cancelled', 'Returned'];
         var yValues = {{ order_status | safe}};
         var barColors = [
             'rgba(255, 159, 64, 0.8)',

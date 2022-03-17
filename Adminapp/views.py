@@ -56,7 +56,7 @@ def adminhome(request):
     shipped = Order.objects.filter(status= 'Shipped').count()
     completed = Order.objects.filter(status= 'Completed').count()
     cancelled = Order.objects.filter(status= 'Cancelled').count()
-    out_of_delivery = Order.objects.filter(status= 'Out Of Delevery').count()
+    out_of_delivery = Order.objects.filter(status= 'Delivered').count()
     returned = Order.objects.filter(status= 'Return').count()
     order_status = [placed,shipped,out_of_delivery,completed,cancelled,returned]
 
@@ -276,7 +276,19 @@ def filterprice(request,id):
 
 def salesreport(request):
     pay=Pay.objects.all()
-    context={'sales':'sales','pay':pay}
+    # if request.method == 'POST':
+    #     from_date = request.POST.get('from_date')
+    #     to_date = request.POST.get('to_date')
+    #     year = request.POST.get('year')
+    #     month = request.POST.get('month')
+    #     m = month[6:]
+    #     if from_date != '' and to_date != '' :
+    #         order_data = Orderdetail.objects.filter(order_date_range=[from_date,to_date]).filter(payment_payment_status='Completed').order_by('order_date')
+    #     elif  month != '' :
+    #         order_data = Orderdetail.objects.filter(order_date_month=m).filter(payment_payment_status='Completed').order_by('order_date')
+    #     elif  year != '' :
+    #         order_data = Orderdetail.objects.filter(order_date_year=year).filter(payment_payment_status='Completed').order_by('order_date')
+    context = { 'sales':'sales','pay':pay}
     return render(request, "sales.html",context)
 
 

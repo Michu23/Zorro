@@ -70,6 +70,22 @@
                                     class="video-popup"><i class="fa fa-play"></i></a>
                             </div>
                         </div>
+                        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+                        <script>
+                        </script>
+
+                        <h1>Image Zoom</h1>
+                        <p>Mouse over the image:</p>
+                        <div class="img-zoom-container">
+                            <div class="preview"><img class="image" src="https://www.w3schools.com/howto/img_girl.jpg"
+                                    width="200" height="200"></div>
+                            <div class="preview"><img class="image" src="https://placeimg.com/640/480/animals"
+                                    width="200" height="200"></div>
+                            <div class="preview"><img class="image" src="https://placeimg.com/640/480/arch" width="200"
+                                    height="200"></div>
+                        </div>
+
+                        <div class="img-zoom-result" id="result"></div>
                     </div>
                 </div>
             </div>
@@ -311,6 +327,109 @@
             'success'
         )
     });
+</script>
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    .img-zoom-container {
+
+        width: 100%
+    }
+
+    .preview {
+        display: inline-block;
+        margin: 0 10px;
+        position: relative;
+    }
+
+    .img-zoom-lens {
+        position: absolute;
+        border: 1px solid #d4d4d4;
+        /*set the size of the lens:*/
+        width: 40px;
+        height: 40px;
+    }
+
+    .img-zoom-result {
+        border: 1px solid #d4d4d4;
+        /*set the size of the result div:*/
+        width: 300px;
+        height: 300px;
+    }
+</style>
+<script>
+    $('.preview').each(function () {
+        var lens, cx, cy, img, result;
+        img = $(this).find('img.image')[0];
+        result = document.getElementById('result');
+        /*create lens:*/
+        lens = document.createElement("div");
+        lens.setAttribute("class", "img-zoom-lens");
+        /*insert lens:*/
+        img.parentElement.insertBefore(lens, img);
+        /*calculate the ratio between result DIV and lens:*/
+        cx = result.offsetWidth / lens.offsetWidth;
+        cy = result.offsetHeight / lens.offsetHeight;
+        /*set background properties for the result DIV:*/
+
+        /*execute a function when someone moves the cursor over the image, or the lens:*/
+        $(lens).on('mousemove touchmove', moveLens);
+        $(img).on('mousemove touchmove', moveLens);
+
+        function getCursorPos(e) {
+            var a, x = 0,
+                y = 0;
+            e = e || window.event;
+            /*get the x and y positions of the image:*/
+            a = img.getBoundingClientRect();
+            /*calculate the cursor's x and y coordinates, relative to the image:*/
+            x = e.pageX - a.left;
+            y = e.pageY - a.top;
+            /*consider any page scrolling:*/
+            x = x - window.pageXOffset;
+            y = y - window.pageYOffset;
+            return {
+                x: x,
+                y: y
+            };
+        }
+
+        function moveLens(e) {
+            var pos, x, y;
+            result.style.backgroundImage = "url('" + img.src + "')";
+            result.style.backgroundSize = (img.width * cx) + "px " + (img.height * cy) + "px";
+
+            /*prevent any other actions that may occur when moving over the image:*/
+            e.preventDefault();
+            /*get the cursor's x and y positions:*/
+            pos = getCursorPos(e);
+            /*calculate the position of the lens:*/
+            x = pos.x - (lens.offsetWidth / 2);
+            y = pos.y - (lens.offsetHeight / 2);
+            /*prevent the lens from being positioned outside the image:*/
+            if (x > img.width - lens.offsetWidth) {
+                x = img.width - lens.offsetWidth;
+            }
+            if (x < 0) {
+                x = 0;
+            }
+            if (y > img.height - lens.offsetHeight) {
+                y = img.height - lens.offsetHeight;
+            }
+            if (y < 0) {
+                y = 0;
+            }
+            /*set the position of the lens:*/
+            lens.style.left = x + "px";
+            lens.style.top = y + "px";
+            /*display what the lens "sees":*/
+            result.style.backgroundPosition = "-" + (x * cx) + "px -" + (y * cy) + "px";
+            console.log(result);
+        }
+
+    })
 </script>
 
 {% endblock %}
