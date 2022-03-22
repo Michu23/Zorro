@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-a--96sj5+^zihkz3-w-7so%wrew&6#jo0)+_nusqv!=$4=1d3w'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition 
@@ -84,10 +84,10 @@ WSGI_APPLICATION = 'Zorro.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Zorro',
-        'USER': 'postgres',
-        'PASSWORD':'michu',
-        'HOST': 'localhost',
+        'NAME': config('name'),
+        'USER': config('user'),
+        'PASSWORD':config('pass'),
+        'HOST': config('host'),
     }
 }
 
@@ -141,8 +141,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'miraspk98@gmail.com'
-EMAIL_HOST_PASSWORD = 'michu@@22'
+EMAIL_HOST_USER = config('email')
+EMAIL_HOST_PASSWORD = config('passw')
     
     
 # Default primary key field type

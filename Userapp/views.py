@@ -1044,8 +1044,6 @@ def usercheckout(request):
     return render(request, 'checkout.html', context )
 
 
-
-
 def invoicedetails(request):
     user = request.user
     order = Order.objects.filter(customer = user,complete=True).order_by('-id')[0]
