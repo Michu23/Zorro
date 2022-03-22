@@ -315,6 +315,16 @@ def adminorders(request):
     context={'orders':paged_orders,'abc':'abc'}
     return render(request, "order.html",context)
 
+def adminordersa(request):
+    orders=Order.objects.filter(complete=True).order_by('date_ordered')
+    paginator = Paginator (orders, 4)
+    page = request.GET.get('page')
+    paged_orders = paginator.get_page(page)
+    context={'orders':paged_orders,'abc':'abc'}
+    return render(request, "order.html",context)
+
+
+
 def adminorderdetail(request,pk):
     user= request.user
     order = Order.objects.get(id=pk)

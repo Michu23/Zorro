@@ -660,6 +660,11 @@
             // Finalize the transaction
             onApprove: function (data, actions) {
                 return actions.order.capture().then(function (orderData) {
+                    var address = $('input[name="address"]:checked').val();
+                    alert(address)
+                    data.address = address
+
+
                     $.ajax({
                         method: "POST",
                         url: "{% url 'paypal' %}",
@@ -707,6 +712,7 @@
                 data: {
                     address: address
                 },
+
                 success: function (response) {
                     console.log(response.total)
                     var options = {
@@ -721,6 +727,8 @@
 
                             data = {
                                 'order_id': responseb.razorpay_payment_id,
+                                address: address,
+
                             }
 
 

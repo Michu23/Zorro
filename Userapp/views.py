@@ -836,11 +836,72 @@ def payrazor(request):
         total_amount =  order.get_cart_total
     return JsonResponse({'name':user.username,'email':user.email,'total':total_amount,'phone':user.phone })
 
+@ csrf_exempt
+def razorpay(request):
+    user=request.user
+    print(user)
+    if request.method == 'POST': 
+        address_id = request.POST.get('address')
+        address = Address.objects.get(id=address_id)
+
+        try:
+            order= Order.objects.get(customer=user,complete=False,status="BuyNow")
+            print("/////////////////////////////////buynow")
+        except:
+            print("/////////////////////////////////cart")
+            order= Order.objects.get(customer=user,complete=False,status="New")
+        items = order.orderitem_set.all()
+        for item in items :
+            ordered = item.quantity
+            print(item.quantity)
+            prestocks = item.product.stocks
+            poststocks = prestocks - ordered
+            productid = item.product.id
+            Product.objects.filter(id = productid).update(stocks = poststocks)
+        total_amount = order.get_cart_total
+        transaction_id = request.POST.get('order_id')
+        Pay.objects.get_or_create(payuser=user,order = order,method = 'RazorPay',amount = total_amount,status = 'Completed',transactionid=transaction_id)
+        order.status = 'Placed'
+        order.complete=True
+        order.address=address
+        
+        
+        order.save()
+
+        
+        try:
+            if order.couponused.used==True:
+                coupon_check = CouponUsed.objects.get(user = user,used = True,order = order)
+                coupid=coupon_check.coupon
+                coupon = CouponDetail.objects.get(id=coupid.id)
+                print("old total........................",order.get_cart_oldtotal)
+                lessed_money = (order.get_cart_oldtotal * coupon_check.coupon.percentage / 100)
+                coupon.count = coupon.count + 1
+                coupon.loss = coupon.loss +lessed_money
+                coupon_check.loss=lessed_money
+                coupon_check.applied=True
+                order.coupon_used=True
+                coupon.save()
+                coupon_check.save()
+                order.save()
+            else:
+                print("couponused isnt true!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        except:
+            print("Error")
+
+
+        return JsonResponse({'status': 'Your order has been Placed Successfully'})
+    
+
 
 @csrf_exempt
 def paypal(request):
     print("/////////////////////////////////activating paypal")
-    if request.method == 'POST':        
+    if request.method == 'POST':  
+        address_id = request.POST.get('address')
+        print(address_id)
+        address = Address.objects.get(id=address_id)
+             
         print("/////////////////////////////////activating paypal")
 
         user = request.user
@@ -859,6 +920,7 @@ def paypal(request):
         transactionid = order.id
         Pay.objects.get_or_create(payuser=user,order = order,method = 'Paypal',amount = total_amount,status = 'Completed', transactionid = transactionid)
         order.status = 'Placed'
+        order.address=address
         order.complete=True
         order.save()
         
@@ -876,6 +938,7 @@ def paypal(request):
                 order.coupon_used=True
                 coupon.save()
                 coupon_check.save()
+
                 order.save()
             else:
                 print("couponused isnt true!!!!!!!!!!!!!!!!!!!!!!!!!!!")
@@ -980,57 +1043,7 @@ def usercheckout(request):
     context = {'order':order,'items':items,'addr':addr,'form':form,'coupon':coup,'couponu':couponu}
     return render(request, 'checkout.html', context )
 
-@ csrf_exempt
-def razorpay(request):
-    user=request.user
-    print(user)
-    if request.method == 'POST': 
-        try:
-            order= Order.objects.get(customer=user,complete=False,status="BuyNow")
-            print("/////////////////////////////////buynow")
-        except:
-            print("/////////////////////////////////cart")
-            order= Order.objects.get(customer=user,complete=False,status="New")
-        items = order.orderitem_set.all()
-        for item in items :
-            ordered = item.quantity
-            print(item.quantity)
-            prestocks = item.product.stocks
-            poststocks = prestocks - ordered
-            productid = item.product.id
-            Product.objects.filter(id = productid).update(stocks = poststocks)
-        total_amount = order.get_cart_total
-        transaction_id = request.POST.get('order_id')
-        Pay.objects.get_or_create(payuser=user,order = order,method = 'RazorPay',amount = total_amount,status = 'Completed',transactionid=transaction_id)
-        order.status = 'Placed'
-        order.complete=True
-        
-        order.save()
 
-        
-        try:
-            if order.couponused.used==True:
-                coupon_check = CouponUsed.objects.get(user = user,used = True,order = order)
-                coupid=coupon_check.coupon
-                coupon = CouponDetail.objects.get(id=coupid.id)
-                print("old total........................",order.get_cart_oldtotal)
-                lessed_money = (order.get_cart_oldtotal * coupon_check.coupon.percentage / 100)
-                coupon.count = coupon.count + 1
-                coupon.loss = coupon.loss +lessed_money
-                coupon_check.loss=lessed_money
-                coupon_check.applied=True
-                order.coupon_used=True
-                coupon.save()
-                coupon_check.save()
-                order.save()
-            else:
-                print("couponused isnt true!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        except:
-            print("Error")
-
-
-        return JsonResponse({'status': 'Your order has been Placed Successfully'})
-    
 
 
 def invoicedetails(request):

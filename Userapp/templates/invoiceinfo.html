@@ -55,7 +55,7 @@
                     <div>Date: {{order.date_ordered|date}}</div>
                 </div>
                 <div class="d-md-flex justify-content-between align-items-center">
-                    <h4>Invoice</h4>
+                    <h2>INVOICE</h2>
                     <div>
                         <img width="120" src="{% static 'img/zorro.svg' %}" alt="logo">
                     </div>
@@ -63,16 +63,31 @@
                 <hr class="my-4">
                 <div class="row">
                     <div class="col-md-6">
-                        <p>
-                            <strong>Bill From</strong>
-                        </p>
-                        <p>Zorro Estore, <br>Pattambi</p>
+                        <h5>
+                            <strong>Customer Details</strong>
+                        </h5><br>
+                        <h6>
+                            <div class="row">
+                                <div class="col-3">
+                                    Name <br>
+                                    Phone <br>
+                                    Mail <br>
+                                    Payment <br>
+                                </div>
+                                <div class="col-6">
+                                    <strong>: {{order.customer.username}}</strong> <br>
+                                    <strong>: {{order.customer.phone}}</strong> <br>
+                                    <strong>: {{order.customer.email}}</strong> <br>
+                                    <strong>: {{order.pay.method}}</strong> <br>
+                                </div>
+                            </div>
+                        </h6>
                     </div>
                     <div class="col-md-6">
                         <p class="text-start text-md-end">
                             <strong>Bill to</strong>
                         </p>
-                        <p>{{order.address.address}}</p> <br>{{order.address.city}}</p>
+                        <p class="text-end">{{order.address.address}} <br>{{order.address.city}}</p>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -90,16 +105,16 @@
                         <tbody>
                             {% for i in items %}
                             <tr class="my-auto">
-                                <td class="text-center my-auto">{{forloop.counter}}</td>
-                                <td class="text-center my-auto">
+                                <td class="text-center pt-4">{{forloop.counter}}</td>
+                                <td class="text-center ">
                                     <a href="#">
                                         <img src="{{i.product.image1.url}}" class="rounded" width="60" alt="...">
                                     </a>
                                 </td>
-                                <td class="text-center my-auto">{{i.product.name}}</td>
-                                <td class="text-center my-auto">{{i.quantity}}</td>
-                                <td class="text-center my-auto">{{i.product.priceinr}}</td>
-                                <td class="text-center my-auto">{{i.get_total}}</td>
+                                <td class="text-center pt-4">{{i.product.name}}</td>
+                                <td class="text-center pt-4">{{i.quantity}}</td>
+                                <td class="text-center pt-4">{{i.product.priceinr}}</td>
+                                <td class="text-center pt-4">{{i.get_total}}</td>
                             </tr>
                             {% endfor %}
 
