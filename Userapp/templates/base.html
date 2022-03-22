@@ -10,11 +10,93 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Zorro-Estore</title>
 
+  <style>
+    .ull {
+      position: relative;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+
+    .ull li {
+      position: relative;
+      list-style: none;
+      width: 60px;
+      height: 60px;
+      margin: 0 30px;
+      transform: rotate(-30deg) skew(25deg);
+      background: #000;
+    }
+
+    .ull li span {
+      position: absolute;
+      top: 0;
+      Left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      transition: 0.5s;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 30px !important;
+    }
+
+    .ull li:hover span:nth-child(5) {
+      transform: translate(40px, -40px);
+      opacity: .8;
+    }
+
+    .ull li:hover span:nth-child(4) {
+      transform: translate(30px, -30px);
+      opacity: .8;
+    }
+
+    .ull li:hover span:nth-child(3) {
+      transform: translate(20px, -20px);
+      opacity: .8;
+    }
+
+    .ull li:hover span:nth-child(2) {
+      transform: translate(10px, -10px);
+      opacity: .8;
+    }
+
+    .ull li:hover span:nth-child(1) {
+      transform: translate(0px, 0px);
+      opacity: .8;
+    }
+
+
+    .ull li:nth-child(1) span {
+      background: #3b5999
+    }
+
+    .ull li:nth-child(2) span {
+      background: #55acee
+    }
+
+    .ull li:nth-child(3) span {
+      background: #dd4b39
+    }
+
+    .ull li:nth-child(4) span {
+      background: #0077B5
+    }
+
+    .ull li:nth-child(5) span {
+      background: #e4405f
+    }
+  </style>
+
+
   <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
     rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <!-- Css Styles -->
   <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css" />
@@ -153,6 +235,7 @@
               <li><a href="{% url 'UserShop' %}">Shop</a></li>
               <li><a href="{% url 'UserCart' %}">Cart</a></li>
               <li><a href="{% url 'UserCheckout' %}">Checkout</a></li>
+              <li><a href="{% url 'invoicedetails' %}">Contacts</a></li>
             </ul>
           </nav>
         </div>
@@ -173,6 +256,7 @@
 
   {% block content %} {% endblock %}
 
+
   <!-- Footer Section Begin -->
   <footer class="footer" style="background-color: black !important;">
     <div class="container" style="background-color: black !important;">
@@ -186,7 +270,56 @@
               The customer is at the heart of our unique business model, which
               includes design.
             </p>
-            <a href="#"><img src="{% static 'img/payment.png' %}" alt="" /></a>
+            <div>
+              <ul class="d-flex ull">
+                <li>
+                  <a href="https://twitter.com/MichuMiras1?t=ZRPwzL65EuUh6SF-25XPIQ&s=09" target="_blank"
+                    rel="noopener">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span class="fa fa-twitter" aria-hidden="true"></span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.instagram.com/_theycallmemichu_/" target="_blank" rel="noopener">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span class="fa fa-instagram" aria-hidden="true"></span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.facebook.com/amichumiras" target="_blank" rel="noopener">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span class="fa fa-facebook-official" aria-hidden="true"></span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.linkedin.com/in/miras98/" target="_blank" rel="noopener">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span class="fa fa-linkedin-square" aria-hidden="true"></span>
+                  </a>
+                </li>
+                <li>
+                  <a href="mailto:m4michu123@gmail.com" target="_blank" rel="noopener">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span class="fa fa-google-plus-official" aria-hidden="true"></span>
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
         <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
@@ -204,10 +337,18 @@
           <div class="footer__widget">
             <h6>Shopping</h6>
             <ul>
-              <li><a href="#">Contact Us</a></li>
-              <li><a href="#">Payment Methods</a></li>
-              <li><a href="#">Delivary</a></li>
-              <li><a href="#">Return & Exchanges</a></li>
+              <li>
+                <a href="#">Contact Us</a>
+              </li>
+              <li>
+                <a href="#">Payment Methods</a>
+              </li>
+              <li>
+                <a href="#">Delivary</a>
+              </li>
+              <li>
+                <a href="#">Return & Exchanges</a>
+              </li>
             </ul>
           </div>
         </div>
@@ -219,8 +360,9 @@
                 Be the first to know about new arrivals, look books, sales &
                 promos!
               </p>
-              <form action="#">
-                <input type="text" placeholder="Your email" />
+              <form action="{% url 'mail' %}" method="POST">
+                {% csrf_token %}
+                <input type="text" name="mail" placeholder="Your email" />
                 <button type="submit">
                   <span class="icon_mail_alt"></span>
                 </button>

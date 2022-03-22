@@ -17,6 +17,9 @@ urlpatterns = [
    path('filterprice/<str:id>',views.filterprice,name='FilterPrice'),
    path('filter_shop_products',views.filter_shop_products, name="filter_shop_products"),
 
+   path('contacts/',views.contacts,name="contacts"),
+   path('mail/',views.mail,name="mail"),
+
 
    path('lowtohigh',views.lowtohigh, name="lowtohigh"),
    path('hightolow',views.hightolow, name="hightolow"),

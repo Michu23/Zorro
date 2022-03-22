@@ -46,7 +46,6 @@ class Product(models.Model):
     created = models.DateField(auto_now_add=True)
 
 
-
     @property
     def newprice(self):
         offerp = self.price

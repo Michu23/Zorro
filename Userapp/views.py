@@ -13,9 +13,14 @@ from django.http import JsonResponse
 from decouple import config
 from django.views.decorators.csrf import csrf_exempt
 from babel.numbers import format_currency
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required 
 from django.db.models import Q
 from django.template.loader import render_to_string
+from django.core.paginator import EmptyPage , PageNotAnInteger , Paginator
+from django.core.mail import send_mail
+from django.conf import settings
+from django.core.mail import BadHeaderError, send_mail
+
 
 # Create your views here.
 
@@ -159,7 +164,7 @@ def userreg(request):
     device = request.COOKIES['device']
     customer, created = Users.objects.get_or_create(device=device)
     
-    form= MyUserFormUser(instance=customer)
+    form= MyUserFormUser()
     if request.method == 'POST':
         form = MyUserFormUser(request.POST,instance=customer)
         uname=request.POST.get("username")
@@ -293,7 +298,7 @@ def userhome(request):
         try:
             device=request.COOKIES['device']
             print("////////////////////////////",device)
-            customer,created=Users.objects.get_or_create(device=device)
+            customer,created=Users.objects.get_or_create(device=device,username=device)
             order,created= Order.objects.get_or_create(customer=customer,complete=False)
         except:
             return redirect("UserLogin")
@@ -331,6 +336,39 @@ def search(request):
 
     return render (request,'shop.html',context)
 
+
+@never_cache
+def mail(request):
+    if request.method == "POST":
+        message=request.POST["mail"]
+        send_mail('Zorro Estore Subscribed!',message,settings.EMAIL_HOST_USER,['m4michu123@gmail.com'],fail_silently=False)
+        messages.success(request,"Submitted successfully!")
+        return redirect('UserHome')
+
+@never_cache
+def contacts(request):
+    if request.method == "POST":
+        message=request.POST["message"]
+        name=request.POST["name"]
+        email=request.POST["email"]
+
+        # send_mail('Zorro Estore Response',message,email,['m4michu123@gmail.com'],fail_silently=False)
+        if name and message and email:
+            try:
+                send_mail(name, message, email, ['m4michu123@gmail.com'])
+            except BadHeaderError:
+                messages.error(request,'Invalid header found')
+                return redirect('contacts')
+            messages.success(request,"Form submitted successfully")
+            return redirect('contacts')
+        else:
+        # In reality we'd use a form class
+        # to get proper validation errors.
+            messages.error("Make sure all fields are entered and valid.")
+            return redirect('contacts')
+
+    return render (request,"contact.html")
+
 @never_cache
 def usershop(request):
     if request.user.is_authenticated:
@@ -339,18 +377,22 @@ def usershop(request):
         try:
             device=request.COOKIES['device']
             customer,created=Users.objects.get_or_create(device=device)
-            order,created= Order.objects.get_or_create(customer=customer,complete=False)
         except:
             return redirect("UserLogin")
         
     products = Product.objects.all()
+    paginator = Paginator (products, 9)
+    page = request.GET.get('page')
+    paged_products = paginator.get_page(page)
     productcount=products.count()
+
     wishes= Wishlist.objects.filter(useradded = customer).values_list('productadded',flat=True)
     catogeries = Catogery.objects.all().annotate(numpro=Count('product'))
     brands=Brand.objects.all().annotate(bpro=Count('product'))
     ptypes=PriceType.objects.all().annotate(ppro=Count('product'))
-    context = {'products':products,'catogeries':catogeries,'brands':brands,'ptypes':ptypes,'wishes':wishes,'count':productcount}
+    context = {'products':paged_products,'catogeries':catogeries,'brands':brands,'ptypes':ptypes,'wishes':wishes,'count':productcount}
     return render(request, "shop.html",context)
+
 
 
 @never_cache
@@ -366,12 +408,15 @@ def lowtohigh(request):
             return redirect("UserLogin")
         
     products = Product.objects.all().order_by('price')
+    paginator = Paginator (products, 9)
+    page = request.GET.get('page')
+    paged_products = paginator.get_page(page)
     productcount=products.count()
     wishes= Wishlist.objects.filter(useradded = customer).values_list('productadded',flat=True)
     catogeries = Catogery.objects.all().annotate(numpro=Count('product'))
     brands=Brand.objects.all().annotate(bpro=Count('product'))
     ptypes=PriceType.objects.all().annotate(ppro=Count('product'))
-    context = {'products':products,'catogeries':catogeries,'brands':brands,'ptypes':ptypes,'wishes':wishes,'count':productcount}
+    context = {'products':paged_products,'catogeries':catogeries,'brands':brands,'ptypes':ptypes,'wishes':wishes,'count':productcount}
     return render(request, "shop.html",context)
 
 @never_cache
@@ -387,12 +432,15 @@ def hightolow(request):
             return redirect("UserLogin")
         
     products = Product.objects.all().order_by('-price')
+    paginator = Paginator (products, 9)
+    page = request.GET.get('page')
+    paged_products = paginator.get_page(page)
     productcount=products.count()
     wishes= Wishlist.objects.filter(useradded = customer).values_list('productadded',flat=True)
     catogeries = Catogery.objects.all().annotate(numpro=Count('product'))
     brands=Brand.objects.all().annotate(bpro=Count('product'))
     ptypes=PriceType.objects.all().annotate(ppro=Count('product'))
-    context = {'products':products,'catogeries':catogeries,'brands':brands,'ptypes':ptypes,'wishes':wishes,'count':productcount}
+    context = {'products':paged_products,'catogeries':catogeries,'brands':brands,'ptypes':ptypes,'wishes':wishes,'count':productcount}
     return render(request, "shop.html",context)
 
 @never_cache
@@ -404,7 +452,9 @@ def filterview(request,id):
     ptype=PriceType.objects.all()
     ptypes=PriceType.objects.all().annotate(ppro=Count('product'))
     products = Product.objects.filter(catogery=id)
-    context = {'products':products,'catogeries':catogeries,'brands':brands,'ptypes':ptypes}
+    wishes= Wishlist.objects.filter(useradded = request.user).values_list('productadded',flat=True)
+
+    context = {'products':products,'catogeries':catogeries,'brands':brands,'ptypes':ptypes,'wishes':wishes}
     return render(request, "shop.html",context)
 
 @never_cache
@@ -416,7 +466,9 @@ def filterbrand(request,id):
     ptype=PriceType.objects.all()
     ptypes=PriceType.objects.all().annotate(ppro=Count('product'))
     products = Product.objects.filter(btype=id)
-    context = {'products':products,'catogeries':catogeries,'brands':brands,'ptypes':ptypes}
+    wishes= Wishlist.objects.filter(useradded = request.user).values_list('productadded',flat=True)
+
+    context = {'products':products,'catogeries':catogeries,'brands':brands,'ptypes':ptypes,'wishes':wishes}
     return render(request, "shop.html",context)
 
 @never_cache
@@ -428,7 +480,9 @@ def filterprice(request,id):
     brand=Brand.objects.all()
     brands=Brand.objects.all().annotate(bpro=Count('product'))
     products = Product.objects.filter(ptype=id)
-    context = {'products':products,'catogeries':catogeries,'brands':brands,'ptypes':ptypes}
+    wishes= Wishlist.objects.filter(useradded = request.user).values_list('productadded',flat=True)
+
+    context = {'products':products,'catogeries':catogeries,'brands':brands,'ptypes':ptypes,'wishes':wishes}
     return render(request, "shop.html",context)
 
 
@@ -516,6 +570,8 @@ def updateitem(request):
         'flag':flag
         }
     return JsonResponse(response)
+
+
   
 @never_cache
 def usercart(request):
@@ -527,16 +583,21 @@ def usercart(request):
         print("////////////////////////////",device)
         customer= Users.objects.get(device=device)
 
+
+    Order.objects.filter(customer=customer,complete=False,status="BuyNow").delete()
+
     try:
         order = Order.objects.get(customer=customer,complete=False,status="New")
         items = order.orderitem_set.all()
-        if items.quantity > 0:
-            pass
+        
+        
     except:
         order=  []
         items = []
         page="Empty"
         return render(request,"cart.html",{'page':page})
+
+
     
     if(order==None or items==None):
         page="Empty"
@@ -548,11 +609,14 @@ def usercart(request):
     context = {'items':items,'order':order}
     return render (request, "cart.html",context)
 
+
+
 @login_required(login_url="UserLogin")
 def buynow(request,id):
     page="BuyNow"
     customer= request.user
     product = Product.objects.get(id=id)
+
     try:
         cur= Order.objects.filter(customer=customer,status="BuyNow",complete=False).order_by('-id')[0]
         cur.delete()
@@ -561,42 +625,28 @@ def buynow(request,id):
     
     order, created = Order.objects.get_or_create(customer = customer , status='BuyNow',complete=False)
     items, created = OrderItem.objects.get_or_create(order=order, product=product,quantity=1)
+
+
+    try:
+        coup = CouponUsed.objects.get(user=customer,used=True,applied=False)
+        coup.delete()
+        order.coupon_used=False
+        order.save()
+    except:
+        pass
     
     form= MyAddressForm()
     addr = Address.objects.filter(cust=customer)
     context = {'product':product,'order':order,'items':items,'addr':addr,'form':form,'page':page}
     return render(request, 'checkout.html',context)
 
-@login_required(login_url="UserLogin")
-@never_cache
-def usercheckout(request):
-    if request.user.is_authenticated:
-        user = request.user
-        last = Order.objects.filter(customer = user,complete=False).order_by('-id')[0]
-        if last.status == "BuyNow":
-            last.delete()
-
-        try:
-            order = Order.objects.get(customer=user,complete=False,status="New")
-            items = order.orderitem_set.all()
-            if items.quantity > 0:
-                pass
-        except:
-            order=  []
-            items = []
-            page="Empty"
-            return render(request,"cart.html",{'page':page})
-    form= MyAddressForm()
-    addr = Address.objects.filter(cust=user)
-    context = {'order':order,'items':items,'addr':addr,'form':form}
-    return render(request, 'checkout.html', context )
 
 
 @never_cache
 def remove(request):
     user = request.user
     productId=request.GET.get("productid")
-    order = Order.objects.get(customer=user,complete=False)
+    order = Order.objects.get(customer=user,complete=False,status="New")
     product = Product.objects.get(id=productId)
     order_item = OrderItem.objects.get(product=product, order=order)
     order_item.delete()
@@ -720,6 +770,7 @@ def proceed(request):
         address_id = request.POST.get('address')
         address = Address.objects.get(id=address_id)
         user = request.user
+
         try:
             order= Order.objects.get(customer=user,complete=False,status="BuyNow")
         except:
@@ -734,25 +785,43 @@ def proceed(request):
             productid = item.product.id
             Product.objects.filter(id = productid).update(stocks = poststocks)
         total_amount=order.get_cart_total
+
         print(total_amount)
-        Order.objects.filter(customer=user,complete=False).update(complete=True, address=address,status = 'Placed')
         try:
             if order.couponused.used==True:
                 coupon_check = CouponUsed.objects.get(user = user,used = True,order = order)
+                coupid=coupon_check.coupon
+                coupon = CouponDetail.objects.get(id=coupid.id)
+                print("old total........................",order.get_cart_oldtotal)
+                lessed_money = (order.get_cart_oldtotal * coupon_check.coupon.percentage / 100)
+                coupon.count = coupon.count + 1
+                coupon.loss = coupon.loss +lessed_money
+                coupon_check.loss=lessed_money
                 coupon_check.applied=True
                 order.coupon_used=True
+                coupon.save()
                 coupon_check.save()
                 order.save()
+            else:
+                print("couponused isnt true!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         except:
             print("Error")
 
 
+        
+        # Order.objects.filter(customer=user,complete=False,status='New').update(complete=True, address=address,status = 'Placed')
+
+        order.complete=True
+        order.address= address
+        order.status= 'Placed'
+        order.save()
+
+
         transaction_id = order.id
-        Pay.objects.get_or_create(order = order,method = 'COD',amount = total_amount,status = 'Completed',transactionid=transaction_id)
+        Pay.objects.get_or_create(payuser=user,order = order,method = 'COD',amount = total_amount,status = 'Completed',transactionid=transaction_id)
         response = {'':''}
         return JsonResponse(response)
     return render(request, "userindex.html")
-
 
 
 def payrazor(request):
@@ -767,40 +836,7 @@ def payrazor(request):
         total_amount =  order.get_cart_total
     return JsonResponse({'name':user.username,'email':user.email,'total':total_amount,'phone':user.phone })
 
-@ csrf_exempt
-def razorpay(request):
-    user=request.user
-    print(user)
-    if request.method == 'POST': 
-        try:
-            order= Order.objects.get(customer=user,complete=False,status="BuyNow")
-        except:
-            order= Order.objects.get(customer=user,complete=False,status="New")
-        items = order.orderitem_set.all()
-        for item in items :
-            ordered = item.quantity
-            print(item.quantity)
-            prestocks = item.product.stocks
-            poststocks = prestocks - ordered
-            productid = item.product.id
-            Product.objects.filter(id = productid).update(stocks = poststocks)
-        total_amount = order.get_cart_total
-        transaction_id = request.POST.get('order_id')
-        Pay.objects.get_or_create(order = order,method = 'RazorPay',amount = total_amount,status = 'Completed',transactionid=transaction_id)
-        order.status = 'Placed'
-        order.complete=True
-        order.save()
-        try:
-            if order.couponused.used==True:
-                coupon_check = CouponUsed.objects.get(user = user,used = True,order = order)
-                coupon_check.applied=True
-                order.coupon_used=True
-                coupon_check.save()
-                order.save()
-        except:
-            print("Error")
-        return JsonResponse({'status': 'Your order has been Placed Successfully'})
-    
+
 @csrf_exempt
 def paypal(request):
     print("/////////////////////////////////activating paypal")
@@ -821,17 +857,28 @@ def paypal(request):
             Product.objects.filter(id = productid).update(stocks = poststocks)
         total_amount = order.get_cart_total
         transactionid = order.id
-        Pay.objects.get_or_create(order = order,method = 'Paypal',amount = total_amount,status = 'Completed', transactionid = transactionid)
+        Pay.objects.get_or_create(payuser=user,order = order,method = 'Paypal',amount = total_amount,status = 'Completed', transactionid = transactionid)
         order.status = 'Placed'
         order.complete=True
         order.save()
+        
         try:
             if order.couponused.used==True:
                 coupon_check = CouponUsed.objects.get(user = user,used = True,order = order)
+                coupid=coupon_check.coupon
+                coupon = CouponDetail.objects.get(id=coupid.id)
+                print("old total........................",order.get_cart_oldtotal)
+                lessed_money = (order.get_cart_oldtotal * coupon_check.coupon.percentage / 100)
+                coupon.count = coupon.count + 1
+                coupon.loss = coupon.loss +lessed_money
+                coupon_check.loss=lessed_money
                 coupon_check.applied=True
                 order.coupon_used=True
+                coupon.save()
                 coupon_check.save()
                 order.save()
+            else:
+                print("couponused isnt true!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         except:
             print("Error")
         return JsonResponse({'status': 'Your order has been Placed Successfully'})
@@ -842,11 +889,8 @@ def verifycoupon(request):
     customer = request.user
     input_code = request.GET.get('input_code')
 
+
     last = Order.objects.filter(customer = customer,complete=False).order_by('-id')[0]
-    print("//////////////////////")
-    print(last.id)
-    print(last.complete)
-    print(last.status)
     if last.status == 'BuyNow' :
         order = Order.objects.get(customer = customer,status = 'BuyNow')
         items = OrderItem.objects.get(order = order)
@@ -867,37 +911,29 @@ def verifycoupon(request):
     try :
         coupon = CouponDetail.objects.get(code=input_code)
     except :
-        data = {'total_amount' : None,'percentage':None,}
+        data = {'total_amount' : order.get_cart_totall,'percentage':None,}
         return JsonResponse(data)
 
     
     lessed_money = (order.get_cart_total * coupon.percentage / 100)
     old_price = order.get_cart_total
-    print("///////////////////")
-    print(old_price)
-    print(order.status)
-    print(coupon.percentage)
     
-    print(lessed_money)
-    print(coupon.name)
-
     try:
         coupon_check = CouponUsed.objects.get(user = customer,coupon = coupon,used = True,applied = True)
-        data = {'total_amount' : None,'percentage':'used',}
+        data = {'total_amount' : order.get_cart_totall,'percentage':'used',}
         return JsonResponse(data)
     except:
-        apply_coupon = CouponUsed.objects.create(user = customer,coupon = coupon, used = True,loss =  lessed_money)
+        apply_coupon = CouponUsed.objects.create(user = customer,coupon = coupon, used = True)
         print("////////////////new coupon used created")
 
     apply_coupon.used = True
     apply_coupon.order = order
     apply_coupon.loss = int(lessed_money)
-    apply_coupon.save()
     order.coupon_used = True
     CouponUsed.objects.get(user=customer,coupon=coupon).save()
-    coupon.count = coupon.count + 1
-    coupon.loss = coupon.loss +lessed_money
+    
     lessedinr = format_currency(lessed_money, 'INR', locale='en_IN')
+    apply_coupon.save()
     print(order.get_cart_total)
     print(order.status)
     coupon.save()
@@ -906,7 +942,101 @@ def verifycoupon(request):
     return JsonResponse(data)
 
 
-def invoicedetails(request):
+
+@login_required(login_url="UserLogin")
+@never_cache
+def usercheckout(request):
+    if request.user.is_authenticated:
+        user = request.user
+        try:
+            last = Order.objects.filter(customer = user,complete=False).order_by('-id')[0]
+            if last.status == "BuyNow":
+                last.delete()
+            else:
+                order = Order.objects.get(customer=user,complete=False,status="New")
+                items = order.orderitem_set.all()
+            
+            
+        except:
+            order=  []
+            items = []
+            page="Empty"
+            return render(request,"cart.html",{'page':page})
+
+        try:
+            coup = CouponUsed.objects.get(user=user,used=True,applied=False)
+            coup.delete()
+            order.coupon_used=False
+            order.save()
+        except:
+            pass
+
     
-    return render(request,'invoicedetails.html')
+    couponu = [i.coupon.code for i in CouponUsed.objects.all()]
+    coup = CouponDetail.objects.exclude(code__in=couponu)
+    
+    form= MyAddressForm()
+    addr = Address.objects.filter(cust=user)
+    context = {'order':order,'items':items,'addr':addr,'form':form,'coupon':coup,'couponu':couponu}
+    return render(request, 'checkout.html', context )
+
+@ csrf_exempt
+def razorpay(request):
+    user=request.user
+    print(user)
+    if request.method == 'POST': 
+        try:
+            order= Order.objects.get(customer=user,complete=False,status="BuyNow")
+            print("/////////////////////////////////buynow")
+        except:
+            print("/////////////////////////////////cart")
+            order= Order.objects.get(customer=user,complete=False,status="New")
+        items = order.orderitem_set.all()
+        for item in items :
+            ordered = item.quantity
+            print(item.quantity)
+            prestocks = item.product.stocks
+            poststocks = prestocks - ordered
+            productid = item.product.id
+            Product.objects.filter(id = productid).update(stocks = poststocks)
+        total_amount = order.get_cart_total
+        transaction_id = request.POST.get('order_id')
+        Pay.objects.get_or_create(payuser=user,order = order,method = 'RazorPay',amount = total_amount,status = 'Completed',transactionid=transaction_id)
+        order.status = 'Placed'
+        order.complete=True
+        
+        order.save()
+
+        
+        try:
+            if order.couponused.used==True:
+                coupon_check = CouponUsed.objects.get(user = user,used = True,order = order)
+                coupid=coupon_check.coupon
+                coupon = CouponDetail.objects.get(id=coupid.id)
+                print("old total........................",order.get_cart_oldtotal)
+                lessed_money = (order.get_cart_oldtotal * coupon_check.coupon.percentage / 100)
+                coupon.count = coupon.count + 1
+                coupon.loss = coupon.loss +lessed_money
+                coupon_check.loss=lessed_money
+                coupon_check.applied=True
+                order.coupon_used=True
+                coupon.save()
+                coupon_check.save()
+                order.save()
+            else:
+                print("couponused isnt true!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        except:
+            print("Error")
+
+
+        return JsonResponse({'status': 'Your order has been Placed Successfully'})
+    
+
+
+def invoicedetails(request):
+    user = request.user
+    order = Order.objects.filter(customer = user,complete=True).order_by('-id')[0]
+    items=order.orderitem_set.all()
+    context={'order':order,'items':items}
+    return render(request,'invoiceinfo.html',context)
 

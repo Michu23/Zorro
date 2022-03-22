@@ -155,7 +155,13 @@ class Pay(models.Model):
 	transactionid = models.CharField(max_length= 100,null= True ,blank=True)
     
 	def __str__(self):
-		return str(self.amount)
+		return str(self.id)
+
+	@property
+	def amountinr(self):
+		total= self.amount
+		totalinr = format_currency(total, 'INR', locale='en_IN')
+		return totalinr
 
 class CouponDetail(models.Model):
     name = models.CharField(max_length=30,null= True, blank=True)

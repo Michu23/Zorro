@@ -1,33 +1,63 @@
 {% extends 'base.html' %} {% block content %} {% load static %}
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.0/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.0/html2pdf.bundle.min.js"
+    integrity="sha512-w3u9q/DeneCSwUDjhiMNibTRh/1i/gScBVp2imNVAMCt6cUHIw6xzhzcPFIaL3Q1EbI2l+nu17q2aLJJLo4ZYg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="https://cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js">
+</script>
+<script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js">
+</script>
+
+
+
+
+
 <!-- content -->
 <br><br><br><br><br><br><br>
 
-<!-- content -->
-<div class="content ">
 
-    <div class="d-flex gap-3 mb-4 d-print-none">
-        <button class="btn btn-outline-primary btn-icon">
-            <i class="bi bi-download"></i> Download
-        </button>
-        <button onclick="javascript:window.print()" class="btn btn-outline-secondary d-none d-md-block btn-icon">
-            <i class="bi bi-printer"></i> Print
-        </button>
-        <button class="btn btn-outline-success btn-icon">
-            <i class="bi bi-share"></i> Share
-        </button>
+<!-- content -->
+<div class="content container">
+
+    <div class="d-flex gap-3 mb-4 d-print-none justify-content-between">
+        <div class="d-flex gap-3">
+            <button class="btn btn-outline-primary btn-icon" id="pdff">
+                <i class="bi bi-download"></i> Download
+            </button>
+            <button onclick="printDiv('printablepdf')" class="btn btn-outline-secondary d-none d-md-block btn-icon">
+                <i class="bi bi-printer"></i> Print
+            </button>
+        </div>
+        <div>
+            <a href="{% url 'UserShop' %}"><button class="btn btn-outline-dark">
+                    Continue shopping
+                </button></a>
+        </div>
+
+
     </div>
 
-    <div class="card">
+    <div class="card" id="printablepdf">
         <div class="card-body">
             <div class="invoice">
                 <div class="d-md-flex justify-content-between align-items-center mb-4">
-                    <div>Invoice No : #000756</div>
-                    <div>Date: 3/29/2021</div>
+                    <div>Invoice No : #{{order.id}}</div>
+                    <div>Date: {{order.date_ordered|date}}</div>
                 </div>
                 <div class="d-md-flex justify-content-between align-items-center">
                     <h4>Invoice</h4>
                     <div>
-                        <img width="120" src="https://vetra.laborasyon.com/assets/images/logo.svg" alt="logo">
+                        <img width="120" src="{% static 'img/zorro.svg' %}" alt="logo">
                     </div>
                 </div>
                 <hr class="my-4">
@@ -36,69 +66,106 @@
                         <p>
                             <strong>Bill From</strong>
                         </p>
-                        <p>81 Fulton Park, <br>Brazil/Pedro Leopoldo</p>
+                        <p>Zorro Estore, <br>Pattambi</p>
                     </div>
                     <div class="col-md-6">
                         <p class="text-start text-md-end">
                             <strong>Bill to</strong>
                         </p>
-                        <p>81 Fulton Park, <br>Brazil/Pedro Leopoldo</p>
+                        <p>{{order.address.address}}</p> <br>{{order.address.city}}</p>
                     </div>
                 </div>
                 <div class="table-responsive">
                     <table class="table mb-4 mt-4">
                         <thead class="thead-light">
                             <tr>
-                                <th>#</th>
-                                <th>Description</th>
-                                <th class="text-end">Quantity</th>
-                                <th class="text-end">Price</th>
-                                <th class="text-end">Total</th>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Photo</th>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">Quantity</th>
+                                <th class="text-center">Price</th>
+                                <th class="text-center">Total</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="text-end">
-                                <td class="text-start">1</td>
-                                <td class="text-start">Digital clock</td>
-                                <td>1</td>
-                                <td>$1.190,90</td>
-                                <td>$1.190,90</td>
+                            {% for i in items %}
+                            <tr class="my-auto">
+                                <td class="text-center my-auto">{{forloop.counter}}</td>
+                                <td class="text-center my-auto">
+                                    <a href="#">
+                                        <img src="{{i.product.image1.url}}" class="rounded" width="60" alt="...">
+                                    </a>
+                                </td>
+                                <td class="text-center my-auto">{{i.product.name}}</td>
+                                <td class="text-center my-auto">{{i.quantity}}</td>
+                                <td class="text-center my-auto">{{i.product.priceinr}}</td>
+                                <td class="text-center my-auto">{{i.get_total}}</td>
                             </tr>
-                            <tr class="text-end">
-                                <td class="text-start">1</td>
-                                <td class="text-start">Toy Car</td>
-                                <td>1</td>
-                                <td>$139.58</td>
-                                <td>$139.58</td>
-                            </tr>
-                            <tr class="text-end">
-                                <td class="text-start">2</td>
-                                <td class="text-start">Sunglasses</td>
-                                <td>1</td>
-                                <td>$50,90</td>
-                                <td>$101,80</td>
-                            </tr>
-                            <tr class="text-end">
-                                <td class="text-start">3</td>
-                                <td class="text-start">Cake</td>
-                                <td>1</td>
-                                <td>$10,50</td>
-                                <td>$10,50</td>
-                            </tr>
+                            {% endfor %}
+
                         </tbody>
                     </table>
                 </div>
-                <div class="text-end">
-                    <p>Sub Total: $1.442,78</p>
-                    <p>Shipping: Free</p>
-                    <p>Tax(18%) : $259.70</p>
-                    <h4 class="fw-bold">Total: $1.702,48</h4>
+                <div>
+                    <div class="text-center">
+
+                    </div>
+
+                    <div class="text-end">
+                        <strong>
+                            <h5>Sub Total: {{order.get_cart_oldtotall}}</h5>
+                        </strong><br>
+                        {% if order.coupon_used == True %}
+                        <strong>
+                            <h6 class="text-success">Coupon applied: {{order.couponused.coupon.name}}</h6>
+                        </strong><br>
+                        <strong>
+                            <h6 class="text-danger">Coupon percentage:
+                                {{order.couponused.coupon.percentage|floatformat:0}}%
+                            </h6>
+                        </strong><br>
+                        <strong>
+                            <h6 class="text-success">Money saved: {{order.couponused.lossinr}}</h6>
+                        </strong><br>
+                        {% endif %}
+                        <strong>
+                            <h4 class="fw-bold">Total: {{order.get_cart_totall}}</h4>
+                        </strong><br>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
 
 </div>
+<br><br><br>
+
+
 <!-- ./ content -->
+
+
+<script type="text/javascript">
+    document.getElementById('pdff').onclick = function () {
+        var element = document.getElementById('printablepdf');
+        html2pdf(element, {
+            margin: 10,
+            filename: 'Invoice.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, logging: true, dpi: 192, letterRendering: true },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        });
+    };
+</script>
+
+
+
+
+
+
+
+
+
+
 
 {% endblock %}

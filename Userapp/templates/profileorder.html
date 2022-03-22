@@ -69,21 +69,21 @@
                         <tr>
 
                             <th>ID</th>
-                            <th>Name</th>
-                            <th>Date</th>
+                            <th>Date</th>5
                             <th>Items</th>
                             <th>Total</th>
                             <th>Status</th>
+                            <th class="text-end">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
+                        
                         {% for order in orders %}
                         <tr>
 
                             <td>
                                 <a href="{% url 'AdminOrderDetail' order.id %}">#{{order.id}}</a>
                             </td>
-                            <td>{{order.customer}}</td>
                             <td>{{order.date_ordered|date}}</td>
                             <td>{{order.get_cart_items}}</td>
                             <td> {{order.get_cart_totall}}</td>
@@ -110,8 +110,7 @@
 
                                         {% elif order.status == "Delivered" %}
                                         <div>
-                                            <a href="{% url 'returnorder' order.id %}"><button
-                                                    class="btn btn-outline-danger">Return</button></a>
+                                            <a href=""><button class="btn btn-outline-danger">Return</button></a>
                                         </div>
                                         {% else %}
                                         <div>

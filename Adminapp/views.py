@@ -13,13 +13,144 @@ from django.contrib import messages
 from django.db.models import Count,Sum
 from django.db.models import Q
 from django.template.loader import render_to_string
-
-
-
-
-
-
+from django.core.paginator import EmptyPage , PageNotAnInteger , Paginator
+from django.conf import settings
+import uuid
+import xlwt
+import datetime
+from datetime import timedelta
+import csv
+import xlwt
 # Create your views here.
+
+
+
+
+@never_cache
+def export_csv(request):
+    order_data = Pay.objects.all()
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=SalesReport'+str(datetime.datetime.now())+'.csv'
+    writer = csv.writer(response)   
+    writer.writerow(['ID','Name','Number Of Products','Order Date','Amount','Payment Type'])
+    for data in order_data:
+        writer.writerow([data.id, data.order.customer, data.order.get_cart_items, data.order.date_ordered,data.amount , data.method])
+    return response
+
+@never_cache
+def export_excel(request):
+    order_data = Pay.objects.all()
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=SalesReport'+str(datetime.datetime.now())+'.xls'
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Sales Report')
+    row_num = 0
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+    columns = ['ID','Name','Order Date','Amount','Payment Type']
+
+    for col_num in range(len(columns)):
+        ws.write(row_num,col_num,columns[col_num],font_style)
+
+    font_style = xlwt.XFStyle()
+
+    rows = order_data.values_list(
+        'order__id','order__customer__username','order__date_ordered','amount','method'
+    )
+    
+    for row in rows:
+        row_num = row_num + 1
+
+        for col_num in range(len(columns)):
+             ws.write(row_num,col_num,str(row[col_num]),font_style)
+    wb.save(response)
+
+    return response
+
+
+
+def salesreport(request):
+    order_data=Pay.objects.all().order_by('id')
+    yr = []
+    ag = 2000
+    months = ['January', 'February', 'March','April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    for i in range(0,51):
+        yr.append(ag + i)
+    if request.method == 'POST':
+        datestr = request.POST.get('dates')
+            #start date
+        mo = datestr[:2]
+        da = datestr[3:5]
+        ye = datestr[6:10]
+        #enddate
+        mo1 = datestr[13:15]
+        da1 = datestr[16:18]
+        ye1 = datestr[19:]
+        from_date = ye+'-'+mo+'-'+da
+        to_date = ye1+'-'+mo1+'-'+da1
+
+        if from_date == "--" and to_date == "--":
+            from_date = ''
+            to_date = '' 
+        
+        year = request.POST.get('year')
+        month = request.POST.get('month')
+        print(month)
+        print(from_date,to_date,"////////////////////////////////////////")
+        m = month
+        print(m)
+        print(from_date)
+        if  month != '' :
+            order_data = Pay.objects.filter(order__date_ordered__month=m).order_by('order__date_ordered')
+        elif  year != '' :
+            order_data = Pay.objects.filter(order__date_ordered__year=year).order_by('order__date_ordered')
+        elif from_date != '' and to_date != '' :
+            order_data = Pay.objects.filter(order__date_ordered__range=[from_date,to_date]).order_by('order__date_ordered')
+
+    context = {'years': yr,'months':months,'sales':'sales','pay':order_data}
+    return render(request, "salesreport.html",context)
+
+
+@never_cache
+def adminsale(request):
+    page = 'salesreport'
+    global order_data
+    order_data = OrderItem.objects.filter(order_payments_status='Completed')
+    yr = []
+    ag = 2000
+    months = ['January', 'February', 'March','April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    for i in range(0,51):
+        yr.append(ag + i)
+    if request.method == 'POST':
+        datestr = request.POST.get('dates')
+            #start date
+        mo = datestr[:2]
+        da = datestr[3:5]
+        ye = datestr[6:10]
+        #enddate
+        mo1 = datestr[13:15]
+        da1 = datestr[16:18]
+        ye1 = datestr[19:]
+        from_date = ye+'-'+mo+'-'+da
+        to_date = ye1+'-'+mo1+'-'+da1
+        
+        year = request.POST.get('year')
+        month = request.POST.get('month')
+        print(month)
+        m = month
+        print(m)
+        print(from_date)
+        if  month != '' :
+            order_data = OrderItem.objects.filter(order_date_ordermonth=m).filter(orderpaymentsstatus='Completed').order_by('order_date_order')
+        elif  year != '' :
+            order_data = OrderItem.objects.filter(order_date_orderyear=year).filter(orderpaymentsstatus='Completed').order_by('order_date_order')
+        elif from_date != '' and to_date != '' :
+            order_data = OrderItem.objects.filter(order_date_orderrange=[from_date,to_date]).filter(orderpaymentsstatus='Completed').order_by('order_date_order')
+
+    context = {'order_data': order_data, 'years': yr,'page': page,'months':months}
+    return render(request,'adminsale3.html', context)
+
+
 @never_cache
 def adminlogin(request):
     if request.user.is_authenticated:
@@ -90,7 +221,10 @@ def adminlogout(request):
 
 def admincustomers(request):
     users = Users.objects.all().order_by('id')
-    context = {'users':users,'cust':'cust'}
+    paginator = Paginator (users, 6)
+    page = request.GET.get('page')
+    paged_users = paginator.get_page(page)
+    context = {'users':paged_users,'cust':'cust'}
     return render(request, "customers.html",context)
 
 
@@ -175,7 +309,10 @@ def filterpro(request):
 
 def adminorders(request):
     orders=Order.objects.filter(complete=True).order_by('-date_ordered')
-    context={'orders':orders,'abc':'abc'}
+    paginator = Paginator (orders, 4)
+    page = request.GET.get('page')
+    paged_orders = paginator.get_page(page)
+    context={'orders':paged_orders,'abc':'abc'}
     return render(request, "order.html",context)
 
 def adminorderdetail(request,pk):
@@ -196,10 +333,12 @@ def editproduct(request,pk):
             return redirect('AdminProduct')
     return render(request,'editproduct.html',{'form':form})
 
-def deleteproduct(request,pk):
+def deleteproduct(request):
+    pk=request.GET.get('productid')
     product = Product.objects.get(id=pk)
     product.delete()
-    return redirect("AdminProduct")
+    response={'':''}
+    return JsonResponse(response)
     
 @never_cache
 def blockuser(request):
@@ -213,12 +352,104 @@ def blockuser(request):
     return redirect("AdminCustomers")
 
 def adminproduct(request):
-    products = Product.objects.all().order_by('-price')
+    products = Product.objects.all()
+    paginator = Paginator (products, 6)
+    page = request.GET.get('page')
+    paged_products = paginator.get_page(page)
+    productcount=products.count()
     catogeries = Catogery.objects.all().annotate(numpro=Count('product'))
     brands=Brand.objects.all().annotate(bpro=Count('product'))
     ptypes=PriceType.objects.all().annotate(ppro=Count('product'))
-    context = {'productss':products,'catogeriess':catogeries,'brands':brands,'ptypes':ptypes,'pro':'pro'}
+    context = {'productss':paged_products,'catogeriess':catogeries,'brands':brands,'ptypes':ptypes,'pro':'pro'}
     return render(request, "productlist.html",context)
+
+
+
+def adminproductna(request):
+    products = Product.objects.all().order_by('name')
+    paginator = Paginator (products, 6)
+    page = request.GET.get('page')
+    paged_products = paginator.get_page(page)
+    productcount=products.count()
+    catogeries = Catogery.objects.all().annotate(numpro=Count('product'))
+    brands=Brand.objects.all().annotate(bpro=Count('product'))
+    ptypes=PriceType.objects.all().annotate(ppro=Count('product'))
+    context = {'productss':paged_products,'catogeriess':catogeries,'brands':brands,'ptypes':ptypes,'pro':'pro'}
+    return render(request, "productlist.html",context)
+
+
+
+def adminproductnd(request):
+    products = Product.objects.all().order_by('-name')
+    paginator = Paginator (products, 6)
+    page = request.GET.get('page')
+    paged_products = paginator.get_page(page)
+    productcount=products.count()
+    catogeries = Catogery.objects.all().annotate(numpro=Count('product'))
+    brands=Brand.objects.all().annotate(bpro=Count('product'))
+    ptypes=PriceType.objects.all().annotate(ppro=Count('product'))
+    context = {'productss':paged_products,'catogeriess':catogeries,'brands':brands,'ptypes':ptypes,'pro':'pro'}
+    return render(request, "productlist.html",context)
+
+
+
+def adminproductpa(request):
+    products = Product.objects.all().order_by('price')
+    paginator = Paginator (products, 6)
+    page = request.GET.get('page')
+    paged_products = paginator.get_page(page)
+    productcount=products.count()
+    catogeries = Catogery.objects.all().annotate(numpro=Count('product'))
+    brands=Brand.objects.all().annotate(bpro=Count('product'))
+    ptypes=PriceType.objects.all().annotate(ppro=Count('product'))
+    context = {'productss':paged_products,'catogeriess':catogeries,'brands':brands,'ptypes':ptypes,'pro':'pro'}
+    return render(request, "productlist.html",context)
+
+
+
+def adminproductpd(request):
+    products = Product.objects.all().order_by('-price')
+    paginator = Paginator (products, 6)
+    page = request.GET.get('page')
+    paged_products = paginator.get_page(page)
+    productcount=products.count()
+    catogeries = Catogery.objects.all().annotate(numpro=Count('product'))
+    brands=Brand.objects.all().annotate(bpro=Count('product'))
+    ptypes=PriceType.objects.all().annotate(ppro=Count('product'))
+    context = {'productss':paged_products,'catogeriess':catogeries,'brands':brands,'ptypes':ptypes,'pro':'pro'}
+    return render(request, "productlist.html",context)
+
+
+
+def adminproductsa(request):
+    products = Product.objects.all().order_by('stocks')
+    paginator = Paginator (products, 6)
+    page = request.GET.get('page')
+    paged_products = paginator.get_page(page)
+    productcount=products.count()
+    catogeries = Catogery.objects.all().annotate(numpro=Count('product'))
+    brands=Brand.objects.all().annotate(bpro=Count('product'))
+    ptypes=PriceType.objects.all().annotate(ppro=Count('product'))
+    context = {'productss':paged_products,'catogeriess':catogeries,'brands':brands,'ptypes':ptypes,'pro':'pro'}
+    return render(request, "productlist.html",context)
+
+
+
+def adminproductsd(request):
+    products = Product.objects.all().order_by('-stocks')
+    paginator = Paginator (products, 6)
+    page = request.GET.get('page')
+    paged_products = paginator.get_page(page)
+    productcount=products.count()
+    catogeries = Catogery.objects.all().annotate(numpro=Count('product'))
+    brands=Brand.objects.all().annotate(bpro=Count('product'))
+    ptypes=PriceType.objects.all().annotate(ppro=Count('product'))
+    context = {'productss':paged_products,'catogeriess':catogeries,'brands':brands,'ptypes':ptypes,'pro':'pro'}
+    return render(request, "productlist.html",context)
+
+
+
+
 
 def productoffer(request):
     products = Product.objects.all().order_by('-price')
@@ -274,22 +505,7 @@ def filterprice(request,id):
     return render(request, "productlist.html",context)
 
 
-def salesreport(request):
-    pay=Pay.objects.all()
-    # if request.method == 'POST':
-    #     from_date = request.POST.get('from_date')
-    #     to_date = request.POST.get('to_date')
-    #     year = request.POST.get('year')
-    #     month = request.POST.get('month')
-    #     m = month[6:]
-    #     if from_date != '' and to_date != '' :
-    #         order_data = Orderdetail.objects.filter(order_date_range=[from_date,to_date]).filter(payment_payment_status='Completed').order_by('order_date')
-    #     elif  month != '' :
-    #         order_data = Orderdetail.objects.filter(order_date_month=m).filter(payment_payment_status='Completed').order_by('order_date')
-    #     elif  year != '' :
-    #         order_data = Orderdetail.objects.filter(order_date_year=year).filter(payment_payment_status='Completed').order_by('order_date')
-    context = { 'sales':'sales','pay':pay}
-    return render(request, "sales.html",context)
+
 
 
 def addproduct(request):
@@ -376,7 +592,7 @@ def delcats(request,pk):
 
 
 def couponsused(request):
-    coupons = CouponUsed.objects.all()
+    coupons = CouponUsed.objects.filter(applied=True)
     context={'coupons': coupons}
     return render(request,'couponused.html',context)
 

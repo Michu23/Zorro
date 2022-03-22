@@ -34,7 +34,10 @@
             The Cart is Empty!
           </h3>
           {% else %}
-          <table>
+          <h3 class="text-center d-none empty">
+            The Cart is Empty!
+          </h3>
+          <table class="notempty">
             <thead>
               <tr>
                 <th>Product</th>
@@ -43,7 +46,7 @@
                 <th></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody class="parentt">
               {% for i in items %}
               <tr id="{{i.product.id}}">
                 <td class="product__cart__item">
@@ -151,7 +154,7 @@
       if (result.isConfirmed) {
         Swal.fire(
           'Deleted!',
-          'Your file has been deleted.',
+          'Your item has been removed.',
           'success',
 
           $.ajax({
@@ -162,6 +165,12 @@
             },
             success: function (response) {
               $('#' + response.id).remove()
+
+              if ($(".parentt").children().length == 0) {
+                $(".empty").removeClass("d-none")
+                $(".notempty").addClass("d-none")
+              }
+
             }
           })
         )
@@ -171,6 +180,14 @@
 </script>
 
 <script>
+
+  var text = "{{items}}"
+  if (text == "&lt;QuerySet []&gt;") {
+    $(".empty").removeClass("d-none")
+    $(".notempty").addClass("d-none")
+  }
+
+
   $(".update-cart").on("click", function (e) {
     var product = $(this).data("product");
     var action = $(this).data("action");
@@ -223,30 +240,6 @@
     });
   });
 </script>
-<!-- <script>
-  function guest(productId, action) {
 
-    console.log('not logged in')
-    if (action == 'increment') {
-      if (cart[productId] == undefined) {
-        cart[productId] = { 'quantity': 1 }
-      } else {
-        cart[productId]['quantity'] += 1
-      }
-    }
 
-    if (action == 'decrement') {
-      cart[productId]['quantity'] -= 1
-
-      if (cart[productId]['quantity'] <= 0) {
-        console.log('Item should be deleted')
-        delete cart[productId];
-      }
-    }
-    console.log('CART:', cart)
-    document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
-    location.reload()
-    
-  }
-</script> -->
 {% endblock %}

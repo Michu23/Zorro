@@ -148,6 +148,7 @@
                         <div class="">
                             <input type="date" name="from_date" id="from_date">
                             <input type="date" name="to_date" id="to_date">
+                            <button class="btn btn-dark" type="submit">Search</button>
                         </div>
                     </form>
                     <thead>
@@ -294,8 +295,8 @@
                 },
 
                 "pageLength": {
-                    "_": "Mostrar %d filas",
-                    "-1": "Mostrar Todo"
+                    "_": "Filter %d orders",
+                    "-1": "All orders"
                 }
             }
         };
@@ -323,7 +324,7 @@
                     buttons: [
                         {
                             extend: 'copyHtml5',
-                            text: '<i class="fa fa-clipboard"></i>Copiar',
+                            text: '<i class="fa fa-clipboard"></i>Copy',
                             title: 'SalesReport',
                             titleAttr: 'Copiar',
                             className: 'btn btn-app export barras',

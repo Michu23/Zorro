@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br><br><br><br><br><br>
+<!-- Map Begin -->
+<div class="map" style="background-color: white">
+    <iframe
+        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15657.935002723278!2d75.8934081!3d11.1517739!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xca7fe369546aec60!2sBrototype!5e0!3m2!1sen!2sin!4v1647520647004!5m2!1sen!2sin"
+        width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+</div>
+<!-- Map End -->
+
+<!-- Contact Section Begin -->
+<section class="contact spad" style="background-color: white">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-6">
+                <div class="contact__text">
+                    <div class="section-title">
+                        <span>Information</span>
+                        <h2>Contact Us</h2>
+                        <p>As you might expect of a ecommerce that began as a high-end electronics enthusiasists, we pay
+                            strict attention.</p>
+                    </div>
+                    <ul>
+                        <li>
+                            <h4>India</h4>
+                            <p>Kubz Coworking space<br /> +91 920 740 4868 </p>
+                        </li>
+                        <li>
+                            <h4>Qatar</h4>
+                            <p>Shabiath Khalifa,, Rayyan <br />+974 5521 4374</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 mt-2">
+                <h2 class="my-3"><b>Message us</b></h2>
+                <div class="contact__form">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <input type="text" name="name" placeholder="Name">
+                            </div>
+                            <div class="col-lg-6">
+                                <input type="text" name="email" placeholder="Email">
+                            </div>
+                            <div class="col-lg-12">
+                                <textarea placeholder="Message" name="message"></textarea>
+                                <button type="submit" class="site-btn">Send Message</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Contact Section End -->
+
+{% endblock %}

@@ -29,22 +29,18 @@
                         <div class="d-md-flex gap-4 align-items-center">
                             <form class="mb-3 mb-md-0">
                                 <div class="row g-3">
-                                    <!-- <div class="col-md-6">
-                                        <select class="form-select">
+                                    <div class="col-md-12">
+                                        <select class="form-select" onchange="location = this.value; ">
                                             <option>Sort by</option>
-                                            <option value="desc">Desc</option>
-                                            <option value="asc">Asc</option>
+                                            <option value="{% url 'AdminProductna' %}">Name (Asc)</option>
+                                            <option value="{% url 'AdminProductnd' %}">Name (Desc)</option>
+                                            <option value="{% url 'AdminProductsa' %}">Stocks (Asc)</option>
+                                            <option value="{% url 'AdminProductsd' %}">Stocks (Desc)</option>
+                                            <option value="{% url 'AdminProductpa' %}">Price (Asc)</option>
+                                            <option value="{% url 'AdminProductpd' %}">Price (Desc)</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-6">
-                                        <select class="form-select">
-                                            <option value="10">10</option>
-                                            <option value="20">20</option>
-                                            <option value="30">30</option>
-                                            <option value="40">40</option>
-                                            <option value="50">50</option>
-                                        </select>
-                                    </div> -->
+
                                 </div>
                             </form>
                         </div>
@@ -112,8 +108,8 @@
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-end">
                                             <a href="{% url 'EditProduct' product.id %}" class="dropdown-item">Edit</a>
-                                            <a href="{% url 'DeleteProduct' product.id %}" type="button"
-                                                class="dropdown-item">Delete</a>
+                                            <button data-id="{{product.id}}" type="button"
+                                                class="dropdown-item remove">Delete</button>
                                         </div>
                                     </div>
                                 </div>
@@ -124,23 +120,31 @@
                     </tbody>
                 </table>
             </div>
-            <!-- <nav class="mt-4" aria-label="Page navigation example">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
+            <nav class="my-4 justify-content-center" aria-label="Page navigation sample">
+                {% if productss.has_other_pages %}
+                <ul class="pagination mx-auto justify-content-center ">
+                    {% if productss.has_previous %}
+                    <li class="page-item"><a class="page-link"
+                            href="?page-{{productss.previous_page_number}}">Previous</a></li>
+                    {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                    {% endif %}
+                    {% for i in productss.paginator.page_range %}
+                    {% if productss.number == i %}
+                    <li class="page-item active"><a class="page-link" href="">{{i}}</a></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                    {% if productss.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{productss.next_page_number}}">Next</a>
                     </li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
+                    {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+                    {% endif %}
                 </ul>
-            </nav> -->
+                {% endif %}
+            </nav>
         </div>
         <div class="col-md-4">
             <h5 class="mb-4">Filter Products</h5>
@@ -219,30 +223,7 @@
                             </div>
                             {% endfor %}
 
-                            <!-- <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="categoryCheck2">
-                                <label class="form-check-label" for="categoryCheck2">
-                                    Accessories
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="categoryCheck3">
-                                <label class="form-check-label" for="categoryCheck3">
-                                    Phone
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="categoryCheck4">
-                                <label class="form-check-label" for="categoryCheck4">
-                                    Headphone
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="categoryCheck5">
-                                <label class="form-check-label" for="categoryCheck5">
-                                    Camera
-                                </label>
-                            </div> -->
+
                         </div>
                     </div>
                 </div>
@@ -273,54 +254,13 @@
                             </div>
                             {% endfor %}
 
-                            <!-- <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="categoryCheck2">
-                                <label class="form-check-label" for="categoryCheck2">
-                                    Accessories
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="categoryCheck3">
-                                <label class="form-check-label" for="categoryCheck3">
-                                    Phone
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="categoryCheck4">
-                                <label class="form-check-label" for="categoryCheck4">
-                                    Headphone
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="categoryCheck5">
-                                <label class="form-check-label" for="categoryCheck5">
-                                    Camera
-                                </label>
-                            </div> -->
+
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- <div class="card mb-4">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
-                        aria-expanded="true" data-bs-target="#colorsCollapseExample" role="button">
-                        <div>Colors</div>
-                        <div class="bi bi-chevron-down"></div>
-                    </div>
-                    <div class="collapse show mt-4" id="colorsCollapseExample">
-                        <div class="color-filter-group d-flex gap-3">
-                            <input class="form-check-input" type="checkbox" value="#1fa0c6" aria-label="...">
-                            <input class="form-check-input" type="checkbox" checked value="green" aria-label="...">
-                            <input class="form-check-input" type="checkbox" checked value="#c61faa" aria-label="...">
-                            <input class="form-check-input" type="checkbox" value="#1fc662" aria-label="...">
-                            <input class="form-check-input" type="checkbox" value="#9dc61f" aria-label="...">
-                            <input class="form-check-input" type="checkbox" checked value="#c67b1f" aria-label="...">
-                        </div>
-                    </div>
-                </div>
-            </div> -->
+
         </div>
     </div>
 
@@ -341,5 +281,39 @@
         background-color: rgb(214, 214, 214);
     }
 </style>
+<script>
+    $(".remove").on("click", function (e) {
+
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success',
+
+                    $.ajax({
+                        type: "GET",
+                        url: "{% url 'DeleteProduct' %}",
+                        data: {
+                            productid: $(this).data('id')
+                        },
+                        success: function (response) {
+                            location.reload();
+                        }
+                    })
+                )
+            }
+        })
+    });
+</script>
 
 {% endblock %}

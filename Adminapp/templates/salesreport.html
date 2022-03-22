@@ -1,6 +1,8 @@
 {% extends 'adminbase.html' %}
 {% block content %}
 {% load static %}
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
     crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.0/html2pdf.bundle.min.js"></script>
@@ -14,20 +16,36 @@
 </script>
 <script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js">
 </script>
+
+<!-- CSS -->
+<link rel="stylesheet" href="libs/datepicker/daterangepicker.css" type="text/css">
+
+<!-- Javascript -->
+<script src="libs/datepicker/daterangepicker.js"></script>
+
+
+<!-- CSS -->
+<link rel="stylesheet" href="{% static 'libs/datepicker/daterangepicker.css' %}" type="text/css">
+
+<!-- Javascript -->
+<script src="{% static 'libs/datepicker/daterangepicker.js' %}"></script>
 <!-- content -->
 <div class="content ">
 
+    <div>
+        <nav class="d-flex justify-content-between" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+            <div>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="#">
+                            <i class="bi bi-globe2 small me-2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Customers</li>
+                </ol>
+            </div>
 
-    <div class="mb-4">
-        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a href="#">
-                        <i class="bi bi-globe2 small me-2"></i> Dashboard
-                    </a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">Customers</li>
-            </ol>
+
         </nav>
     </div>
 
@@ -87,6 +105,45 @@
         </div>
     </div> -->
 
+    <div class="card my-3">
+        <div class="card-body ">
+            <form action="" method="post">
+                {% csrf_token %}
+
+                <div class="d-md-flex row">
+                    <div class="col-md-4">
+                        Select range :
+                        <input type="text" name="dates" class="form-control">
+                    </div>
+                    <div class="col-md-3 ">
+
+                        <span class="my-auto">Month :<select name="month" class="form-select"
+                                aria-label="Default select example">
+                                <option selected></option>
+                                {% for month in months %}
+                                <option value="{{forloop.counter}}">{{month}}</option>
+                                {% endfor %}
+                            </select>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="my-auto"> Year :<select name="year" class="form-select"
+                                aria-label="Default select example2">
+                                <option selected></option>
+                                {% for year in years %}
+                                <option value="{{forloop.counter}}">{{year}}</option>
+                                {% endfor %}
+                            </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="mt-2 py-3 px-5 btn btn-outline-dark">Filter</button>
+                    </div>
+
+
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="card">
         <div class="card-body">
             <div class="d-md-flex">
@@ -94,36 +151,30 @@
                     <form class="mb-3 mb-md-0">
                         <div class="row g-3">
 
-                            <div class="col-md-4">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-light dropdown-toggle"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                        Sort by
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Desc</a></li>
-                                        <li><a class="dropdown-item" href="#">Asc</a></li>
-                                    </ul>
+                            <div class="col-md-12">
+                                <div>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Search">
+                                        <button class="btn btn-outline-light" type="button">
+                                            <i class="bi bi-search"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 
 
-
-                            <div class="col-md-8">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Search">
-                                    <button class="btn btn-outline-light" type="button">
-                                        <i class="bi bi-search"></i>
-                                    </button>
-                                </div>
-                            </div>
                         </div>
                     </form>
                 </div>
                 <div class="ms-auto">
-                    <button class="btn btn-outline-dark mx-3" id="pdf">Download PDF</button>
-                    <button class="btn btn-outline-dark" id="excel" onclick="tableToExcel(
-                        'pdftable', 'Students')">Download Excel</button>
+                    <button class="btn btn-dark mx-2" id="pdf">Download PDF</button>
+                    <button class="btn btn-dark mx-2 text-white">
+                        <a class="text-white" href="{% url 'export_csv' %}">Export CSV</a>
+                    </button>
+                    <button class="btn btn-dark mx-2 text-white">
+                        <a class="text-white" href="{% url 'export_excel' %}">Export
+                            Excel</a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -141,7 +192,7 @@
                     <th>Payment</th>
                     <th>No of items</th>
                     <th>Amount</th>
-                    <th>Date and Time</th>
+                    <th>Date</th>
                 </tr>
             </thead>
             <tbody>
@@ -153,15 +204,15 @@
                     </td>
                     <td>
                         <div class="avatar avatar-info">
-                            <img src="{{user.propic.url}}" height="10%" width="60%" class="rounded-circle" alt="..." />
+                            <img src="{{i.payuser.propic.url}}" height="10%" width="60%" class="rounded-circle"
+                                alt="..." />
                         </div>
                     </td>
                     <td>{{i.order.customer.username}}</td>
                     <td>{{i.method}}</td>
                     <td>{{i.order.get_cart_items}}</td>
-                    <td>{{i.order.get_cart_total}}</td>
-                    <td>{{i.order.date_ordered}}</td>
-
+                    <td>{{i.amountinr}}</td>
+                    <td>{{i.order.date_ordered|date}}</td>
 
                 </tr>
                 {% endfor %}
@@ -176,15 +227,7 @@
 <!-- ./ content -->
 
 
-<!-- <script>
-    $(document).ready(function () {
-        $('#excel').click(function () {
-            $("#pdftable").table2excel({
-                filename: "Employees.xls"
-            });
-        });
-    });
-</script> -->
+
 
 <script type="text/javascript">
     document.getElementById('pdf').onclick = function () {
@@ -199,4 +242,25 @@
     };
 </script>
 
+<script>
+    var datefilter = $('input[name="dates"]');
+    datefilter.daterangepicker({
+        autoUpdateInput: false,
+        locale: {
+            cancelLabel: 'Clear'
+        }
+    });
+
+    datefilter.on('apply.daterangepicker', function (ev, picker) {
+        from = $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+    });
+
+    $('input.create-event-datepicker').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
+        autoUpdateInput: false
+    }).on('apply.daterangepicker', function (ev, picker) {
+        to = $(this).val(picker.startDate.format('MM/DD/YYYY'));
+    });
+</script>
 {% endblock %}

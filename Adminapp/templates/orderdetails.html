@@ -104,8 +104,8 @@
                                     </td>
                                     <td>{{i.product.name}}</td>
                                     <td>{{i.quantity}}</td>
-                                    <td>₹{{i.product.price}}</td>
-                                    <td>₹{{i.get_total}}</td>
+                                    <td>{{i.product.newpriceinr}}</td>
+                                    <td>{{i.get_total}}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -120,7 +120,7 @@
                     <h6 class="card-title mb-4">Price</h6>
                     <div class="row justify-content-center mb-3">
                         <div class="col-4 text-end">Sub Total :</div>
-                        <div class="col-4">₹{{order.get_cart_total}}</div>
+                        <div class="col-4">{{order.get_cart_oldtotall}}</div>
                     </div>
                     <div class="row justify-content-center mb-3">
                         <div class="col-4 text-end">Shipping :</div>
@@ -135,7 +135,7 @@
                             <strong>Total :</strong>
                         </div>
                         <div class="col-4">
-                            <strong>₹{{order.get_cart_total}}</strong>
+                            <strong>{{order.get_cart_totall}}</strong>
                         </div>
                     </div>
                 </div>

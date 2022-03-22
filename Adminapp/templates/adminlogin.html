@@ -14,34 +14,85 @@
     <title>CRUDs</title>
 </head>
 
-<body
-    style="background-image: linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12); background-repeat: no-repeat; height: 800px;">
+<style>
+    body {
+        background: linear-gradient(-45deg, #EE7752, #E73C7E, #23A6D5, #23D5AB);
+        background-repeat: no-repeat;
+        height: 100vh;
+        background-size: 400% 400%;
+        position: relative;
+        animation: change 10s ease-in-out infinite;
+
+
+    }
+
+    .btn {
+        background: linear-gradient(-45deg, #EE7752, #E73C7E, #23A6D5, #23D5AB);
+        animation: change 10s ease-in-out infinite;
+        background-size: 400% 400%;
+        position: relative;
+
+    }
+
+    @keyframes change {
+        0% {
+            background-position: 0 50%;
+
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0 50%;
+        }
+    }
+
+    h3 {
+        font-size: 2rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border: 3px solid #fff;
+        color: #fff;
+        justify-content: center;
+        align-content: center;
+        text-align: center;
+    }
+</style>
+
+<body>
+    <!-- style="background-image: linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12); background-repeat: no-repeat; height: 800px;"> -->
+    <!-- background: linear-gradient(-45deg, #EE7752, #E73C7E, #23A6D5, #23D5AB); -->
 
     <br>
+    <div class="container w-50 mt-4  mx-auto justify-content-center">
+        <h3 class=" mx-auto justify-content-centertext-center p-5">Admin Login</h3>
+    </div>
 
 
-    <div class="container col-3 text-dark bg-light" style="margin-top: 100px; padding: 40px; border-radius: 10px;">
-        <form method="POST" action="">
+    <div class="container col-3 text-dark bg-light bg-opacity-25"
+        style="margin-top: 100px; padding: 40px; border-radius: 10px;">
+        <form method="POST" action="" class="justify-content-center d-flex row">
             {% for error in messages %}
             <p class="text-danger">{{error}}</p>
             {% endfor %}
             <div class="text-center ">
-                <h3>Admin Login</h3>
             </div>
             {% csrf_token %}
-            <div class="mb-3">
+            <div class="mb-3 col-12">
                 <label for="exampleInputEmail1" username="username" class="form-label">Username</label>
                 <input type="text" class="form-control" name="username" id="exampleInputEmail1"
                     aria-describedby="emailHelp">
             </div>
-            <div class="mb-3">
+            <div class="mb-3 col-12">
                 <label for="exampleInputPassword1" password="password" class="form-label">Password</label>
                 <input type="password" class="form-control" name="password" id="exampleInputPassword1">
             </div>
             <div class="mb-3 form-check">
 
             </div>
-            <button type="submit" class="btn text-center btn-primary">Submit</button>
+            <button type="submit" class="btn w-25 text-center btn-primary mx-auto border-0">Submit</button>
         </form>
     </div>
 

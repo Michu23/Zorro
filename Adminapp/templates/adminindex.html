@@ -93,12 +93,10 @@
                     </div>
                     <h4 class="mb-3">Total Revenue</h4>
                     <div class="d-flex mb-3">
-                        <div class="display-7">₹{{total_revenue.amount__sum}}</div>
-                        <div class="ms-auto" id="total-orders"></div>
+                        <div class="display-7">₹{{total_revenue.amount__sum|floatformat:2}}</div>
+                        <!-- <div class="ms-auto" id="total-orders"></div> -->
                     </div>
-                    <div class="text-success">
-                        <!-- Over last month 1.4% <i class="small bi bi-arrow-up"></i> -->
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -124,10 +122,6 @@
                     <h4 class="mb-3">Products</h4>
                     <div class="d-flex mb-3">
                         <div class="display-7">{{product_count}}</div>
-                        <div class="ms-auto" id="total-sales"></div>
-                    </div>
-                    <div class="text-danger">
-                        <!-- Over last month 2.4% <i class="small bi bi-arrow-down"></i> -->
                     </div>
                 </div>
             </div>
@@ -154,10 +148,6 @@
                     <h4 class="mb-3">Customers</h4>
                     <div class="d-flex mb-3">
                         <div class="display-7">{{customers}}</div>
-                        <div class="ms-auto" id="total-orders"></div>
-                    </div>
-                    <div class="text-success">
-                        <!-- Over last month 1.4% <i class="small bi bi-arrow-up"></i> -->
                     </div>
                 </div>
             </div>
@@ -184,10 +174,6 @@
                     <h4 class="mb-3">Orders</h4>
                     <div class="d-flex mb-3">
                         <div class="display-7">{{orders}}</div>
-                        <div class="ms-auto" id="total-sales"></div>
-                    </div>
-                    <div class="text-danger">
-                        <!-- Over last month 2.4% <i class="small bi bi-arrow-down"></i> -->
                     </div>
                 </div>
             </div>
