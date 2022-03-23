@@ -1,9 +1,7 @@
 {% extends 'base.html' %} {% block content %}
 
-<div
-  class="container bg-dark text-light"
-  style="margin-top: 100px; padding: 40px; border-radius: 10px; width: 450px"
->
+<div class="container col-lg-4 col-md-6 col-sm-12 col-xs-12  bg-dark text-light"
+  style="margin-top: 180px; padding: 40px; border-radius: 10px;">
   <div class="text-center text-light">
     <h3 class="text-white">OTP Login</h3>
   </div>
@@ -11,13 +9,11 @@
   <form method="POST">
     {% csrf_token %}
     <div class="mb-3">
-      <label for="exampleInputEmail1" username="username" class="form-label"
-        >Enter the OTP :</label
-      >
+      <label for="exampleInputEmail1" username="username" class="form-label">Enter the OTP :</label>
       <input type="number" class="form-control" name="otp" />
     </div>
     <div class="mb-3 p-0 form-check">
-     
+
     </div>
     <button type="submit" class="btn text-center btn-primary">Submit</button>
   </form>

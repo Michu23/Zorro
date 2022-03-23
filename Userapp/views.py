@@ -1034,7 +1034,6 @@ def usercheckout(request):
         except:
             pass
 
-    
     couponu = [i.coupon.code for i in CouponUsed.objects.all()]
     coup = CouponDetail.objects.exclude(code__in=couponu)
     
@@ -1045,9 +1044,15 @@ def usercheckout(request):
 
 
 def invoicedetails(request):
-    user = request.user
-    order = Order.objects.filter(customer = user,complete=True).order_by('-id')[0]
-    items=order.orderitem_set.all()
+    try:
+        if user.is_authenticated():
+            user = request.user
+            order = Order.objects.filter(customer = user,complete=True).order_by('-id')[0]
+            items=order.orderitem_set.all()
+    except:
+        messages.error(request,"Login to order!")
+        return redirect("UserShop")
+
     context={'order':order,'items':items}
     return render(request,'invoiceinfo.html',context)
 
