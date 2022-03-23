@@ -197,7 +197,10 @@
               <p>
                 Welcome
                 <span style="text-transform: capitalize">{{user.username}}</span>
+                {% if user.is_authenticated %}
                 <img src="{{user.propic.url}}" height="5%" width="5%" class="rounded-circle" alt="..." />
+                {% else %}
+                {% endif %}
                 <span></span>
               </p>
             </div>
@@ -339,8 +342,6 @@
             <h6>Shopping</h6>
             <ul>
               <li><a href="#">Clothing Store</a></li>
-              <li><a href="#">Trending Shoes</a></li>
-              <li><a href="#">Accessories</a></li>
               <li><a href="#">Sale</a></li>
             </ul>
           </div>
