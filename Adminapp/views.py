@@ -93,13 +93,14 @@ def salesreport(request):
             from_date = ''
             to_date = '' 
         
+
         year = request.POST.get('year')
         month = request.POST.get('month')
         print(month)
         print(from_date,to_date,"////////////////////////////////////////")
         m = month
-        print(m)
-        print(from_date)
+        
+        
         if  month != '' :
             order_data = Pay.objects.filter(order__date_ordered__month=m).order_by('order__date_ordered')
         elif  year != '' :
@@ -606,6 +607,7 @@ def couponsused(request):
     context={'coupons': coupons}
     return render(request,'couponused.html',context)
 
+
 def admincoupons(request):
     coupons= CouponDetail.objects.all()
     couponform= MyCouponForm()
@@ -613,12 +615,13 @@ def admincoupons(request):
         couponform = MyCouponForm(request.POST)
         if couponform.is_valid():
             couponform.save()
-            messages.error(request,"Successfully added")
+            messages.success(request,"Successfully added")
             return redirect("AdminCoupons")
         else:
             messages.error(request,"Error")
     context= {'coupons':coupons,'couponform':couponform}
     return render (request, 'coupons.html',context)
+
 
 def editcoupons(request,id):
     print("/////////////////////hi")
