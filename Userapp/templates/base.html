@@ -253,6 +253,16 @@
     </div>
   </header>
   <!-- Header Section End -->
+  {% for message in messages %}
+  <div class="container-fluid p-0">
+    <div class="alert {{ message.tags }} alert-dismissible px-5" role="alert">
+      {{ message }}
+      <button type="button" class="btn" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="True">&times;</span>
+      </button>
+    </div>
+  </div>
+  {% endfor %}
 
   {% block content %} {% endblock %}
 
